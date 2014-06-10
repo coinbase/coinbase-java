@@ -1,0 +1,21 @@
+<project>
+  <!-- model version is always 4.0.0 for Maven 2.x POMs -->
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <!-- project coordinates, i.e. a group of values which
+       uniquely identify this project -->
+ 
+  <groupId>com.coinbase.api</groupId>
+  <artifactId>coinbase-java</artifactId>
+  <version>1.0</version>
+ 
+  <!-- library dependencies -->
+ 
+  <dependencies>
+    <dependency>
+      <groupId>org.glassfish.jersey.core</groupId>
+      <artifactId>jersey-client</artifactId>
+      <version>2.9</version>
+    </dependency>
+  </dependencies>
+</project>
