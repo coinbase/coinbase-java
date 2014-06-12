@@ -52,6 +52,19 @@
 						<threadCount>3</threadCount>
 					</configuration>
 				</plugin>
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<configuration>
+						<archive>
+							<manifest>
+								<mainClass>com.coinbase.api.example.Example</mainClass>
+							</manifest>
+						</archive>
+						<descriptorRefs>
+							<descriptorRef>jar-with-dependencies</descriptorRef>
+						</descriptorRefs>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
