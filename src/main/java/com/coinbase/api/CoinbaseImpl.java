@@ -9,6 +9,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.oauth2.OAuth2ClientSupport;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
+import com.coinbase.api.auth.HmacClientFilter;
 import com.coinbase.api.entity.Users;
 import com.coinbase.api.entity.Users.UserNode.User;
 
@@ -27,6 +28,8 @@ class CoinbaseImpl implements Coinbase {
 
 	if (builder.access_token != null) {
 	    clientConfig.register(OAuth2ClientSupport.feature(builder.access_token));
+	} else if (builder.api_key != null && builder.api_secret != null) {
+	    clientConfig.register(new HmacClientFilter(builder.api_key, builder.api_secret));
 	}
 
 	_client = ClientBuilder.newBuilder().withConfig(clientConfig)
