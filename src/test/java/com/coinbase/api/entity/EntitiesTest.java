@@ -63,7 +63,7 @@ public class EntitiesTest {
 	assertEquals("5018f833f8182b129c00002f", t.getId());
 	assertEquals(DateTime.parse("2012-08-01T02:34:43-07:00"), t.getCreatedAt());
 	assertEquals(Money.parse("BTC -1.1"), t.getAmount());
-	assertTrue(t.getRequest());
+	assertTrue(t.isRequest());
 	assertEquals("pending", t.getStatus());
 	
 	User sender = t.getSender();

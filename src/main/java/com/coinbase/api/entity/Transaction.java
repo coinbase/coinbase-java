@@ -102,7 +102,7 @@ public class Transaction {
         _amount = amount;
     }
     
-    public Boolean getRequest() {
+    public Boolean isRequest() {
         return _request;
     }
     

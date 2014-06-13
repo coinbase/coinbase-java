@@ -92,12 +92,22 @@ class CoinbaseImpl implements Coinbase {
 	return getTransactions(1);
     }
 
+    public void resendRequest(String id) {
+	WebTarget resendRequestTarget = _base_target.path("transactions/" + id + "/resend_request");
+	put(resendRequestTarget, new Request());
+    }
+
     private static Response get(WebTarget target) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
     }
     
     private static Response post(WebTarget target, Object entity) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).post(
+		Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Response.class);
+    }
+
+    private static Response put(WebTarget target, Object entity) {
+	return target.request(MediaType.APPLICATION_JSON_TYPE).put(
 		Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Response.class);
     }
 
