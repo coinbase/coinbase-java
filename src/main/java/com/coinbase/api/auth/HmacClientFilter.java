@@ -2,40 +2,45 @@ package com.coinbase.api.auth;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.ext.MessageBodyWriter;
+import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.codec.binary.Hex;
 import org.glassfish.jersey.message.MessageBodyWorkers;
 
+@Provider
 public class HmacClientFilter implements ClientRequestFilter {
 
-    private String apiKey;
-    private String apiSecret;
+    public static final String API_KEY_NAME = "hmacApiKey";
+    public static final String API_SECRET_NAME = "hmacApiSecret";
 
-    @Context
+   @Context
     private MessageBodyWorkers workers;
+
+   @Context
+   private Configuration configuration;
 
     // TODO
     // private static final Logger log =
     // LoggerFactory.getLogger(HmacClientFilter.class);
 
-    public HmacClientFilter(String apiKey, String apiSecret) {
-	this.apiKey = apiKey;
-	this.apiSecret = apiSecret;
+    public HmacClientFilter() {
+	
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void filter(ClientRequestContext requestContext) throws IOException {
+	String apiKey = (String) configuration.getProperty(API_KEY_NAME);
+	String apiSecret = (String) configuration.getProperty(API_SECRET_NAME);
+
 	String nonce = String.valueOf(System.currentTimeMillis());
 	String url = requestContext.getUri().toString();
 	String body = null;
@@ -65,14 +70,13 @@ public class HmacClientFilter implements ClientRequestFilter {
 
 	    body = baos.toString();
 	    
-	    // TODO try this for performance
-	    // requestContext.setEntity(body);
+	    requestContext.setEntity(body);
 	}
 
 	String message = nonce + url + (body != null ? body : "");
 	
 // TODO remove
-//	System.out.println("Canonical message: /" + message + "/");
+	System.out.println("Canonical message: #" + message + "#");
 
 	Mac mac = null;
 	try {
@@ -85,7 +89,7 @@ public class HmacClientFilter implements ClientRequestFilter {
 	String signature = new String(Hex.encodeHex(mac.doFinal(message.getBytes())));
 	
 // TODO remove
-//	System.out.println("Signature: /" + signature + "/");
+	System.out.println("Signature: #" + signature + "#");
 
 	requestContext.getHeaders().add("ACCESS_KEY", apiKey);
 	requestContext.getHeaders().add("ACCESS_SIGNATURE", signature);

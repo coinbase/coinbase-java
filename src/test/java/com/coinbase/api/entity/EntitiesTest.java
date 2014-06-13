@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -31,12 +32,12 @@ public class EntitiesTest {
     public void users() throws Exception {
 	
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/users.json");
-	Users users = mapper.readValue(in, Users.class);
+	Response response = mapper.readValue(in, Response.class);
 	
-	List<Users.UserNode> userNodeList = users.getUsers();
+	List<UserNode> userNodeList = response.getUsers();
 	assertEquals(1, userNodeList.size());
 	
-	Users.UserNode.User user = userNodeList.get(0).getUser();
+	User user = userNodeList.get(0).getUser();
 
 	assertEquals("512db383f8182bd24d000001", user.getId());
 	assertEquals("User One", user.getName());
@@ -48,6 +49,34 @@ public class EntitiesTest {
 	assertEquals(1, user.getSellLevel().intValue());
 	assertEquals(Money.parse("BTC 10"), user.getBuyLimit());
 	assertEquals(Money.parse("BTC 100"), user.getSellLimit());	
+	
+    }
+    
+    @Test
+    public void transaction() throws Exception {
+	
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/transaction.json");
+	Response r = mapper.readValue(in, Response.class);
+	
+	Transaction t = r.getTransaction();
+
+	assertEquals("5018f833f8182b129c00002f", t.getId());
+	assertEquals(DateTime.parse("2012-08-01T02:34:43-07:00"), t.getCreatedAt());
+	assertEquals(Money.parse("BTC -1.1"), t.getAmount());
+	assertTrue(t.getRequest());
+	assertEquals("pending", t.getStatus());
+	
+	User sender = t.getSender();
+	
+	assertEquals("5011f33df8182b142400000e", sender.getId());
+	assertEquals("User Two", sender.getName());
+	assertEquals("user2@example.com", sender.getEmail());
+	
+	User recipient = t.getRecipient();
+	
+	assertEquals("5011f33df8182b142400000a", recipient.getId());
+	assertEquals("User One", recipient.getName());
+	assertEquals("user1@example.com", recipient.getEmail());	
 	
     }
 

@@ -1,6 +1,6 @@
 package com.coinbase.api.deserializer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.math.BigDecimal;
 
@@ -9,7 +9,7 @@ import org.joda.money.Money;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
@@ -53,13 +53,13 @@ public class MoneyDeserializerTest {
 	assertEquals(Money.of(CurrencyUnit.of("BTC"), new BigDecimal("49.76987601")), money);
     }
 
-    @Test(expected = JsonParseException.class)
+    @Test(expected = JsonProcessingException.class)
     public void invalidJson() throws Exception {
 	String json = "{\"name\": \"Alex\", \"Nationality\": \"Canadian\"}";
 	Money money = mapper.readValue(json, Money.class);
     }
 
-    @Test(expected = JsonParseException.class)
+    @Test(expected = JsonProcessingException.class)
     public void unknownCurrency() throws Exception {
 	String json = "{\"amount\": \"49.76987601\", \"currency\": \"WTF\"}";
 	Money money = mapper.readValue(json, Money.class);

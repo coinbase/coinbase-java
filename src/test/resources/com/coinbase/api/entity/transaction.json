@@ -1,0 +1,22 @@
+{
+  "transaction": {
+    "id": "5018f833f8182b129c00002f",
+    "created_at": "2012-08-01T02:34:43-07:00",
+    "amount": {
+      "amount": "-1.10000000",
+      "currency": "BTC"
+    },
+    "request": true,
+    "status": "pending",
+    "sender": {
+      "id": "5011f33df8182b142400000e",
+      "name": "User Two",
+      "email": "user2@example.com"
+    },
+    "recipient": {
+      "id": "5011f33df8182b142400000a",
+      "name": "User One",
+      "email": "user1@example.com"
+    }
+  }
+}
