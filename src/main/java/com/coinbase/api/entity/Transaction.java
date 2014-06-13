@@ -25,6 +25,17 @@ public class Transaction {
     private String _amountCurrencyIso;
     private String _from;
     
+    // Send Money
+    private String _to;
+
+    public String getTo() {
+        return _to;
+    }
+
+    public void setTo(String to) {
+        _to = to;
+    }
+
     public String getFrom() {
         return _from;
     }

@@ -11,4 +11,6 @@ public interface Coinbase {
     
     public Transaction requestMoney(Transaction transaction);
 
+    public Transaction sendMoney(Transaction transaction);
+
 }

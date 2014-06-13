@@ -61,12 +61,7 @@ class CoinbaseImpl implements Coinbase {
 
 	WebTarget requestMoneyTarget = _base_target.path("transactions/request_money");
 
-	// Massage amount
-	Money amount = transaction.getAmount();
-	transaction.setAmount(null);
-
-	transaction.setAmountString(amount.getAmount().toPlainString());
-	transaction.setAmountCurrencyIso(amount.getCurrencyUnit().getCurrencyCode());
+	serializeAmount(transaction);
 	
 	Request request = new Request();
 	request.setTransaction(transaction);
@@ -76,13 +71,34 @@ class CoinbaseImpl implements Coinbase {
 
     }
 
-    private Response get(WebTarget target) {
+    public Transaction sendMoney(Transaction transaction) {
+	WebTarget requestMoneyTarget = _base_target.path("transactions/send_money");
+	
+	serializeAmount(transaction);
+	
+	Request request = new Request();
+	request.setTransaction(transaction);
+	
+	Response response = post(requestMoneyTarget, request);
+	return response.getTransaction();
+    }
+
+    private static Response get(WebTarget target) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
     }
     
-    private Response post(WebTarget target, Object entity) {
+    private static Response post(WebTarget target, Object entity) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).post(
 		Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Response.class);
+    }
+
+    private static void serializeAmount(Transaction transaction) {
+	// Massage amount
+	Money amount = transaction.getAmount();
+	transaction.setAmount(null);
+
+	transaction.setAmountString(amount.getAmount().toPlainString());
+	transaction.setAmountCurrencyIso(amount.getCurrencyUnit().getCurrencyCode());
     }
 
 }

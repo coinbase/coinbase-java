@@ -75,9 +75,6 @@ public class HmacClientFilter implements ClientRequestFilter {
 
 	String message = nonce + url + (body != null ? body : "");
 	
-// TODO remove
-	System.out.println("Canonical message: #" + message + "#");
-
 	Mac mac = null;
 	try {
 	    mac = Mac.getInstance("HmacSHA256");
@@ -87,9 +84,6 @@ public class HmacClientFilter implements ClientRequestFilter {
 	}
 
 	String signature = new String(Hex.encodeHex(mac.doFinal(message.getBytes())));
-	
-// TODO remove
-	System.out.println("Signature: #" + signature + "#");
 
 	requestContext.getHeaders().add("ACCESS_KEY", apiKey);
 	requestContext.getHeaders().add("ACCESS_SIGNATURE", signature);
