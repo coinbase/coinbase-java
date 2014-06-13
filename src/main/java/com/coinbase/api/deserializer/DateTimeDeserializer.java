@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 public class DateTimeDeserializer extends StdDeserializer<DateTime> {
 
-    protected DateTimeDeserializer() {
+    public DateTimeDeserializer() {
 	super(DateTime.class);
     }
 

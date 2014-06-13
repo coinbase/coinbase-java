@@ -9,6 +9,7 @@ import org.joda.money.Money;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.coinbase.api.ObjectMapperProvider;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -19,10 +20,7 @@ public class MoneyDeserializerTest {
 
     @Before
     public void setUp() {
-	mapper = new ObjectMapper();
-	SimpleModule module = new SimpleModule();
-	module.addDeserializer(Money.class, new MoneyDeserializer());
-	mapper.registerModule(module);
+	mapper = ObjectMapperProvider.createDefaultMapper();
     }
 
     @Test

@@ -3,11 +3,17 @@ package com.coinbase.api;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
+import org.joda.money.Money;
+import org.joda.time.DateTime;
+
+import com.coinbase.api.deserializer.DateTimeDeserializer;
+import com.coinbase.api.deserializer.MoneyDeserializer;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 @Provider
 public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
@@ -28,6 +34,11 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 	result.configure(SerializationFeature.INDENT_OUTPUT, true);
 	result.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	result.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
+	
+	SimpleModule module = new SimpleModule();
+	module.addDeserializer(Money.class, new MoneyDeserializer());
+	module.addDeserializer(DateTime.class, new DateTimeDeserializer());
+	result.registerModule(module);
 
 	return result;
     }

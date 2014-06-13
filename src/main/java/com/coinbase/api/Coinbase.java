@@ -1,5 +1,6 @@
 package com.coinbase.api;
 
+import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.User;
 
@@ -12,5 +13,8 @@ public interface Coinbase {
     public Transaction requestMoney(Transaction transaction);
 
     public Transaction sendMoney(Transaction transaction);
+
+    public Response getTransactions();
+    public Response getTransactions(int page);
 
 }

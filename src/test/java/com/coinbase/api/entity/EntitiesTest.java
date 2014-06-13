@@ -80,4 +80,31 @@ public class EntitiesTest {
 	
     }
 
+    @Test
+    public void transactions() throws Exception {
+
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/transactions.json");
+	Response r = mapper.readValue(in, Response.class);
+
+	User current_user = r.getCurrentUser();
+	assertEquals("5011f33df8182b142400000e", current_user.getId());
+	assertEquals("User Two", current_user.getName());
+	assertEquals("user2@example.com", current_user.getEmail());
+
+	assertEquals(Money.parse("BTC 50"), r.getBalance());
+	assertEquals(Money.parse("USD 500"), r.getNativeBalance());
+	assertEquals(2, r.getTotalCount());
+	assertEquals(1, r.getNumPages());
+	assertEquals(1, r.getCurrentPage());
+
+	List<TransactionNode> txs = r.getTransactions();
+	assertEquals(2, txs.size());
+
+	Transaction tx1 = txs.get(0).getTransaction();
+	assertEquals("5018f833f8182b129c00002f", tx1.getId());
+
+	Transaction tx2 = txs.get(1).getTransaction();
+	assertEquals("5018f833f8182b129c00002e", tx2.getId());
+    }
+
 }
