@@ -27,6 +27,9 @@ public interface Coinbase {
     public Response getTransfers();
     public Response getTransfers(int page);
 
+    public Response getAddresses();
+    public Response getAddresses(int page);
+
     public Money getSpotPrice(CurrencyUnit currency);
     public Quote getBuyQuote(Money btcAmount);
     public Quote getSellQuote(Money btcAmount);

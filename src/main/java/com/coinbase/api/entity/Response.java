@@ -19,6 +19,7 @@ public class Response {
     private int _numPages;
     private int _currentPage;
     private List<TransferNode> _transfers;
+    private List<AddressNode> _addresses;
 
     public List<TransferNode> getTransfers() {
         return _transfers;
@@ -106,6 +107,14 @@ public class Response {
 
     public void setTransaction(Transaction transaction) {
         _transaction = transaction;
+    }
+
+    public List<AddressNode> getAddresses() {
+	return _addresses;
+    }
+
+    public void setAddresses(List<AddressNode> addresses) {
+	_addresses = addresses;
     }
 
 }

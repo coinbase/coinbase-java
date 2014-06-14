@@ -128,6 +128,15 @@ class CoinbaseImpl implements Coinbase {
 	return getTransfers(1);
     }
 
+    public Response getAddresses(int page) {
+	WebTarget addressesTarget = _account_specific_target.path("addresses").queryParam("page", page);
+	return get(addressesTarget);
+    }
+
+    public Response getAddresses() {
+	return getAddresses(1);
+    }
+
     public Money getSpotPrice(CurrencyUnit currency) {
 	WebTarget spotPriceTarget = _base_target.path("prices/spot_rate").queryParam("currency", currency.getCurrencyCode());
 	return spotPriceTarget.request(MediaType.APPLICATION_JSON_TYPE).get(Money.class);

@@ -144,4 +144,25 @@ public class EntitiesTest {
 	assertEquals(Money.parse("USD 10.35"), q.getTotal());
     }
 
+    @Test
+    public void addresses() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/addresses.json");
+	Response r = mapper.readValue(in, Response.class);
+	
+	List<AddressNode> addresses = r.getAddresses();
+	assertEquals(2, addresses.size());
+	
+	Address a1 = addresses.get(0).getAddress();
+	assertEquals("moLxGrqWNcnGq4A8Caq8EGP4n9GUGWanj4", a1.getAddress());
+	assertNull(a1.getCallbackUrl());
+	assertNull(a1.getLabel());
+	assertEquals(DateTime.parse("2013-05-09T23:07:08-07:00"), a1.getCreatedAt());
+	
+	Address a2 = addresses.get(1).getAddress();
+	assertEquals("mwigfecvyG4MZjb6R5jMbmNcs7TkzhUaCj", a2.getAddress());
+	assertEquals("http://localhost/callback", a2.getCallbackUrl());
+	assertEquals("My Label", a2.getLabel());
+	assertEquals(DateTime.parse("2013-05-09T17:50:37-07:00"), a2.getCreatedAt());
+    }
+
 }
