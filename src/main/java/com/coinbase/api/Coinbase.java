@@ -13,7 +13,7 @@ public interface Coinbase {
     public Transaction requestMoney(Transaction transaction);
 
     public void resendRequest(String transactionId);
-
+    public void deleteRequest(String transactionId);
     public Transaction sendMoney(Transaction transaction);
 
     public Response getTransactions();

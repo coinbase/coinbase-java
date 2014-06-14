@@ -22,6 +22,7 @@ class CoinbaseImpl implements Coinbase {
     private static final String API_BASE_URL = "https://coinbase.com/api/v1/";
     private Client _client = null;
     private WebTarget _base_target = null;
+    private WebTarget _account_specific_target = null;
 
     CoinbaseImpl(CoinbaseBuilder builder) throws Exception {
 
@@ -42,6 +43,14 @@ class CoinbaseImpl implements Coinbase {
 		.sslContext(CoinbaseSSL.context()).build();
 
 	_base_target = _client.target(API_BASE_URL);
+	
+	if (builder.acct_id != null) {
+	    _account_specific_target = _base_target.queryParam("account_id", builder.acct_id);
+	} else {
+	    _account_specific_target = _base_target;
+	}
+	
+	
 
     }
 
@@ -52,14 +61,14 @@ class CoinbaseImpl implements Coinbase {
     }
     
     public Transaction getTransaction(String id) {
-	WebTarget txTarget = _base_target.path("transactions/" + id);
+	WebTarget txTarget = _account_specific_target.path("transactions/" + id);
 	Response response = get(txTarget);
 	return response.getTransaction();
     }
     
     public Transaction requestMoney(Transaction transaction) {
 
-	WebTarget requestMoneyTarget = _base_target.path("transactions/request_money");
+	WebTarget requestMoneyTarget = _account_specific_target.path("transactions/request_money");
 
 	serializeAmount(transaction);
 	
@@ -72,7 +81,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     public Transaction sendMoney(Transaction transaction) {
-	WebTarget requestMoneyTarget = _base_target.path("transactions/send_money");
+	WebTarget requestMoneyTarget = _account_specific_target.path("transactions/send_money");
 	
 	serializeAmount(transaction);
 	
@@ -84,7 +93,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     public Response getTransactions(int page) {
-	WebTarget transactionsTarget = _base_target.path("transactions").queryParam("page", page);
+	WebTarget transactionsTarget = _account_specific_target.path("transactions").queryParam("page", page);
 	return get(transactionsTarget);
     }
 
@@ -93,8 +102,13 @@ class CoinbaseImpl implements Coinbase {
     }
 
     public void resendRequest(String id) {
-	WebTarget resendRequestTarget = _base_target.path("transactions/" + id + "/resend_request");
+	WebTarget resendRequestTarget = _account_specific_target.path("transactions/" + id + "/resend_request");
 	put(resendRequestTarget, new Request());
+    }
+
+    public void deleteRequest(String id) {
+	WebTarget deleteRequestTarget = _account_specific_target.path("transactions/" + id + "/cancel_request");
+	delete(deleteRequestTarget);
     }
 
     private static Response get(WebTarget target) {
@@ -109,6 +123,10 @@ class CoinbaseImpl implements Coinbase {
     private static Response put(WebTarget target, Object entity) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).put(
 		Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Response.class);
+    }
+
+    private static Response delete(WebTarget target) {
+	return target.request(MediaType.APPLICATION_JSON_TYPE).delete(Response.class);
     }
 
     private static void serializeAmount(Transaction transaction) {
