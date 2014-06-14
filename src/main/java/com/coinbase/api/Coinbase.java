@@ -14,6 +14,7 @@ public interface Coinbase {
 
     public void resendRequest(String transactionId);
     public void deleteRequest(String transactionId);
+    public Transaction completeRequest(String transactionId);
     public Transaction sendMoney(Transaction transaction);
 
     public Response getTransactions();

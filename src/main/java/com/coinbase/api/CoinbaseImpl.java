@@ -111,6 +111,12 @@ class CoinbaseImpl implements Coinbase {
 	delete(deleteRequestTarget);
     }
 
+    public Transaction completeRequest(String id) {
+	WebTarget completeRequestTarget = _account_specific_target.path("transactions/" + id + "/complete_request");
+	Response response = put(completeRequestTarget, new Request());
+	return response.getTransaction();
+    }
+
     private static Response get(WebTarget target) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
     }
