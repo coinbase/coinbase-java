@@ -1,5 +1,9 @@
 package com.coinbase.api;
 
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
+
+import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.User;
@@ -22,5 +26,9 @@ public interface Coinbase {
 
     public Response getTransfers();
     public Response getTransfers(int page);
+
+    public Money getSpotPrice(CurrencyUnit currency);
+    public Quote getBuyQuote(Money btcAmount);
+    public Quote getSellQuote(Money btcAmount);
 
 }

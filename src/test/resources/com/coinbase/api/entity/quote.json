@@ -1,0 +1,24 @@
+{
+  "subtotal": {
+    "amount": "10.10",
+    "currency": "USD"
+  },
+  "fees": [
+    {
+      "coinbase": {
+        "amount": "0.10",
+        "currency": "USD"
+      }
+    },
+    {
+      "bank": {
+        "amount": "0.15",
+        "currency": "USD"
+      }
+    }
+  ],
+  "total": {
+    "amount": "10.35",
+    "currency": "USD"
+  }
+}

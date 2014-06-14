@@ -132,4 +132,16 @@ public class EntitiesTest {
 	assertEquals("Paid for with $13.84 from Test xxxxx3111.", t.getDescription());
     }
 
+    @Test
+    public void quote() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/quote.json");
+	Quote q = mapper.readValue(in, Quote.class);
+	
+	assertEquals(Money.parse("USD 10.10"), q.getSubtotal());
+	assertEquals(2, q.getFees().size());
+	assertEquals(Money.parse("USD 0.10"), q.getFees().get("coinbase"));
+	assertEquals(Money.parse("USD 0.15"), q.getFees().get("bank"));
+	assertEquals(Money.parse("USD 10.35"), q.getTotal());
+    }
+
 }
