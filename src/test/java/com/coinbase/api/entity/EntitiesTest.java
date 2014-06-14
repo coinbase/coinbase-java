@@ -107,4 +107,29 @@ public class EntitiesTest {
 	assertEquals("5018f833f8182b129c00002e", tx2.getId());
     }
 
+    @Test
+    public void transfers() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/transfers.json");
+	Response r = mapper.readValue(in, Response.class);
+	
+	assertEquals(1, r.getTotalCount());
+	assertEquals(1, r.getNumPages());
+	assertEquals(1, r.getCurrentPage());
+	List<TransferNode> transfers = r.getTransfers();
+	assertEquals(1, transfers.size());
+	Transfer t = transfers.get(0).getTransfer();
+	assertEquals(Transfer.Type.BUY, t.getType());
+	assertEquals("QPCUCZHR", t.getCode());
+	assertEquals(DateTime.parse("2013-02-27T23:28:18-08:00"), t.getCreatedAt());
+	assertEquals(Money.parse("USD 0.14"), t.getFees().get("coinbase"));
+	assertEquals(Money.parse("USD 0.15"), t.getFees().get("bank"));
+	assertEquals(DateTime.parse("2013-03-05T18:00:00-08:00"), t.getPayoutDate());
+	assertEquals("5011f33df8182b142400000e", t.getTransactionId());
+	assertEquals(Transfer.Status.PENDING, t.getStatus());
+	assertEquals(Money.parse("BTC 1"), t.getBtc());
+	assertEquals(Money.parse("USD 13.55"), t.getSubtotal());
+	assertEquals(Money.parse("USD 13.84"), t.getTotal());
+	assertEquals("Paid for with $13.84 from Test xxxxx3111.", t.getDescription());
+    }
+
 }

@@ -20,4 +20,7 @@ public interface Coinbase {
     public Response getTransactions();
     public Response getTransactions(int page);
 
+    public Response getTransfers();
+    public Response getTransfers(int page);
+
 }

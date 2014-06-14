@@ -18,6 +18,15 @@ public class Response {
     private int _totalCount;
     private int _numPages;
     private int _currentPage;
+    private List<TransferNode> _transfers;
+
+    public List<TransferNode> getTransfers() {
+        return _transfers;
+    }
+
+    public void setTransfers(List<TransferNode> transfers) {
+        _transfers = transfers;
+    }
 
     public List<TransactionNode> getTransactions() {
         return _transactions;
