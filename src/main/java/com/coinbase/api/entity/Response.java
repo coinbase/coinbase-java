@@ -4,11 +4,15 @@ import java.util.List;
 
 import org.joda.money.Money;
 
+import com.coinbase.api.deserializer.ErrorsCollector;
 import com.coinbase.api.entity.UserNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class Response {
     
-    private String _success;
+    private Boolean _success;
+    private String _error;
+    private String _errors;
     private Transaction _transaction;
     private List<UserNode> _users;
     private List<TransactionNode> _transactions;
@@ -21,6 +25,36 @@ public class Response {
     private List<TransferNode> _transfers;
     private List<AddressNode> _addresses;
     private List<Account> _accounts;
+    private Account _account;
+
+    public void setError(String error) {
+        _error = error;
+    }
+
+    public String getErrors() {
+	if (_error != null) {
+	    if (_errors != null) {
+		return _error + ", " + _errors;
+	    } else {
+		return _error;
+	    }
+	} else {
+	    return _errors;
+	}
+    }
+
+    @JsonDeserialize(converter=ErrorsCollector.class)
+    public void setErrors(String errors) {
+        _errors = errors;
+    }
+
+    public Account getAccount() {
+        return _account;
+    }
+
+    public void setAccount(Account account) {
+        _account = account;
+    }
 
     public List<Account> getAccounts() {
         return _accounts;
@@ -102,11 +136,11 @@ public class Response {
         _users = users;
     }
 
-    public String getSuccess() {
+    public Boolean isSuccess() {
         return _success;
     }
 
-    public void setSuccess(String success) {
+    public void setSuccess(Boolean success) {
         this._success = success;
     }
 
@@ -124,6 +158,10 @@ public class Response {
 
     public void setAddresses(List<AddressNode> addresses) {
 	_addresses = addresses;
+    }
+
+    public boolean hasErrors() {
+	return _error != null || _errors != null;
     }
 
 }

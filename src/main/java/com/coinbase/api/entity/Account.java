@@ -10,8 +10,8 @@ public class Account {
     private Money _balance;
     private Money _nativeBalance;
     private DateTime _createdAt;
-    private boolean _primary;
-    private boolean _active;
+    private Boolean _primary;
+    private Boolean _active;
 
     public String getId() {
         return _id;
@@ -53,7 +53,7 @@ public class Account {
         _createdAt = createdAt;
     }
 
-    public boolean isPrimary() {
+    public Boolean isPrimary() {
         return _primary;
     }
 
@@ -61,7 +61,7 @@ public class Account {
         _primary = primary;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return _active;
     }
 

@@ -15,7 +15,9 @@ import org.junit.Test;
 import com.coinbase.api.CoinbaseSSL;
 import com.coinbase.api.ObjectMapperProvider;
 import com.coinbase.api.deserializer.MoneyDeserializer;
+import com.coinbase.api.exception.CoinbaseException;
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
@@ -148,7 +150,9 @@ public class EntitiesTest {
     public void addresses() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/addresses.json");
 	Response r = mapper.readValue(in, Response.class);
-	
+
+	assertNull(r.isSuccess());
+
 	List<AddressNode> addresses = r.getAddresses();
 	assertEquals(2, addresses.size());
 	
@@ -190,6 +194,57 @@ public class EntitiesTest {
 	assertEquals(DateTime.parse("2014-05-07T08:50:10-07:00"), a2.getCreatedAt());
 	assertFalse(a2.isPrimary());
 	assertTrue(a2.isActive());
+    }
+
+    // TODO DI to make tests better
+
+    @Test(expected = CoinbaseException.class)
+    public void errorResponse() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/error.json");
+	Response response = mapper.readValue(in, Response.class);
+	
+	assertEquals("Test Error", response.getErrors());
+	
+	if (response.hasErrors()) {
+	    throw new CoinbaseException(response.getErrors());
+	}
+
+	if (response.isSuccess() != null && !response.isSuccess()) {
+	    throw new CoinbaseException("Unknown error");
+	}
+
+    }
+
+    @Test(expected = CoinbaseException.class)
+    public void errorsResponse() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/errors.json");
+	Response response = mapper.readValue(in, Response.class);
+	
+	assertEquals("Test Error 1, Test Error 2", response.getErrors());
+	
+	if (response.hasErrors()) {
+	    throw new CoinbaseException(response.getErrors());
+	}
+
+	if (response.isSuccess() != null && !response.isSuccess()) {
+	    throw new CoinbaseException("Unknown error");
+	}
+
+    }
+
+    @Test(expected = CoinbaseException.class)
+    public void falseSuccessResponse() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/false_success.json");
+	Response response = mapper.readValue(in, Response.class);
+	
+	if (response.hasErrors()) {
+	    throw new CoinbaseException(response.getErrors());
+	}
+
+	if (response.isSuccess() != null && !response.isSuccess()) {
+	    throw new CoinbaseException("Unknown error");
+	}
+
     }
 
 }
