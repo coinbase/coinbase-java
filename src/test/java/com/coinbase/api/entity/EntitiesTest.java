@@ -165,4 +165,31 @@ public class EntitiesTest {
 	assertEquals(DateTime.parse("2013-05-09T17:50:37-07:00"), a2.getCreatedAt());
     }
 
+    @Test
+    public void accounts() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/accounts.json");
+	Response r = mapper.readValue(in, Response.class);
+
+	List<Account> accounts = r.getAccounts();
+	assertEquals(2, accounts.size());
+
+	Account a1 = accounts.get(0);
+	assertEquals("536a541fa9393bb3c7000023", a1.getId());
+	assertEquals("My Wallet", a1.getName());
+	assertEquals(Money.parse("BTC 50"), a1.getBalance());
+	assertEquals(Money.parse("USD 500.12"), a1.getNativeBalance());
+	assertEquals(DateTime.parse("2014-05-07T08:41:19-07:00"), a1.getCreatedAt());
+	assertTrue(a1.isPrimary());
+	assertTrue(a1.isActive());
+	
+	Account a2 = accounts.get(1);
+	assertEquals("536a541fa9393bb3c7000034", a2.getId());
+	assertEquals("Savings", a2.getName());
+	assertEquals(Money.parse("BTC 0"), a2.getBalance());
+	assertEquals(Money.parse("USD 0"), a2.getNativeBalance());
+	assertEquals(DateTime.parse("2014-05-07T08:50:10-07:00"), a2.getCreatedAt());
+	assertFalse(a2.isPrimary());
+	assertTrue(a2.isActive());
+    }
+
 }

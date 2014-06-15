@@ -30,6 +30,11 @@ public interface Coinbase {
     public Response getAddresses();
     public Response getAddresses(int page);
 
+    public Response getAccounts();
+    public Response getAccounts(int page);
+    public Response getAccounts(int page, int limit);
+    public Response getAccounts(int page, int limit, boolean includeInactive);
+
     public Money getSpotPrice(CurrencyUnit currency);
     public Quote getBuyQuote(Money btcAmount);
     public Quote getSellQuote(Money btcAmount);

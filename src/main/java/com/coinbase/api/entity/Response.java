@@ -20,6 +20,15 @@ public class Response {
     private int _currentPage;
     private List<TransferNode> _transfers;
     private List<AddressNode> _addresses;
+    private List<Account> _accounts;
+
+    public List<Account> getAccounts() {
+        return _accounts;
+    }
+
+    public void setAccounts(List<Account> accounts) {
+        _accounts = accounts;
+    }
 
     public List<TransferNode> getTransfers() {
         return _transfers;

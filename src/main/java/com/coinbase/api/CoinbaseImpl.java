@@ -152,6 +152,29 @@ class CoinbaseImpl implements Coinbase {
 	return buyPriceTarget.request(MediaType.APPLICATION_JSON_TYPE).get(Quote.class);
     }
 
+    public Response getAccounts() {
+	return getAccounts(1, 25, false);
+    }
+
+    public Response getAccounts(int page) {
+	return getAccounts(page, 25, false);
+    }
+
+    public Response getAccounts(int page, int limit) {
+	return getAccounts(page, limit, false);
+    }
+
+    public Response getAccounts(int page, int limit, boolean includeInactive) {
+	WebTarget addressesTarget =
+		_authenticated_target
+		.path("accounts")
+		.queryParam("page", page)
+		.queryParam("limit", limit)
+		.queryParam("all_accounts", includeInactive);
+		
+	return get(addressesTarget);
+    }
+
     private static Response get(WebTarget target) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
     }
