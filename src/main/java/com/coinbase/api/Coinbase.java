@@ -35,6 +35,8 @@ public interface Coinbase {
     public Response getAccounts(int page, int limit);
     public Response getAccounts(int page, int limit, boolean includeInactive);
 
+    public Money getBalance(String accountId);
+
     public Money getSpotPrice(CurrencyUnit currency);
     public Quote getBuyQuote(Money btcAmount);
     public Quote getSellQuote(Money btcAmount);

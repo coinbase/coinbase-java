@@ -175,6 +175,11 @@ class CoinbaseImpl implements Coinbase {
 	return get(addressesTarget);
     }
 
+    public Money getBalance(String accountId) {
+	WebTarget balanceTarget = _authenticated_target.path("accounts/" + accountId + "/balance");
+	return balanceTarget.request(MediaType.APPLICATION_JSON_TYPE).get(Money.class);
+    }
+
     private static Response get(WebTarget target) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
     }
