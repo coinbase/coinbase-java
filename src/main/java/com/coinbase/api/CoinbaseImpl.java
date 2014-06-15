@@ -180,9 +180,14 @@ class CoinbaseImpl implements Coinbase {
 	return balanceTarget.request(MediaType.APPLICATION_JSON_TYPE).get(Money.class);
     }
 
-    public void setPrimary(String accountId) {
+    public void setPrimaryAccount(String accountId) {
 	WebTarget setPrimaryTarget = _authenticated_target.path("accounts/" + accountId + "/primary");
 	post(setPrimaryTarget, new Request());
+    }
+
+    public void deleteAccount(String accountId) {
+	WebTarget accountTarget = _authenticated_target.path("accounts/" + accountId);
+	delete(accountTarget);
     }
 
     private static Response get(WebTarget target) {

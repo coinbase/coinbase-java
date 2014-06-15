@@ -37,7 +37,8 @@ public interface Coinbase {
 
     public Money getBalance(String accountId);
 
-    public void setPrimary(String accountId);
+    public void setPrimaryAccount(String accountId);
+    public void deleteAccount(String accountId);
 
     public Money getSpotPrice(CurrencyUnit currency);
     public Quote getBuyQuote(Money btcAmount);
