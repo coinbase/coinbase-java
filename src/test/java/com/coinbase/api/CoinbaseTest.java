@@ -1,45 +1,135 @@
-package com.coinbase.api.entity;
+package com.coinbase.api;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.List;
 
-import org.joda.money.CurrencyUnit;
+import javax.ws.rs.client.Entity;
+
+import mockit.Capturing;
+import mockit.Cascading;
+import mockit.Mocked;
+import mockit.NonStrictExpectations;
+
+import org.glassfish.jersey.client.JerseyInvocation;
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.coinbase.api.CoinbaseSSL;
-import com.coinbase.api.ObjectMapperProvider;
-import com.coinbase.api.deserializer.MoneyDeserializer;
+import com.coinbase.api.entity.Account;
+import com.coinbase.api.entity.Address;
+import com.coinbase.api.entity.AddressNode;
+import com.coinbase.api.entity.Quote;
+import com.coinbase.api.entity.Response;
+import com.coinbase.api.entity.Transaction;
+import com.coinbase.api.entity.TransactionNode;
+import com.coinbase.api.entity.Transfer;
+import com.coinbase.api.entity.TransferNode;
+import com.coinbase.api.entity.User;
 import com.coinbase.api.exception.CoinbaseException;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 
-public class EntitiesTest {
+public class CoinbaseTest {
     
+    @Mocked(stubOutClassInitialization = true)
+    @Capturing
+    @Cascading
+    JerseyInvocation.Builder invoker;
+    
+    private Coinbase cb;
     private ObjectMapper mapper;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
+	cb = new CoinbaseBuilder().build();
 	mapper = ObjectMapperProvider.createDefaultMapper();
     }
+    
+    @Test(expected = CoinbaseException.class)
+    public void errorResponse() throws Exception {
+	final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/error.json");
+	final Response response = mapper.readValue(in, Response.class);
+	
+	new NonStrictExpectations() {{
+	    invoker.post((Entity) any, Response.class); times = 1; result = response;
+	}};
+	
+	cb.createAccount(new Account());
+    }
+    
 
+    @Test(expected = CoinbaseException.class)
+    public void errorsResponse() throws Exception {
+	final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/errors.json");
+	final Response response = mapper.readValue(in, Response.class);
+	
+	new NonStrictExpectations() {{
+	    invoker.post((Entity) any, Response.class); times = 1; result = response;
+	}};
+
+	cb.createAccount(new Account());
+    }
+
+    @Test(expected = CoinbaseException.class)
+    public void falseSuccessResponse() throws Exception {
+	final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/false_success.json");
+	final Response response = mapper.readValue(in, Response.class);
+	
+	new NonStrictExpectations() {{
+	    invoker.post((Entity) any, Response.class); times = 1; result = response;
+	}};
+
+	cb.createAccount(new Account());
+    }
+    
+    @Test
+    public void accounts() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/accounts.json");
+	final Response response = mapper.readValue(in, Response.class);
+	
+	new NonStrictExpectations() {{
+	    invoker.get(Response.class); times = 1; result = response;
+	}};
+
+	Response r = cb.getAccounts();
+	List<Account> accounts = r.getAccounts();
+	assertEquals(2, accounts.size());
+
+	Account a1 = accounts.get(0);
+	assertEquals("536a541fa9393bb3c7000023", a1.getId());
+	assertEquals("My Wallet", a1.getName());
+	assertEquals(Money.parse("BTC 50"), a1.getBalance());
+	assertEquals(Money.parse("USD 500.12"), a1.getNativeBalance());
+	assertEquals(DateTime.parse("2014-05-07T08:41:19-07:00"), a1.getCreatedAt());
+	assertTrue(a1.isPrimary());
+	assertTrue(a1.isActive());
+	
+	Account a2 = accounts.get(1);
+	assertEquals("536a541fa9393bb3c7000034", a2.getId());
+	assertEquals("Savings", a2.getName());
+	assertEquals(Money.parse("BTC 0"), a2.getBalance());
+	assertEquals(Money.parse("USD 0"), a2.getNativeBalance());
+	assertEquals(DateTime.parse("2014-05-07T08:50:10-07:00"), a2.getCreatedAt());
+	assertFalse(a2.isPrimary());
+	assertTrue(a2.isActive());
+    }
+    
     @Test
     public void users() throws Exception {
 	
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/users.json");
-	Response response = mapper.readValue(in, Response.class);
+	final Response response = mapper.readValue(in, Response.class);
 	
-	List<UserNode> userNodeList = response.getUsers();
-	assertEquals(1, userNodeList.size());
+	new NonStrictExpectations() {{
+	    invoker.get(Response.class); times = 1; result = response;
+	}};
 	
-	User user = userNodeList.get(0).getUser();
+	User user = cb.getUser();
 
 	assertEquals("512db383f8182bd24d000001", user.getId());
 	assertEquals("User One", user.getName());
@@ -58,9 +148,13 @@ public class EntitiesTest {
     public void transaction() throws Exception {
 	
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/transaction.json");
-	Response r = mapper.readValue(in, Response.class);
+	final Response response = mapper.readValue(in, Response.class);
 	
-	Transaction t = r.getTransaction();
+	new NonStrictExpectations() {{
+	    invoker.get(Response.class); times = 1; result = response;
+	}};
+	
+	Transaction t = cb.getTransaction("5018f833f8182b129c00002f");
 
 	assertEquals("5018f833f8182b129c00002f", t.getId());
 	assertEquals(DateTime.parse("2012-08-01T02:34:43-07:00"), t.getCreatedAt());
@@ -86,7 +180,13 @@ public class EntitiesTest {
     public void transactions() throws Exception {
 
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/transactions.json");
-	Response r = mapper.readValue(in, Response.class);
+	final Response response = mapper.readValue(in, Response.class);
+	
+	new NonStrictExpectations() {{
+	    invoker.get(Response.class); times = 1; result = response;
+	}};
+	
+	Response r = cb.getTransactions();
 
 	User current_user = r.getCurrentUser();
 	assertEquals("5011f33df8182b142400000e", current_user.getId());
@@ -112,7 +212,13 @@ public class EntitiesTest {
     @Test
     public void transfers() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/transfers.json");
-	Response r = mapper.readValue(in, Response.class);
+	final Response response = mapper.readValue(in, Response.class);
+	
+	new NonStrictExpectations() {{
+	    invoker.get(Response.class); times = 1; result = response;
+	}};
+	
+	Response r = cb.getTransfers();
 	
 	assertEquals(1, r.getTotalCount());
 	assertEquals(1, r.getNumPages());
@@ -137,7 +243,13 @@ public class EntitiesTest {
     @Test
     public void quote() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/quote.json");
-	Quote q = mapper.readValue(in, Quote.class);
+	final Quote quote = mapper.readValue(in, Quote.class);
+	
+	new NonStrictExpectations() {{
+	    invoker.get(Quote.class); times = 1; result = quote;
+	}};
+	
+	Quote q = cb.getBuyQuote(Money.parse("BTC 1"));
 	
 	assertEquals(Money.parse("USD 10.10"), q.getSubtotal());
 	assertEquals(2, q.getFees().size());
@@ -149,7 +261,13 @@ public class EntitiesTest {
     @Test
     public void addresses() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/addresses.json");
-	Response r = mapper.readValue(in, Response.class);
+	final Response response = mapper.readValue(in, Response.class);
+	
+	new NonStrictExpectations() {{
+	    invoker.get(Response.class); times = 1; result = response;
+	}};
+	
+	Response r = cb.getAddresses();
 
 	assertNull(r.isSuccess());
 
@@ -167,84 +285,6 @@ public class EntitiesTest {
 	assertEquals("http://localhost/callback", a2.getCallbackUrl());
 	assertEquals("My Label", a2.getLabel());
 	assertEquals(DateTime.parse("2013-05-09T17:50:37-07:00"), a2.getCreatedAt());
-    }
-
-    @Test
-    public void accounts() throws Exception {
-	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/accounts.json");
-	Response r = mapper.readValue(in, Response.class);
-
-	List<Account> accounts = r.getAccounts();
-	assertEquals(2, accounts.size());
-
-	Account a1 = accounts.get(0);
-	assertEquals("536a541fa9393bb3c7000023", a1.getId());
-	assertEquals("My Wallet", a1.getName());
-	assertEquals(Money.parse("BTC 50"), a1.getBalance());
-	assertEquals(Money.parse("USD 500.12"), a1.getNativeBalance());
-	assertEquals(DateTime.parse("2014-05-07T08:41:19-07:00"), a1.getCreatedAt());
-	assertTrue(a1.isPrimary());
-	assertTrue(a1.isActive());
-	
-	Account a2 = accounts.get(1);
-	assertEquals("536a541fa9393bb3c7000034", a2.getId());
-	assertEquals("Savings", a2.getName());
-	assertEquals(Money.parse("BTC 0"), a2.getBalance());
-	assertEquals(Money.parse("USD 0"), a2.getNativeBalance());
-	assertEquals(DateTime.parse("2014-05-07T08:50:10-07:00"), a2.getCreatedAt());
-	assertFalse(a2.isPrimary());
-	assertTrue(a2.isActive());
-    }
-
-    // TODO DI to make tests better
-
-    @Test(expected = CoinbaseException.class)
-    public void errorResponse() throws Exception {
-	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/error.json");
-	Response response = mapper.readValue(in, Response.class);
-	
-	assertEquals("Test Error", response.getErrors());
-	
-	if (response.hasErrors()) {
-	    throw new CoinbaseException(response.getErrors());
-	}
-
-	if (response.isSuccess() != null && !response.isSuccess()) {
-	    throw new CoinbaseException("Unknown error");
-	}
-
-    }
-
-    @Test(expected = CoinbaseException.class)
-    public void errorsResponse() throws Exception {
-	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/errors.json");
-	Response response = mapper.readValue(in, Response.class);
-	
-	assertEquals("Test Error 1, Test Error 2", response.getErrors());
-	
-	if (response.hasErrors()) {
-	    throw new CoinbaseException(response.getErrors());
-	}
-
-	if (response.isSuccess() != null && !response.isSuccess()) {
-	    throw new CoinbaseException("Unknown error");
-	}
-
-    }
-
-    @Test(expected = CoinbaseException.class)
-    public void falseSuccessResponse() throws Exception {
-	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/false_success.json");
-	Response response = mapper.readValue(in, Response.class);
-	
-	if (response.hasErrors()) {
-	    throw new CoinbaseException(response.getErrors());
-	}
-
-	if (response.isSuccess() != null && !response.isSuccess()) {
-	    throw new CoinbaseException("Unknown error");
-	}
-
     }
 
 }
