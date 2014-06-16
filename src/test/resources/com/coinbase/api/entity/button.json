@@ -1,0 +1,17 @@
+{
+  "success": true,
+  "button": {
+    "code": "93865b9cae83706ae59220c013bc0afd",
+    "type": "buy_now",
+    "style": "custom_large",
+    "text": "Pay With Bitcoin",
+    "name": "test",
+    "description": "Sample description",
+    "custom": "Order123",
+    "callback_url": "http://www.example.com/my_custom_button_callback",
+    "price": {
+      "cents": 123,
+      "currency_iso": "USD"
+    }
+  }
+}

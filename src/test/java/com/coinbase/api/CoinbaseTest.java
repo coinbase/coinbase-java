@@ -24,6 +24,7 @@ import org.junit.Test;
 import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.Address;
 import com.coinbase.api.entity.AddressNode;
+import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
@@ -286,5 +287,31 @@ public class CoinbaseTest {
 	assertEquals("My Label", a2.getLabel());
 	assertEquals(DateTime.parse("2013-05-09T17:50:37-07:00"), a2.getCreatedAt());
     }
+
+    @Test
+    public void button() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/button.json");
+	final Response response = mapper.readValue(in, Response.class);
+
+	new NonStrictExpectations() {{
+		invoker.post((Entity) any, Response.class);
+		times = 1;
+		result = response;
+	}};
+
+	Button buttonParams = new Button();
+	buttonParams.setPrice(Money.parse("USD 2"));
+	Button button = cb.createButton(buttonParams);
+
+	assertEquals(Money.parse("USD 1.23"), button.getPrice());
+	assertEquals("http://www.example.com/my_custom_button_callback", button.getCallbackUrl());
+	assertEquals("Order123", button.getCustom());
+	assertEquals("Sample description", button.getDescription());
+	assertEquals("test", button.getName());
+	assertEquals("Pay With Bitcoin", button.getText());
+	assertEquals(Button.Style.CUSTOM_LARGE, button.getStyle());
+	assertEquals(Button.Type.BUY_NOW, button.getType());
+	assertEquals("93865b9cae83706ae59220c013bc0afd", button.getCode());
+     }
 
 }

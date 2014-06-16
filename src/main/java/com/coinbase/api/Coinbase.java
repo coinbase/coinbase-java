@@ -4,6 +4,7 @@ import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 
 import com.coinbase.api.entity.Account;
+import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
@@ -56,4 +57,5 @@ public interface Coinbase {
     public Quote getBuyQuote(Money btcAmount);
     public Quote getSellQuote(Money btcAmount);
 
+    public Button createButton(Button button) throws CoinbaseException;
 }

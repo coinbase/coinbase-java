@@ -31,7 +31,7 @@ public class Transfer {
 	    return null;
 	}
     }
-    
+
     public enum Status {
 	PENDING("Pending"),
 	COMPLETE("Complete"),

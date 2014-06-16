@@ -14,6 +14,7 @@ import org.joda.money.Money;
 
 import com.coinbase.api.auth.HmacClientFilter;
 import com.coinbase.api.entity.Account;
+import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Request;
 import com.coinbase.api.entity.Response;
@@ -75,11 +76,11 @@ class CoinbaseImpl implements Coinbase {
     
     public Transaction requestMoney(Transaction transaction) throws CoinbaseException {
 
-	WebTarget requestMoneyTarget = _account_specific_target.path("transactions/request_money");
+	WebTarget requestMoneyTarget = _authenticated_target.path("transactions/request_money");
 
 	serializeAmount(transaction);
 	
-	Request request = new Request();
+	Request request = newRequest();
 	request.setTransaction(transaction);
 
 	Response response = post(requestMoneyTarget, request);
@@ -88,14 +89,14 @@ class CoinbaseImpl implements Coinbase {
     }
 
     public Transaction sendMoney(Transaction transaction) throws CoinbaseException {
-	WebTarget requestMoneyTarget = _account_specific_target.path("transactions/send_money");
+	WebTarget sendMoneyTarget = _authenticated_target.path("transactions/send_money");
 	
 	serializeAmount(transaction);
 	
-	Request request = new Request();
+	Request request = newRequest();
 	request.setTransaction(transaction);
 	
-	Response response = post(requestMoneyTarget, request);
+	Response response = post(sendMoneyTarget, request);
 	return response.getTransaction();
     }
 
@@ -109,18 +110,18 @@ class CoinbaseImpl implements Coinbase {
     }
 
     public void resendRequest(String id) throws CoinbaseException {
-	WebTarget resendRequestTarget = _account_specific_target.path("transactions/" + id + "/resend_request");
-	put(resendRequestTarget, new Request());
+	WebTarget resendRequestTarget = _authenticated_target.path("transactions/" + id + "/resend_request");
+	put(resendRequestTarget, newRequest());
     }
 
     public void deleteRequest(String id) throws CoinbaseException {
-	WebTarget deleteRequestTarget = _account_specific_target.path("transactions/" + id + "/cancel_request");
+	WebTarget deleteRequestTarget = _authenticated_target.path("transactions/" + id + "/cancel_request");
 	delete(deleteRequestTarget);
     }
 
     public Transaction completeRequest(String id) throws CoinbaseException {
-	WebTarget completeRequestTarget = _account_specific_target.path("transactions/" + id + "/complete_request");
-	Response response = put(completeRequestTarget, new Request());
+	WebTarget completeRequestTarget = _authenticated_target.path("transactions/" + id + "/complete_request");
+	Response response = put(completeRequestTarget, newRequest());
 	return response.getTransaction();
     }
 
@@ -242,6 +243,16 @@ class CoinbaseImpl implements Coinbase {
 	return response.getAccount();
     }
 
+    // TODO test that account_specific_target still works here
+    public Button createButton(Button button) throws CoinbaseException {
+	WebTarget buttonsTarget = _authenticated_target.path("buttons");
+	
+	Request request = newRequest();
+	request.setButton(serializePrice(button));
+	
+	return post(buttonsTarget, request).getButton();
+    }
+
     private static Response get(WebTarget target) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
     }
@@ -260,13 +271,34 @@ class CoinbaseImpl implements Coinbase {
 	return handleErrors(target.request(MediaType.APPLICATION_JSON_TYPE).delete(Response.class));
     }
 
-    private static void serializeAmount(Transaction transaction) {
+    private static Transaction serializeAmount(Transaction transaction) throws CoinbaseException {
+	if (transaction.getAmount() == null) {
+	    throw new CoinbaseException("Amount is a required field");
+	}
+	
 	// Massage amount
 	Money amount = transaction.getAmount();
 	transaction.setAmount(null);
 
 	transaction.setAmountString(amount.getAmount().toPlainString());
 	transaction.setAmountCurrencyIso(amount.getCurrencyUnit().getCurrencyCode());
+	
+	return transaction;
+    }
+
+    private static Button serializePrice(Button button) throws CoinbaseException {
+	if (button.getPrice() == null) {
+	    throw new CoinbaseException("Price is a required field");
+	}
+	
+	// Massage amount
+	Money price = button.getPrice();
+	button.setPrice(null);
+
+	button.setPriceString(price.getAmount().toPlainString());
+	button.setPriceCurrencyIso(price.getCurrencyUnit().getCurrencyCode());
+	
+	return button;
     }
 
     private static Response handleErrors(Response response) throws CoinbaseException {
@@ -279,6 +311,14 @@ class CoinbaseImpl implements Coinbase {
 	}
 
 	return response;
+    }
+
+    private Request newRequest() {
+	Request request = new Request();
+	if (_account_id != null) {
+	    request.setAccountId(_account_id);
+	}
+	return request;
     }
 
 }

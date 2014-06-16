@@ -26,6 +26,15 @@ public class Response {
     private List<AddressNode> _addresses;
     private List<Account> _accounts;
     private Account _account;
+    private Button _button;
+
+    public Button getButton() {
+        return _button;
+    }
+
+    public void setButton(Button button) {
+        _button = button;
+    }
 
     public void setError(String error) {
         _error = error;
