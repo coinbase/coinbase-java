@@ -25,6 +25,7 @@ import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.Address;
 import com.coinbase.api.entity.AddressNode;
 import com.coinbase.api.entity.Button;
+import com.coinbase.api.entity.Contact;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
@@ -312,6 +313,26 @@ public class CoinbaseTest {
 	assertEquals(Button.Style.CUSTOM_LARGE, button.getStyle());
 	assertEquals(Button.Type.BUY_NOW, button.getType());
 	assertEquals("93865b9cae83706ae59220c013bc0afd", button.getCode());
+     }
+
+    @Test
+    public void contacts() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/contacts.json");
+	final Response response = mapper.readValue(in, Response.class);
+
+	new NonStrictExpectations() {{
+		invoker.get(Response.class);
+		times = 1;
+		result = response;
+	}};
+
+	Response r = cb.getContacts();
+
+	Contact c1 = r.getContacts().get(0).getContact();
+	Contact c2 = r.getContacts().get(1).getContact();
+
+	assertEquals("user1@example.com", c1.getEmail());
+	assertEquals("user2@example.com", c2.getEmail());
      }
 
 }

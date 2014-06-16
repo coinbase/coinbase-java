@@ -253,6 +253,33 @@ class CoinbaseImpl implements Coinbase {
 	return post(buttonsTarget, request).getButton();
     }
 
+    public Response getContacts(int page) {
+	WebTarget contactsTarget =
+		_authenticated_target
+		.path("contacts")
+		.queryParam("page", page);
+	
+	return get(contactsTarget);
+    }
+
+    public Response getContacts() {
+	return getContacts(1);
+    }
+
+    public Response getContacts(String query, int page) {
+	WebTarget contactsTarget =
+		_authenticated_target
+		.path("contacts")
+		.queryParam("query", query)
+		.queryParam("page", page);
+	
+	return get(contactsTarget);
+    }
+
+    public Response getContacts(String query) {
+	return getContacts(query, 1);
+    }
+
     private static Response get(WebTarget target) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
     }

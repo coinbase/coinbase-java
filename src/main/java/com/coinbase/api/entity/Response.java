@@ -27,6 +27,7 @@ public class Response {
     private List<Account> _accounts;
     private Account _account;
     private Button _button;
+    private List<ContactNode> _contacts;
 
     public Button getButton() {
         return _button;
@@ -171,6 +172,14 @@ public class Response {
 
     public boolean hasErrors() {
 	return _error != null || _errors != null;
+    }
+
+    public List<ContactNode> getContacts() {
+	return _contacts;
+    }
+
+    public void setContacts(List<ContactNode> contacts) {
+	_contacts = contacts;
     }
 
 }

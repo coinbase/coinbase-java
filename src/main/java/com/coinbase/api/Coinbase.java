@@ -39,6 +39,12 @@ public interface Coinbase {
     public Response getAccounts(int page, int limit);
     public Response getAccounts(int page, int limit, boolean includeInactive);
 
+    // TODO re-introduce limit param when BUGS-263 is fixed
+    public Response getContacts();
+    public Response getContacts(int page);
+    public Response getContacts(String query);
+    public Response getContacts(String query, int page);
+
     public Money getBalance() throws CoinbaseException;
     public Money getBalance(String accountId);
 

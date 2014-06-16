@@ -1,0 +1,17 @@
+{
+  "contacts": [
+    {
+      "contact": {
+        "email": "user1@example.com"
+      }
+    },
+    {
+      "contact": {
+        "email": "user2@example.com"
+      }
+    }
+  ],
+  "total_count": 2,
+  "num_pages": 1,
+  "current_page": 1
+}
