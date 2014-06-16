@@ -348,7 +348,7 @@ public class CoinbaseTest {
 	    }
 	};
 
-	Transfer t = cb.sell(Money.parse("BTC 0.01"));
+	Transfer t = cb.sell(Money.parse("BTC 1.00"));
 	
 	assertEquals(Money.parse("USD 13.21"), t.getTotal());
 	assertEquals(Money.parse("USD 13.50"), t.getSubtotal());
@@ -358,6 +358,31 @@ public class CoinbaseTest {
 	assertEquals(Money.parse("USD 0.14"), t.getFees().get("coinbase"));
 	assertEquals(Money.parse("USD 0.15"), t.getFees().get("bank"));
 	assertEquals("RD2OC8AL", t.getCode());
+    }
+
+    @Test
+    public void buy() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/new_buy.json");
+	final Response response = mapper.readValue(in, Response.class);
+
+	new NonStrictExpectations() {
+	    {
+		invoker.post((Entity) any, Response.class);
+		times = 1;
+		result = response;
+	    }
+	};
+
+	Transfer t = cb.buy(Money.parse("BTC 1.00"));
+	
+	assertEquals(Money.parse("USD 13.84"), t.getTotal());
+	assertEquals(Money.parse("USD 13.55"), t.getSubtotal());
+	assertEquals(Money.parse("BTC 1"), t.getBtc());
+	assertEquals(Transfer.Type.BUY, t.getType());
+	assertEquals(Transfer.Status.CREATED, t.getStatus());
+	assertEquals(Money.parse("USD 0.14"), t.getFees().get("coinbase"));
+	assertEquals(Money.parse("USD 0.15"), t.getFees().get("bank"));
+	assertEquals("6H7GYLXZ", t.getCode());
     }
 
 }

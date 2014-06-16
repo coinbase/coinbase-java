@@ -314,6 +314,39 @@ class CoinbaseImpl implements Coinbase {
 	return post(sellTarget, request).getTransfer();
     }
 
+    public Transfer buy(Money amount) throws CoinbaseException {
+	if (!amount.getCurrencyUnit().getCode().equals("BTC")) {
+	    throw new CoinbaseException(
+		    "Cannot buy " + amount.getCurrencyUnit().getCode()
+		    + " Only BTC amounts are supported for buys"
+		    );
+	}
+	
+	WebTarget buyTarget = _authenticated_target.path("buys");
+	
+	Request request = newRequest();
+	request.setQty(amount.getAmount().doubleValue());
+	
+	return post(buyTarget, request).getTransfer();
+    }
+
+    public Transfer buy(Money amount, String paymentMethodId) throws CoinbaseException {
+	if (!amount.getCurrencyUnit().getCode().equals("BTC")) {
+	    throw new CoinbaseException(
+		    "Cannot buy " + amount.getCurrencyUnit().getCode()
+		    + " Only BTC amounts are supported for buys"
+		    );
+	}
+	
+	WebTarget buyTarget = _authenticated_target.path("buys");
+	
+	Request request = newRequest();
+	request.setQty(amount.getAmount().doubleValue());
+	request.setPaymentMethodId(paymentMethodId);
+	
+	return post(buyTarget, request).getTransfer();
+    }
+
     private static Response get(WebTarget target) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
     }

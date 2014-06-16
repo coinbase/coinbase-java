@@ -68,4 +68,7 @@ public interface Coinbase {
 
     public Transfer sell(Money amount) throws CoinbaseException;
     public Transfer sell(Money amount, String paymentMethodId) throws CoinbaseException;
+
+    public Transfer buy(Money amount) throws CoinbaseException;
+    public Transfer buy(Money amount, String paymentMethodId) throws CoinbaseException;
 }
