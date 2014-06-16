@@ -19,6 +19,7 @@ import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Request;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
+import com.coinbase.api.entity.Transfer;
 import com.coinbase.api.entity.User;
 import com.coinbase.api.exception.CoinbaseException;
 import com.coinbase.api.exception.UnknownAccount;
@@ -278,6 +279,39 @@ class CoinbaseImpl implements Coinbase {
 
     public Response getContacts(String query) {
 	return getContacts(query, 1);
+    }
+
+    public Transfer sell(Money amount) throws CoinbaseException {
+	if (!amount.getCurrencyUnit().getCode().equals("BTC")) {
+	    throw new CoinbaseException(
+		    "Cannot sell " + amount.getCurrencyUnit().getCode()
+		    + " Only BTC amounts are supported for sells"
+		    );
+	}
+	
+	WebTarget sellTarget = _authenticated_target.path("sells");
+	
+	Request request = newRequest();
+	request.setQty(amount.getAmount().doubleValue());
+	
+	return post(sellTarget, request).getTransfer();
+    }
+
+    public Transfer sell(Money amount, String paymentMethodId) throws CoinbaseException {
+	if (!amount.getCurrencyUnit().getCode().equals("BTC")) {
+	    throw new CoinbaseException(
+		    "Cannot sell " + amount.getCurrencyUnit().getCode()
+		    + " Only BTC amounts are supported for sells"
+		    );
+	}
+	
+	WebTarget sellTarget = _authenticated_target.path("sells");
+	
+	Request request = newRequest();
+	request.setQty(amount.getAmount().doubleValue());
+	request.setPaymentMethodId(paymentMethodId);
+	
+	return post(sellTarget, request).getTransfer();
     }
 
     private static Response get(WebTarget target) {

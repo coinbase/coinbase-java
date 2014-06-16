@@ -8,6 +8,7 @@ import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
+import com.coinbase.api.entity.Transfer;
 import com.coinbase.api.entity.User;
 import com.coinbase.api.exception.CoinbaseException;
 import com.coinbase.api.exception.UnknownAccount;
@@ -64,4 +65,7 @@ public interface Coinbase {
     public Quote getSellQuote(Money btcAmount);
 
     public Button createButton(Button button) throws CoinbaseException;
+
+    public Transfer sell(Money amount) throws CoinbaseException;
+    public Transfer sell(Money amount, String paymentMethodId) throws CoinbaseException;
 }

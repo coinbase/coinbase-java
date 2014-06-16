@@ -7,6 +7,24 @@ public class Request {
     private Transaction _transaction;
     private Account _account;
     private Button _button;
+    private Double _qty;
+    private String _paymentMethodId;
+
+    public String getPaymentMethodId() {
+        return _paymentMethodId;
+    }
+
+    public void setPaymentMethodId(String paymentMethodId) {
+        _paymentMethodId = paymentMethodId;
+    }
+
+    public Double getQty() {
+        return _qty;
+    }
+
+    public void setQty(Double qty) {
+        _qty = qty;
+    }
 
     public String getAccountId() {
         return _accountId;

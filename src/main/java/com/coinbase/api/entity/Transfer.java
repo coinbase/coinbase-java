@@ -33,6 +33,7 @@ public class Transfer {
     }
 
     public enum Status {
+	CREATED("created"),
 	PENDING("Pending"),
 	COMPLETE("Complete"),
 	CANCELED("Canceled"),
