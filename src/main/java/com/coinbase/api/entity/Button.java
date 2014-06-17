@@ -104,6 +104,12 @@ public class Button {
     private Money _price;
     private String _code;
     
+    public String getId() {
+        return _code;
+    }
+    public void setId(String id) {
+        _code = id;
+    }
     public String getCode() {
         return _code;
     }

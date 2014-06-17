@@ -29,6 +29,7 @@ public class Response {
     private Button _button;
     private List<ContactNode> _contacts;
     private Transfer _transfer;
+    private List<OrderNode> _orders;
 
     public Transfer getTransfer() {
         return _transfer;
@@ -189,6 +190,14 @@ public class Response {
 
     public void setContacts(List<ContactNode> contacts) {
 	_contacts = contacts;
+    }
+
+    public List<OrderNode> getOrders() {
+	return _orders;
+    }
+
+    public void setOrders(List<OrderNode> orders) {
+	_orders = orders;
     }
 
 }

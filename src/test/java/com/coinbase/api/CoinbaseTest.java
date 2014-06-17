@@ -26,6 +26,7 @@ import com.coinbase.api.entity.Address;
 import com.coinbase.api.entity.AddressNode;
 import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.Contact;
+import com.coinbase.api.entity.Order;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
@@ -383,6 +384,42 @@ public class CoinbaseTest {
 	assertEquals(Money.parse("USD 0.14"), t.getFees().get("coinbase"));
 	assertEquals(Money.parse("USD 0.15"), t.getFees().get("bank"));
 	assertEquals("6H7GYLXZ", t.getCode());
+    }
+
+    @Test
+    public void orders() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/orders.json");
+	final Response response = mapper.readValue(in, Response.class);
+
+	new NonStrictExpectations() {
+	    {
+		invoker.get(Response.class);
+		times = 1;
+		result = response;
+	    }
+	};
+
+	Response r = cb.getOrders();
+	Order order = r.getOrders().get(0).getOrder();
+	Transaction t = order.getTransaction();
+	Button b = order.getButton();
+
+	assertEquals("513eb768f12a9cf27400000b", t.getId());
+	assertEquals("4cc5eec20cd692f3cdb7fc264a0e1d78b9a7e3d7b862dec1e39cf7e37ababc14", t.getHash());
+	assertEquals(Integer.valueOf(1), t.getConfirmations());
+
+	assertEquals(Button.Type.BUY_NOW, b.getType());
+	assertEquals("Order #1234", b.getName());
+	assertEquals("order description", b.getDescription());
+	assertEquals("eec6d08e9e215195a471eae432a49fc7", b.getId());
+
+	assertEquals("mgrmKftH5CeuFBU3THLWuTNKaZoCGJU5jQ", order.getReceiveAddress());
+	assertEquals("custom_123", order.getCustom());
+	assertEquals(Money.parse("USD 30"), order.getTotalNative());
+	assertEquals(Money.parse("BTC 1"), order.getTotalBtc());
+	assertEquals(Order.Status.COMPLETED, order.getStatus());
+	assertEquals(DateTime.parse("2013-03-11T22:04:37-07:00"), order.getCreatedAt());
+	assertEquals("A7C52JQT", order.getId());
     }
 
 }

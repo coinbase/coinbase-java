@@ -28,6 +28,17 @@ public class Transaction {
     // Send Money
     private String _to;
 
+    // Order
+    private Integer _confirmations;
+
+    public Integer getConfirmations() {
+        return _confirmations;
+    }
+
+    public void setConfirmations(Integer confirmations) {
+        _confirmations = confirmations;
+    }
+
     public String getTo() {
         return _to;
     }
@@ -84,7 +95,15 @@ public class Transaction {
     public void setHsh(String hsh) {
         _hsh = hsh;
     }
+
+    public String getHash() {
+        return _hsh;
+    }
     
+    public void setHash(String hash) {
+        _hsh = hash;
+    }
+
     public String getNotes() {
         return _notes;
     }

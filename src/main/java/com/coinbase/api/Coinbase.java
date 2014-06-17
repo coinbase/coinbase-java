@@ -26,6 +26,9 @@ public interface Coinbase {
     public Transaction completeRequest(String transactionId) throws CoinbaseException;
     public Transaction sendMoney(Transaction transaction) throws CoinbaseException;
 
+    public Response getOrders();
+    public Response getOrders(int page);
+
     public Response getTransactions();
     public Response getTransactions(int page);
 

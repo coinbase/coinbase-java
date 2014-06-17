@@ -101,6 +101,15 @@ class CoinbaseImpl implements Coinbase {
 	return response.getTransaction();
     }
 
+    public Response getOrders(int page) {
+	WebTarget ordersTarget = _account_specific_target.path("orders").queryParam("page", page);
+	return get(ordersTarget);
+    }
+
+    public Response getOrders() {
+	return getOrders(1);
+    }
+
     public Response getTransactions(int page) {
 	WebTarget transactionsTarget = _account_specific_target.path("transactions").queryParam("page", page);
 	return get(transactionsTarget);
