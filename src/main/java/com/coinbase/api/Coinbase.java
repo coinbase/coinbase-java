@@ -77,4 +77,6 @@ public interface Coinbase {
 
     public Transfer buy(Money amount) throws CoinbaseException;
     public Transfer buy(Money amount, String paymentMethodId) throws CoinbaseException;
+
+    public Response getPaymentMethods();
 }

@@ -9,7 +9,7 @@ import com.coinbase.api.entity.UserNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class Response {
-    
+
     private Boolean _success;
     private String _error;
     private String _errors;
@@ -31,6 +31,9 @@ public class Response {
     private Transfer _transfer;
     private List<OrderNode> _orders;
     private Order _order;
+    private String _defaultBuy;
+    private String _defaultSell;
+    private List<PaymentMethodNode> _paymentMethods;
 
     public Order getOrder() {
         return _order;
@@ -207,6 +210,30 @@ public class Response {
 
     public void setOrders(List<OrderNode> orders) {
 	_orders = orders;
+    }
+
+    public String getDefaultBuy() {
+        return _defaultBuy;
+    }
+
+    public void setDefaultBuy(String defaultBuy) {
+        _defaultBuy = defaultBuy;
+    }
+
+    public String getDefaultSell() {
+        return _defaultSell;
+    }
+
+    public void setDefaultSell(String defaultSell) {
+        _defaultSell = defaultSell;
+    }
+
+    public List<PaymentMethodNode> getPaymentMethods() {
+        return _paymentMethods;
+    }
+
+    public void setPaymentMethods(List<PaymentMethodNode> paymentMethods) {
+        _paymentMethods = paymentMethods;
     }
 
 }

@@ -371,6 +371,11 @@ class CoinbaseImpl implements Coinbase {
 	return post(buyTarget, request).getTransfer();
     }
 
+    public Response getPaymentMethods() {
+	WebTarget paymentMethodsTarget = _authenticated_target.path("payment_methods");
+	return get(paymentMethodsTarget);
+    }
+
     private static Response get(WebTarget target) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
     }

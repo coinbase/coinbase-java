@@ -27,6 +27,7 @@ import com.coinbase.api.entity.AddressNode;
 import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.Contact;
 import com.coinbase.api.entity.Order;
+import com.coinbase.api.entity.PaymentMethod;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
@@ -443,5 +444,32 @@ public class CoinbaseTest {
 	assertEquals(Money.parse("BTC 0.123"), order.getTotalBtc());
 	assertEquals(Button.Type.BUY_NOW, button.getType());
 	assertEquals("1741b3be1eb5dc50625c48851a94ae13", button.getId());
+    }
+
+    @Test
+    public void getPaymentMethods() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/payment_methods.json");
+	final Response response = mapper.readValue(in, Response.class);
+
+	new NonStrictExpectations() {{
+		invoker.get(Response.class);
+		times = 1;
+		result = response;
+	}};
+	
+	Response r = cb.getPaymentMethods();
+	assertEquals("530eb5b217cb34e07a000011", r.getDefaultBuy());
+	assertEquals("530eb5b217cb34e07a000011", r.getDefaultSell());
+	
+	PaymentMethod p1 = r.getPaymentMethods().get(0).getPaymentMethod();
+	PaymentMethod p2 = r.getPaymentMethods().get(1).getPaymentMethod();
+	
+	assertEquals("530eb5b217cb34e07a000011", p1.getId());
+	assertEquals("US Bank ****4567", p1.getName());
+	assertTrue(p1.canBuy());
+	assertTrue(p1.canSell());
+	
+	assertFalse(p2.canBuy());
+	assertFalse(p2.canSell());
     }
 }
