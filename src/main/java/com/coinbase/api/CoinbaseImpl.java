@@ -75,7 +75,12 @@ class CoinbaseImpl implements Coinbase {
 	Response response = get(txTarget);
 	return response.getTransaction();
     }
-    
+
+    public Order getOrder(String idOrCustom) {
+	WebTarget orderTarget = _account_specific_target.path("orders/" + idOrCustom);
+	return get(orderTarget).getOrder();
+    }
+
     public Transaction requestMoney(Transaction transaction) throws CoinbaseException {
 
 	WebTarget requestMoneyTarget = _authenticated_target.path("transactions/request_money");
