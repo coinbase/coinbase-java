@@ -14,14 +14,27 @@ import org.joda.money.Money;
 
 import com.coinbase.api.auth.HmacClientFilter;
 import com.coinbase.api.entity.Account;
+import com.coinbase.api.entity.AccountResponse;
+import com.coinbase.api.entity.AccountsResponse;
+import com.coinbase.api.entity.AddressesResponse;
 import com.coinbase.api.entity.Button;
+import com.coinbase.api.entity.ButtonResponse;
+import com.coinbase.api.entity.ContactsResponse;
 import com.coinbase.api.entity.Order;
+import com.coinbase.api.entity.OrderResponse;
+import com.coinbase.api.entity.OrdersResponse;
+import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Request;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
+import com.coinbase.api.entity.TransactionResponse;
+import com.coinbase.api.entity.TransactionsResponse;
 import com.coinbase.api.entity.Transfer;
+import com.coinbase.api.entity.TransferResponse;
+import com.coinbase.api.entity.TransfersResponse;
 import com.coinbase.api.entity.User;
+import com.coinbase.api.entity.UsersResponse;
 import com.coinbase.api.exception.CoinbaseException;
 import com.coinbase.api.exception.UnknownAccount;
 
@@ -66,19 +79,17 @@ class CoinbaseImpl implements Coinbase {
 
     public User getUser() {
 	WebTarget usersTarget = _base_target.path("users");
-	Response response = get(usersTarget);
-	return response.getUsers().get(0).getUser();
+	return get(usersTarget, UsersResponse.class).getUsers().get(0).getUser();
     }
-    
+
     public Transaction getTransaction(String id) {
 	WebTarget txTarget = _account_specific_target.path("transactions/" + id);
-	Response response = get(txTarget);
-	return response.getTransaction();
+	return get(txTarget, TransactionResponse.class).getTransaction();
     }
 
     public Order getOrder(String idOrCustom) {
 	WebTarget orderTarget = _account_specific_target.path("orders/" + idOrCustom);
-	return get(orderTarget).getOrder();
+	return get(orderTarget, OrderResponse.class).getOrder();
     }
 
     public Transaction requestMoney(Transaction transaction) throws CoinbaseException {
@@ -90,9 +101,7 @@ class CoinbaseImpl implements Coinbase {
 	Request request = newRequest();
 	request.setTransaction(transaction);
 
-	Response response = post(requestMoneyTarget, request);
-	return response.getTransaction();
-
+	return post(requestMoneyTarget, request, TransactionResponse.class).getTransaction();
     }
 
     public Transaction sendMoney(Transaction transaction) throws CoinbaseException {
@@ -103,59 +112,57 @@ class CoinbaseImpl implements Coinbase {
 	Request request = newRequest();
 	request.setTransaction(transaction);
 	
-	Response response = post(sendMoneyTarget, request);
-	return response.getTransaction();
+	return post(sendMoneyTarget, request, TransactionResponse.class).getTransaction();
     }
 
-    public Response getOrders(int page) {
+    public OrdersResponse getOrders(int page) {
 	WebTarget ordersTarget = _account_specific_target.path("orders").queryParam("page", page);
-	return get(ordersTarget);
+	return get(ordersTarget, OrdersResponse.class);
     }
 
-    public Response getOrders() {
+    public OrdersResponse getOrders() {
 	return getOrders(1);
     }
 
-    public Response getTransactions(int page) {
+    public TransactionsResponse getTransactions(int page) {
 	WebTarget transactionsTarget = _account_specific_target.path("transactions").queryParam("page", page);
-	return get(transactionsTarget);
+	return get(transactionsTarget, TransactionsResponse.class);
     }
 
-    public Response getTransactions() {
+    public TransactionsResponse getTransactions() {
 	return getTransactions(1);
     }
 
     public void resendRequest(String id) throws CoinbaseException {
 	WebTarget resendRequestTarget = _authenticated_target.path("transactions/" + id + "/resend_request");
-	put(resendRequestTarget, newRequest());
+	put(resendRequestTarget, newRequest(), Response.class);
     }
 
     public void deleteRequest(String id) throws CoinbaseException {
 	WebTarget deleteRequestTarget = _authenticated_target.path("transactions/" + id + "/cancel_request");
-	delete(deleteRequestTarget);
+	delete(deleteRequestTarget, Response.class);
     }
 
     public Transaction completeRequest(String id) throws CoinbaseException {
 	WebTarget completeRequestTarget = _authenticated_target.path("transactions/" + id + "/complete_request");
-	Response response = put(completeRequestTarget, newRequest());
-	return response.getTransaction();
+	return put(completeRequestTarget, newRequest(), TransactionResponse.class).getTransaction();
     }
 
-    public Response getTransfers(int page) {
+    public TransfersResponse getTransfers(int page) {
 	WebTarget transfersTarget = _account_specific_target.path("transfers").queryParam("page", page);
-	return get(transfersTarget);
+	return get(transfersTarget, TransfersResponse.class);
     }
 
-    public Response getTransfers() {
+    public TransfersResponse getTransfers() {
 	return getTransfers(1);
     }
 
-    public Response getAddresses(int page) {
+    public AddressesResponse getAddresses(int page) {
 	WebTarget addressesTarget = _account_specific_target.path("addresses").queryParam("page", page);
-	return get(addressesTarget);
+	return get(addressesTarget, AddressesResponse.class);
     }
 
-    public Response getAddresses() {
+    public AddressesResponse getAddresses() {
 	return getAddresses(1);
     }
 
@@ -174,19 +181,19 @@ class CoinbaseImpl implements Coinbase {
 	return buyPriceTarget.request(MediaType.APPLICATION_JSON_TYPE).get(Quote.class);
     }
 
-    public Response getAccounts() {
+    public AccountsResponse getAccounts() {
 	return getAccounts(1, 25, false);
     }
 
-    public Response getAccounts(int page) {
+    public AccountsResponse getAccounts(int page) {
 	return getAccounts(page, 25, false);
     }
 
-    public Response getAccounts(int page, int limit) {
+    public AccountsResponse getAccounts(int page, int limit) {
 	return getAccounts(page, limit, false);
     }
 
-    public Response getAccounts(int page, int limit, boolean includeInactive) {
+    public AccountsResponse getAccounts(int page, int limit, boolean includeInactive) {
 	WebTarget addressesTarget =
 		_authenticated_target
 		.path("accounts")
@@ -194,7 +201,7 @@ class CoinbaseImpl implements Coinbase {
 		.queryParam("limit", limit)
 		.queryParam("all_accounts", includeInactive);
 		
-	return get(addressesTarget);
+	return get(addressesTarget, AccountsResponse.class);
     }
 
     public Money getBalance(String accountId) {
@@ -204,12 +211,12 @@ class CoinbaseImpl implements Coinbase {
 
     public void setPrimaryAccount(String accountId) throws CoinbaseException {
 	WebTarget setPrimaryTarget = _authenticated_target.path("accounts/" + accountId + "/primary");
-	post(setPrimaryTarget, new Request());
+	post(setPrimaryTarget, new Request(), Response.class);
     }
 
     public void deleteAccount(String accountId) throws CoinbaseException {
 	WebTarget accountTarget = _authenticated_target.path("accounts/" + accountId);
-	delete(accountTarget);
+	delete(accountTarget, Response.class);
     }
 
     public void updateAccount(String accountId, Account account) throws CoinbaseException {
@@ -217,7 +224,7 @@ class CoinbaseImpl implements Coinbase {
 	
 	Request request = new Request();
 	request.setAccount(account);
-	put(accountTarget, request);
+	put(accountTarget, request, Response.class);
     }
 
     public Money getBalance() throws CoinbaseException {
@@ -254,9 +261,7 @@ class CoinbaseImpl implements Coinbase {
 
     public Account createAccount(Account account) throws CoinbaseException {
 	WebTarget accountsTarget = _authenticated_target.path("accounts");
-	Response response = post(accountsTarget, account);
-
-	return response.getAccount();
+	return post(accountsTarget, account, AccountResponse.class).getAccount();
     }
 
     // TODO test that account_specific_target still works here
@@ -266,7 +271,7 @@ class CoinbaseImpl implements Coinbase {
 	Request request = newRequest();
 	request.setButton(serializePrice(button));
 	
-	return post(buttonsTarget, request).getButton();
+	return post(buttonsTarget, request, ButtonResponse.class).getButton();
     }
 
     public Order createOrder(Button button) throws CoinbaseException {
@@ -275,33 +280,33 @@ class CoinbaseImpl implements Coinbase {
 	Request request = newRequest();
 	request.setButton(serializePrice(button));
 	
-	return post(ordersTarget, request).getOrder();
+	return post(ordersTarget, request, OrderResponse.class).getOrder();
     }
 
-    public Response getContacts(int page) {
+    public ContactsResponse getContacts(int page) {
 	WebTarget contactsTarget =
 		_authenticated_target
 		.path("contacts")
 		.queryParam("page", page);
 	
-	return get(contactsTarget);
+	return get(contactsTarget, ContactsResponse.class);
     }
 
-    public Response getContacts() {
+    public ContactsResponse getContacts() {
 	return getContacts(1);
     }
 
-    public Response getContacts(String query, int page) {
+    public ContactsResponse getContacts(String query, int page) {
 	WebTarget contactsTarget =
 		_authenticated_target
 		.path("contacts")
 		.queryParam("query", query)
 		.queryParam("page", page);
 	
-	return get(contactsTarget);
+	return get(contactsTarget, ContactsResponse.class);
     }
 
-    public Response getContacts(String query) {
+    public ContactsResponse getContacts(String query) {
 	return getContacts(query, 1);
     }
 
@@ -318,7 +323,7 @@ class CoinbaseImpl implements Coinbase {
 	Request request = newRequest();
 	request.setQty(amount.getAmount().doubleValue());
 	
-	return post(sellTarget, request).getTransfer();
+	return post(sellTarget, request, TransferResponse.class).getTransfer();
     }
 
     public Transfer sell(Money amount, String paymentMethodId) throws CoinbaseException {
@@ -335,7 +340,7 @@ class CoinbaseImpl implements Coinbase {
 	request.setQty(amount.getAmount().doubleValue());
 	request.setPaymentMethodId(paymentMethodId);
 	
-	return post(sellTarget, request).getTransfer();
+	return post(sellTarget, request, TransferResponse.class).getTransfer();
     }
 
     public Transfer buy(Money amount) throws CoinbaseException {
@@ -351,7 +356,7 @@ class CoinbaseImpl implements Coinbase {
 	Request request = newRequest();
 	request.setQty(amount.getAmount().doubleValue());
 	
-	return post(buyTarget, request).getTransfer();
+	return post(buyTarget, request, TransferResponse.class).getTransfer();
     }
 
     public Transfer buy(Money amount, String paymentMethodId) throws CoinbaseException {
@@ -368,30 +373,30 @@ class CoinbaseImpl implements Coinbase {
 	request.setQty(amount.getAmount().doubleValue());
 	request.setPaymentMethodId(paymentMethodId);
 	
-	return post(buyTarget, request).getTransfer();
+	return post(buyTarget, request, TransferResponse.class).getTransfer();
     }
 
-    public Response getPaymentMethods() {
+    public PaymentMethodsResponse getPaymentMethods() {
 	WebTarget paymentMethodsTarget = _authenticated_target.path("payment_methods");
-	return get(paymentMethodsTarget);
+	return get(paymentMethodsTarget, PaymentMethodsResponse.class);
     }
 
-    private static Response get(WebTarget target) {
-	return target.request(MediaType.APPLICATION_JSON_TYPE).get(Response.class);
+    private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {
+	return target.request(MediaType.APPLICATION_JSON_TYPE).get(responseClass);
     }
 
-    private static Response post(WebTarget target, Object entity) throws CoinbaseException {
+    private static <T extends Response> T post(WebTarget target, Object entity, Class<T> responseClass) throws CoinbaseException {
 	return handleErrors(target.request(MediaType.APPLICATION_JSON_TYPE).post(
-		Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Response.class));
+		Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), responseClass));
     }
 
-    private static Response put(WebTarget target, Object entity) throws CoinbaseException {
+    private static <T extends Response> T put(WebTarget target, Object entity, Class<T> responseClass) throws CoinbaseException {
 	return handleErrors(target.request(MediaType.APPLICATION_JSON_TYPE).put(
-		Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), Response.class));
+		Entity.entity(entity, MediaType.APPLICATION_JSON_TYPE), responseClass));
     }
 
-    private static Response delete(WebTarget target) throws CoinbaseException {
-	return handleErrors(target.request(MediaType.APPLICATION_JSON_TYPE).delete(Response.class));
+    private static <T extends Response> T delete(WebTarget target, Class<T> responseClass) throws CoinbaseException {
+	return handleErrors(target.request(MediaType.APPLICATION_JSON_TYPE).delete(responseClass));
     }
 
     private static Transaction serializeAmount(Transaction transaction) throws CoinbaseException {
@@ -424,7 +429,7 @@ class CoinbaseImpl implements Coinbase {
 	return button;
     }
 
-    private static Response handleErrors(Response response) throws CoinbaseException {
+    private static <T extends Response> T handleErrors(T response) throws CoinbaseException {
 	if (response.hasErrors()) {
 	    throw new CoinbaseException(response.getErrors());
 	}

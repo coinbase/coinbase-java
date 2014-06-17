@@ -22,19 +22,32 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.coinbase.api.entity.Account;
+import com.coinbase.api.entity.AccountResponse;
+import com.coinbase.api.entity.AccountsResponse;
 import com.coinbase.api.entity.Address;
 import com.coinbase.api.entity.AddressNode;
+import com.coinbase.api.entity.AddressesResponse;
 import com.coinbase.api.entity.Button;
+import com.coinbase.api.entity.ButtonResponse;
 import com.coinbase.api.entity.Contact;
+import com.coinbase.api.entity.ContactsResponse;
 import com.coinbase.api.entity.Order;
+import com.coinbase.api.entity.OrderResponse;
+import com.coinbase.api.entity.OrdersResponse;
 import com.coinbase.api.entity.PaymentMethod;
+import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.TransactionNode;
+import com.coinbase.api.entity.TransactionResponse;
+import com.coinbase.api.entity.TransactionsResponse;
 import com.coinbase.api.entity.Transfer;
 import com.coinbase.api.entity.TransferNode;
+import com.coinbase.api.entity.TransferResponse;
+import com.coinbase.api.entity.TransfersResponse;
 import com.coinbase.api.entity.User;
+import com.coinbase.api.entity.UsersResponse;
 import com.coinbase.api.exception.CoinbaseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -57,10 +70,10 @@ public class CoinbaseTest {
     @Test(expected = CoinbaseException.class)
     public void errorResponse() throws Exception {
 	final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/error.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final AccountResponse response = mapper.readValue(in, AccountResponse.class);
 	
 	new NonStrictExpectations() {{
-	    invoker.post((Entity) any, Response.class); times = 1; result = response;
+	    invoker.post((Entity) any, AccountResponse.class); times = 1; result = response;
 	}};
 	
 	cb.createAccount(new Account());
@@ -70,37 +83,37 @@ public class CoinbaseTest {
     @Test(expected = CoinbaseException.class)
     public void errorsResponse() throws Exception {
 	final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/errors.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final AccountResponse response = mapper.readValue(in, AccountResponse.class);
 	
 	new NonStrictExpectations() {{
-	    invoker.post((Entity) any, Response.class); times = 1; result = response;
+	    invoker.post((Entity) any, AccountResponse.class); times = 1; result = response;
 	}};
-
+	
 	cb.createAccount(new Account());
     }
 
     @Test(expected = CoinbaseException.class)
     public void falseSuccessResponse() throws Exception {
 	final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/false_success.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final AccountResponse response = mapper.readValue(in, AccountResponse.class);
 	
 	new NonStrictExpectations() {{
-	    invoker.post((Entity) any, Response.class); times = 1; result = response;
+	    invoker.post((Entity) any, AccountResponse.class); times = 1; result = response;
 	}};
-
+	
 	cb.createAccount(new Account());
     }
     
     @Test
     public void accounts() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/accounts.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final AccountsResponse response = mapper.readValue(in, AccountsResponse.class);
 	
 	new NonStrictExpectations() {{
-	    invoker.get(Response.class); times = 1; result = response;
+	    invoker.get(AccountsResponse.class); times = 1; result = response;
 	}};
 
-	Response r = cb.getAccounts();
+	AccountsResponse r = cb.getAccounts();
 	List<Account> accounts = r.getAccounts();
 	assertEquals(2, accounts.size());
 
@@ -127,10 +140,10 @@ public class CoinbaseTest {
     public void users() throws Exception {
 	
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/users.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final UsersResponse response = mapper.readValue(in, UsersResponse.class);
 	
 	new NonStrictExpectations() {{
-	    invoker.get(Response.class); times = 1; result = response;
+	    invoker.get(UsersResponse.class); times = 1; result = response;
 	}};
 	
 	User user = cb.getUser();
@@ -152,10 +165,10 @@ public class CoinbaseTest {
     public void transaction() throws Exception {
 	
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/transaction.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final TransactionResponse response = mapper.readValue(in, TransactionResponse.class);
 	
 	new NonStrictExpectations() {{
-	    invoker.get(Response.class); times = 1; result = response;
+	    invoker.get(TransactionResponse.class); times = 1; result = response;
 	}};
 	
 	Transaction t = cb.getTransaction("5018f833f8182b129c00002f");
@@ -184,13 +197,13 @@ public class CoinbaseTest {
     public void transactions() throws Exception {
 
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/transactions.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final TransactionsResponse response = mapper.readValue(in, TransactionsResponse.class);
 	
 	new NonStrictExpectations() {{
-	    invoker.get(Response.class); times = 1; result = response;
+	    invoker.get(TransactionsResponse.class); times = 1; result = response;
 	}};
 	
-	Response r = cb.getTransactions();
+	TransactionsResponse r = cb.getTransactions();
 
 	User current_user = r.getCurrentUser();
 	assertEquals("5011f33df8182b142400000e", current_user.getId());
@@ -216,13 +229,13 @@ public class CoinbaseTest {
     @Test
     public void transfers() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/transfers.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final TransfersResponse response = mapper.readValue(in, TransfersResponse.class);
 	
 	new NonStrictExpectations() {{
-	    invoker.get(Response.class); times = 1; result = response;
+	    invoker.get(TransfersResponse.class); times = 1; result = response;
 	}};
 	
-	Response r = cb.getTransfers();
+	TransfersResponse r = cb.getTransfers();
 	
 	assertEquals(1, r.getTotalCount());
 	assertEquals(1, r.getNumPages());
@@ -265,13 +278,13 @@ public class CoinbaseTest {
     @Test
     public void addresses() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/addresses.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final AddressesResponse response = mapper.readValue(in, AddressesResponse.class);
 	
 	new NonStrictExpectations() {{
-	    invoker.get(Response.class); times = 1; result = response;
+	    invoker.get(AddressesResponse.class); times = 1; result = response;
 	}};
 	
-	Response r = cb.getAddresses();
+	AddressesResponse r = cb.getAddresses();
 
 	assertNull(r.isSuccess());
 
@@ -294,10 +307,10 @@ public class CoinbaseTest {
     @Test
     public void button() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/button.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final ButtonResponse response = mapper.readValue(in, ButtonResponse.class);
 
 	new NonStrictExpectations() {{
-		invoker.post((Entity) any, Response.class);
+		invoker.post((Entity) any, ButtonResponse.class);
 		times = 1;
 		result = response;
 	}};
@@ -320,15 +333,15 @@ public class CoinbaseTest {
     @Test
     public void contacts() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/contacts.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final ContactsResponse response = mapper.readValue(in, ContactsResponse.class);
 
 	new NonStrictExpectations() {{
-		invoker.get(Response.class);
+		invoker.get(ContactsResponse.class);
 		times = 1;
 		result = response;
 	}};
 
-	Response r = cb.getContacts();
+	ContactsResponse r = cb.getContacts();
 
 	Contact c1 = r.getContacts().get(0).getContact();
 	Contact c2 = r.getContacts().get(1).getContact();
@@ -340,11 +353,11 @@ public class CoinbaseTest {
     @Test
     public void sell() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/new_sell.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final TransferResponse response = mapper.readValue(in, TransferResponse.class);
 
 	new NonStrictExpectations() {
 	    {
-		invoker.post((Entity) any, Response.class);
+		invoker.post((Entity) any, TransferResponse.class);
 		times = 1;
 		result = response;
 	    }
@@ -365,11 +378,11 @@ public class CoinbaseTest {
     @Test
     public void buy() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/new_buy.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final TransferResponse response = mapper.readValue(in, TransferResponse.class);
 
 	new NonStrictExpectations() {
 	    {
-		invoker.post((Entity) any, Response.class);
+		invoker.post((Entity) any, TransferResponse.class);
 		times = 1;
 		result = response;
 	    }
@@ -390,17 +403,17 @@ public class CoinbaseTest {
     @Test
     public void orders() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/orders.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final OrdersResponse response = mapper.readValue(in, OrdersResponse.class);
 
 	new NonStrictExpectations() {
 	    {
-		invoker.get(Response.class);
+		invoker.get(OrdersResponse.class);
 		times = 1;
 		result = response;
 	    }
 	};
 
-	Response r = cb.getOrders();
+	OrdersResponse r = cb.getOrders();
 	Order order = r.getOrders().get(0).getOrder();
 	Transaction t = order.getTransaction();
 	Button b = order.getButton();
@@ -426,10 +439,10 @@ public class CoinbaseTest {
     @Test
     public void createOrder() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/new_order.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final OrderResponse response = mapper.readValue(in, OrderResponse.class);
 
 	new NonStrictExpectations() {{
-		invoker.post((Entity) any, Response.class);
+		invoker.post((Entity) any, OrderResponse.class);
 		times = 1;
 		result = response;
 	}};
@@ -449,15 +462,15 @@ public class CoinbaseTest {
     @Test
     public void getPaymentMethods() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/payment_methods.json");
-	final Response response = mapper.readValue(in, Response.class);
+	final PaymentMethodsResponse response = mapper.readValue(in, PaymentMethodsResponse.class);
 
 	new NonStrictExpectations() {{
-		invoker.get(Response.class);
+		invoker.get(PaymentMethodsResponse.class);
 		times = 1;
 		result = response;
 	}};
 	
-	Response r = cb.getPaymentMethods();
+	PaymentMethodsResponse r = cb.getPaymentMethods();
 	assertEquals("530eb5b217cb34e07a000011", r.getDefaultBuy());
 	assertEquals("530eb5b217cb34e07a000011", r.getDefaultSell());
 	

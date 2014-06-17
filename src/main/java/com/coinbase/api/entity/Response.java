@@ -1,11 +1,6 @@
 package com.coinbase.api.entity;
 
-import java.util.List;
-
-import org.joda.money.Money;
-
 import com.coinbase.api.deserializer.ErrorsCollector;
-import com.coinbase.api.entity.UserNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class Response {
@@ -13,52 +8,10 @@ public class Response {
     private Boolean _success;
     private String _error;
     private String _errors;
-    private Transaction _transaction;
-    private List<UserNode> _users;
-    private List<TransactionNode> _transactions;
-    private User _currentUser;
-    private Money _balance;
-    private Money _nativeBalance;
     private int _totalCount;
     private int _numPages;
     private int _currentPage;
-    private List<TransferNode> _transfers;
-    private List<AddressNode> _addresses;
-    private List<Account> _accounts;
-    private Account _account;
-    private Button _button;
-    private List<ContactNode> _contacts;
-    private Transfer _transfer;
-    private List<OrderNode> _orders;
-    private Order _order;
-    private String _defaultBuy;
-    private String _defaultSell;
-    private List<PaymentMethodNode> _paymentMethods;
-
-    public Order getOrder() {
-        return _order;
-    }
-
-    public void setOrder(Order order) {
-        _order = order;
-    }
-
-    public Transfer getTransfer() {
-        return _transfer;
-    }
-
-    public void setTransfer(Transfer transfer) {
-        _transfer = transfer;
-    }
-
-    public Button getButton() {
-        return _button;
-    }
-
-    public void setButton(Button button) {
-        _button = button;
-    }
-
+    
     public void setError(String error) {
         _error = error;
     }
@@ -78,62 +31,6 @@ public class Response {
     @JsonDeserialize(converter=ErrorsCollector.class)
     public void setErrors(String errors) {
         _errors = errors;
-    }
-
-    public Account getAccount() {
-        return _account;
-    }
-
-    public void setAccount(Account account) {
-        _account = account;
-    }
-
-    public List<Account> getAccounts() {
-        return _accounts;
-    }
-
-    public void setAccounts(List<Account> accounts) {
-        _accounts = accounts;
-    }
-
-    public List<TransferNode> getTransfers() {
-        return _transfers;
-    }
-
-    public void setTransfers(List<TransferNode> transfers) {
-        _transfers = transfers;
-    }
-
-    public List<TransactionNode> getTransactions() {
-        return _transactions;
-    }
-
-    public void setTransactions(List<TransactionNode> transactions) {
-        _transactions = transactions;
-    }
-
-    public User getCurrentUser() {
-        return _currentUser;
-    }
-
-    public void setCurrentUser(User currentUser) {
-        _currentUser = currentUser;
-    }
-
-    public Money getBalance() {
-        return _balance;
-    }
-
-    public void setBalance(Money balance) {
-        _balance = balance;
-    }
-
-    public Money getNativeBalance() {
-        return _nativeBalance;
-    }
-
-    public void setNativeBalance(Money nativeBalance) {
-        _nativeBalance = nativeBalance;
     }
 
     public int getTotalCount() {
@@ -160,14 +57,6 @@ public class Response {
         _currentPage = currentPage;
     }
 
-    public List<UserNode> getUsers() {
-        return _users;
-    }
-
-    public void setUsers(List<UserNode> users) {
-        _users = users;
-    }
-
     public Boolean isSuccess() {
         return _success;
     }
@@ -176,64 +65,8 @@ public class Response {
         this._success = success;
     }
 
-    public Transaction getTransaction() {
-        return _transaction;
-    }
-
-    public void setTransaction(Transaction transaction) {
-        _transaction = transaction;
-    }
-
-    public List<AddressNode> getAddresses() {
-	return _addresses;
-    }
-
-    public void setAddresses(List<AddressNode> addresses) {
-	_addresses = addresses;
-    }
-
     public boolean hasErrors() {
 	return _error != null || _errors != null;
-    }
-
-    public List<ContactNode> getContacts() {
-	return _contacts;
-    }
-
-    public void setContacts(List<ContactNode> contacts) {
-	_contacts = contacts;
-    }
-
-    public List<OrderNode> getOrders() {
-	return _orders;
-    }
-
-    public void setOrders(List<OrderNode> orders) {
-	_orders = orders;
-    }
-
-    public String getDefaultBuy() {
-        return _defaultBuy;
-    }
-
-    public void setDefaultBuy(String defaultBuy) {
-        _defaultBuy = defaultBuy;
-    }
-
-    public String getDefaultSell() {
-        return _defaultSell;
-    }
-
-    public void setDefaultSell(String defaultSell) {
-        _defaultSell = defaultSell;
-    }
-
-    public List<PaymentMethodNode> getPaymentMethods() {
-        return _paymentMethods;
-    }
-
-    public void setPaymentMethods(List<PaymentMethodNode> paymentMethods) {
-        _paymentMethods = paymentMethods;
     }
 
 }
