@@ -30,6 +30,15 @@ public class Response {
     private List<ContactNode> _contacts;
     private Transfer _transfer;
     private List<OrderNode> _orders;
+    private Order _order;
+
+    public Order getOrder() {
+        return _order;
+    }
+
+    public void setOrder(Order order) {
+        _order = order;
+    }
 
     public Transfer getTransfer() {
         return _transfer;

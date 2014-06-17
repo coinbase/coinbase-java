@@ -12,7 +12,8 @@ public class Order {
     public enum Status {
 	COMPLETED("completed"),
 	CANCELED("canceled"),
-	EXPIRED("expired");
+	EXPIRED("expired"),
+	NEW("new");
 	
 	private String _value;
 	private Status(String value) { this._value = value; }

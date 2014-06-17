@@ -15,6 +15,7 @@ import org.joda.money.Money;
 import com.coinbase.api.auth.HmacClientFilter;
 import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.Button;
+import com.coinbase.api.entity.Order;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Request;
 import com.coinbase.api.entity.Response;
@@ -261,6 +262,15 @@ class CoinbaseImpl implements Coinbase {
 	request.setButton(serializePrice(button));
 	
 	return post(buttonsTarget, request).getButton();
+    }
+
+    public Order createOrder(Button button) throws CoinbaseException {
+	WebTarget ordersTarget = _authenticated_target.path("orders");
+	
+	Request request = newRequest();
+	request.setButton(serializePrice(button));
+	
+	return post(ordersTarget, request).getOrder();
     }
 
     public Response getContacts(int page) {

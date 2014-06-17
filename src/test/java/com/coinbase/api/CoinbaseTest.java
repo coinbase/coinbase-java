@@ -422,4 +422,26 @@ public class CoinbaseTest {
 	assertEquals("A7C52JQT", order.getId());
     }
 
+    @Test
+    public void createOrder() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/new_order.json");
+	final Response response = mapper.readValue(in, Response.class);
+
+	new NonStrictExpectations() {{
+		invoker.post((Entity) any, Response.class);
+		times = 1;
+		result = response;
+	}};
+
+	Button buttonParams = new Button();
+	buttonParams.setPrice(Money.parse("USD 2"));
+	Order order = cb.createOrder(buttonParams);
+
+	Button button = order.getButton();
+	
+	assertEquals(Money.parse("USD 1.23"), order.getTotalNative());
+	assertEquals(Money.parse("BTC 0.123"), order.getTotalBtc());
+	assertEquals(Button.Type.BUY_NOW, button.getType());
+	assertEquals("1741b3be1eb5dc50625c48851a94ae13", button.getId());
+    }
 }

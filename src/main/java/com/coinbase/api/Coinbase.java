@@ -5,6 +5,7 @@ import org.joda.money.Money;
 
 import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.Button;
+import com.coinbase.api.entity.Order;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
@@ -68,6 +69,7 @@ public interface Coinbase {
     public Quote getSellQuote(Money btcAmount);
 
     public Button createButton(Button button) throws CoinbaseException;
+    public Order createOrder(Button button) throws CoinbaseException;
 
     public Transfer sell(Money amount) throws CoinbaseException;
     public Transfer sell(Money amount, String paymentMethodId) throws CoinbaseException;
