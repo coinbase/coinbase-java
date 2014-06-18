@@ -36,7 +36,7 @@ import com.coinbase.api.entity.TransfersResponse;
 import com.coinbase.api.entity.User;
 import com.coinbase.api.entity.UsersResponse;
 import com.coinbase.api.exception.CoinbaseException;
-import com.coinbase.api.exception.UnknownAccount;
+import com.coinbase.api.exception.UnspecifiedAccount;
 
 class CoinbaseImpl implements Coinbase {
 
@@ -227,11 +227,11 @@ class CoinbaseImpl implements Coinbase {
 	put(accountTarget, request, Response.class);
     }
 
-    public Money getBalance() throws CoinbaseException {
+    public Money getBalance() throws UnspecifiedAccount {
 	if (_account_id != null) {
 	    return getBalance(_account_id);
 	} else {
-	    throw new UnknownAccount();
+	    throw new UnspecifiedAccount();
 	}
     }
 
@@ -239,7 +239,7 @@ class CoinbaseImpl implements Coinbase {
 	if (_account_id != null) {
 	    setPrimaryAccount(_account_id);
 	} else {
-	    throw new UnknownAccount();
+	    throw new UnspecifiedAccount();
 	}
     }
 
@@ -247,7 +247,7 @@ class CoinbaseImpl implements Coinbase {
 	if (_account_id != null) {
 	    deleteAccount(_account_id);
 	} else {
-	    throw new UnknownAccount();
+	    throw new UnspecifiedAccount();
 	}
     }
 
@@ -255,7 +255,7 @@ class CoinbaseImpl implements Coinbase {
 	if (_account_id != null) {
 	    updateAccount(_account_id, account);
 	} else {
-	    throw new UnknownAccount();
+	    throw new UnspecifiedAccount();
 	}
     }
 

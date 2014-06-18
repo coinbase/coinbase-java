@@ -7,7 +7,7 @@ import javax.net.ssl.SSLContext;
 
 import org.glassfish.jersey.SslConfigurator;
 
-public class CoinbaseSSL {
+class CoinbaseSSL {
 
     public static SSLContext context() throws Exception {
 	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/ca-coinbase.jks");
