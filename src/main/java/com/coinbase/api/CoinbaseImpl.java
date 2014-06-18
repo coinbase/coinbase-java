@@ -25,6 +25,7 @@ import com.coinbase.api.entity.OrderResponse;
 import com.coinbase.api.entity.OrdersResponse;
 import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
+import com.coinbase.api.entity.RecurringPaymentsResponse;
 import com.coinbase.api.entity.Request;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
@@ -379,6 +380,15 @@ class CoinbaseImpl implements Coinbase {
     public PaymentMethodsResponse getPaymentMethods() {
 	WebTarget paymentMethodsTarget = _authenticated_target.path("payment_methods");
 	return get(paymentMethodsTarget, PaymentMethodsResponse.class);
+    }
+
+    public RecurringPaymentsResponse getSubscribers(int page) {
+	WebTarget subscribersTarget = _account_specific_target.path("subscribers").queryParam("page", page);
+	return get(subscribersTarget, RecurringPaymentsResponse.class);
+    }
+
+    public RecurringPaymentsResponse getSubscribers() {
+	return getSubscribers(1);
     }
 
     private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {

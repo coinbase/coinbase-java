@@ -37,6 +37,8 @@ import com.coinbase.api.entity.OrdersResponse;
 import com.coinbase.api.entity.PaymentMethod;
 import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
+import com.coinbase.api.entity.RecurringPayment;
+import com.coinbase.api.entity.RecurringPaymentsResponse;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.TransactionNode;
@@ -484,5 +486,35 @@ public class CoinbaseTest {
 	
 	assertFalse(p2.canBuy());
 	assertFalse(p2.canSell());
+    }
+
+    @Test
+    public void getSubscribers() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/subscribers.json");
+	final RecurringPaymentsResponse response = mapper.readValue(in, RecurringPaymentsResponse.class);
+
+	new NonStrictExpectations() {{
+		invoker.get(RecurringPaymentsResponse.class);
+		times = 1;
+		result = response;
+	}};
+	
+	RecurringPaymentsResponse r = cb.getSubscribers();
+
+	RecurringPayment p1 = r.getRecurringPayments().get(0).getRecurringPayment();
+	RecurringPayment p2 = r.getRecurringPayments().get(1).getRecurringPayment();
+	
+	assertEquals("51a7cf58f8182b4b220000d5", p1.getId());
+	assertEquals(DateTime.parse("2013-05-30T15:14:48-07:00"), p1.getCreatedAt());
+	assertEquals(RecurringPayment.Status.ACTIVE, p1.getStatus());
+	assertEquals("user123", p1.getCustom());
+	
+	Button b1 = p1.getButton();
+	assertEquals(Button.Type.SUBSCRIPTION, b1.getType());
+	assertEquals("Test", b1.getName());
+	assertEquals("", b1.getDescription());
+	assertEquals("1b7a1019f371402ec02af389d1b24e55", b1.getId());
+	
+	assertEquals("51a7be2ff8182b4b220000a5", p2.getId());
     }
 }

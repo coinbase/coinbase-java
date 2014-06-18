@@ -12,6 +12,7 @@ import com.coinbase.api.entity.Order;
 import com.coinbase.api.entity.OrdersResponse;
 import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
+import com.coinbase.api.entity.RecurringPaymentsResponse;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.TransactionsResponse;
 import com.coinbase.api.entity.Transfer;
@@ -426,8 +427,26 @@ public interface Coinbase {
 
     /**
      * Get the user's payment methods
-     * 
+     *
      * @see <a href="https://coinbase.com/api/doc/1.0/payment_methods/index.html">Online Documentation</a>
      */
     public PaymentMethodsResponse getPaymentMethods();
+
+    /**
+     * Retrieve all the subscriptions customers have made with you
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/subscribers/index.html">Online Documentation</a>
+     * @see <a href="https://coinbase.com/docs/merchant_tools/recurring_payments">About recurring payments</a>
+     */
+    public RecurringPaymentsResponse getSubscribers();
+
+    /**
+     * Retrieve all the subscriptions customers have made with you
+     *
+     * @param page the page of subscribers to retrieve
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/subscribers/index.html">Online Documentation</a>
+     * @see <a href="https://coinbase.com/docs/merchant_tools/recurring_payments">About recurring payments</a>
+     */
+    public RecurringPaymentsResponse getSubscribers(int page);
 }
