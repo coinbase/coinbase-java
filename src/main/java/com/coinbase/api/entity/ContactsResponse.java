@@ -2,14 +2,18 @@ package com.coinbase.api.entity;
 
 import java.util.List;
 
+import com.coinbase.api.deserializer.ContactsLifter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class ContactsResponse extends Response {
-    private List<ContactNode> _contacts;
+    private List<Contact> _contacts;
     
-    public List<ContactNode> getContacts() {
+    public List<Contact> getContacts() {
 	return _contacts;
     }
 
-    public void setContacts(List<ContactNode> contacts) {
+    @JsonDeserialize(converter=ContactsLifter.class)
+    public void setContacts(List<Contact> contacts) {
 	_contacts = contacts;
     }
 }

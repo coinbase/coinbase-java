@@ -4,17 +4,21 @@ import java.util.List;
 
 import org.joda.money.Money;
 
+import com.coinbase.api.deserializer.TransactionsLifter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class TransactionsResponse extends Response {
     private User _currentUser;
     private Money _balance;
     private Money _nativeBalance;
-    private List<TransactionNode> _transactions;
+    private List<Transaction> _transactions;
     
-    public List<TransactionNode> getTransactions() {
+    public List<Transaction> getTransactions() {
         return _transactions;
     }
 
-    public void setTransactions(List<TransactionNode> transactions) {
+    @JsonDeserialize(converter=TransactionsLifter.class)
+    public void setTransactions(List<Transaction> transactions) {
         _transactions = transactions;
     }
     

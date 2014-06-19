@@ -2,14 +2,18 @@ package com.coinbase.api.entity;
 
 import java.util.List;
 
+import com.coinbase.api.deserializer.OrdersLifter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class OrdersResponse extends Response {
-    private List<OrderNode> _orders;
+    private List<Order> _orders;
     
-    public List<OrderNode> getOrders() {
+    public List<Order> getOrders() {
 	return _orders;
     }
 
-    public void setOrders(List<OrderNode> orders) {
+    @JsonDeserialize(converter=OrdersLifter.class)
+    public void setOrders(List<Order> orders) {
 	_orders = orders;
     }
 }

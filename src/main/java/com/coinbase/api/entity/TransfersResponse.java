@@ -2,14 +2,18 @@ package com.coinbase.api.entity;
 
 import java.util.List;
 
+import com.coinbase.api.deserializer.TransfersLifter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class TransfersResponse extends Response {
-    private List<TransferNode> _transfers;
+    private List<Transfer> _transfers;
     
-    public List<TransferNode> getTransfers() {
+    public List<Transfer> getTransfers() {
         return _transfers;
     }
-
-    public void setTransfers(List<TransferNode> transfers) {
+    
+    @JsonDeserialize(converter=TransfersLifter.class)
+    public void setTransfers(List<Transfer> transfers) {
         _transfers = transfers;
     }
 }

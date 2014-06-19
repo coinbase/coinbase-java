@@ -2,14 +2,18 @@ package com.coinbase.api.entity;
 
 import java.util.List;
 
+import com.coinbase.api.deserializer.AddressesLifter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class AddressesResponse extends Response {
-    private List<AddressNode> _addresses;
+    private List<Address> _addresses;
     
-    public List<AddressNode> getAddresses() {
+    public List<Address> getAddresses() {
 	return _addresses;
     }
 
-    public void setAddresses(List<AddressNode> addresses) {
+    @JsonDeserialize(converter=AddressesLifter.class)
+    public void setAddresses(List<Address> addresses) {
 	_addresses = addresses;
     }
 }

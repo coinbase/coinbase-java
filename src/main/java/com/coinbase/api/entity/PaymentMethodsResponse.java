@@ -2,10 +2,13 @@ package com.coinbase.api.entity;
 
 import java.util.List;
 
+import com.coinbase.api.deserializer.PaymentMethodsLifter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class PaymentMethodsResponse extends Response {
     private String _defaultBuy;
     private String _defaultSell;
-    private List<PaymentMethodNode> _paymentMethods;
+    private List<PaymentMethod> _paymentMethods;
 
     public String getDefaultBuy() {
         return _defaultBuy;
@@ -23,11 +26,12 @@ public class PaymentMethodsResponse extends Response {
         _defaultSell = defaultSell;
     }
 
-    public List<PaymentMethodNode> getPaymentMethods() {
+    public List<PaymentMethod> getPaymentMethods() {
         return _paymentMethods;
     }
 
-    public void setPaymentMethods(List<PaymentMethodNode> paymentMethods) {
+    @JsonDeserialize(converter=PaymentMethodsLifter.class)
+    public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
         _paymentMethods = paymentMethods;
     }
 }

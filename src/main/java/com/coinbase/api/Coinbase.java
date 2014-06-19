@@ -255,7 +255,7 @@ public interface Coinbase {
      * @throws UnspecifiedAccount if the account was not specified during the creation of the client
      * @return the balance of the current account
      * 
-     * @see <a href="https://coinbase.com/api/doc/1.0/contacts/index.html">Online Documentation</a>
+     * @see <a href="https://coinbase.com/api/doc/1.0/accounts/balance.html">Online Documentation</a>
      */
     public Money getBalance() throws UnspecifiedAccount;
     

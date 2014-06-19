@@ -25,7 +25,6 @@ import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.AccountResponse;
 import com.coinbase.api.entity.AccountsResponse;
 import com.coinbase.api.entity.Address;
-import com.coinbase.api.entity.AddressNode;
 import com.coinbase.api.entity.AddressesResponse;
 import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.ButtonResponse;
@@ -39,13 +38,10 @@ import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.RecurringPayment;
 import com.coinbase.api.entity.RecurringPaymentsResponse;
-import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Transaction;
-import com.coinbase.api.entity.TransactionNode;
 import com.coinbase.api.entity.TransactionResponse;
 import com.coinbase.api.entity.TransactionsResponse;
 import com.coinbase.api.entity.Transfer;
-import com.coinbase.api.entity.TransferNode;
 import com.coinbase.api.entity.TransferResponse;
 import com.coinbase.api.entity.TransfersResponse;
 import com.coinbase.api.entity.User;
@@ -218,13 +214,13 @@ public class CoinbaseTest {
 	assertEquals(1, r.getNumPages());
 	assertEquals(1, r.getCurrentPage());
 
-	List<TransactionNode> txs = r.getTransactions();
+	List<Transaction> txs = r.getTransactions();
 	assertEquals(2, txs.size());
 
-	Transaction tx1 = txs.get(0).getTransaction();
+	Transaction tx1 = txs.get(0);
 	assertEquals("5018f833f8182b129c00002f", tx1.getId());
 
-	Transaction tx2 = txs.get(1).getTransaction();
+	Transaction tx2 = txs.get(1);
 	assertEquals("5018f833f8182b129c00002e", tx2.getId());
     }
 
@@ -242,9 +238,9 @@ public class CoinbaseTest {
 	assertEquals(1, r.getTotalCount());
 	assertEquals(1, r.getNumPages());
 	assertEquals(1, r.getCurrentPage());
-	List<TransferNode> transfers = r.getTransfers();
+	List<Transfer> transfers = r.getTransfers();
 	assertEquals(1, transfers.size());
-	Transfer t = transfers.get(0).getTransfer();
+	Transfer t = transfers.get(0);
 	assertEquals(Transfer.Type.BUY, t.getType());
 	assertEquals("QPCUCZHR", t.getCode());
 	assertEquals(DateTime.parse("2013-02-27T23:28:18-08:00"), t.getCreatedAt());
@@ -290,16 +286,16 @@ public class CoinbaseTest {
 
 	assertNull(r.isSuccess());
 
-	List<AddressNode> addresses = r.getAddresses();
+	List<Address> addresses = r.getAddresses();
 	assertEquals(2, addresses.size());
 	
-	Address a1 = addresses.get(0).getAddress();
+	Address a1 = addresses.get(0);
 	assertEquals("moLxGrqWNcnGq4A8Caq8EGP4n9GUGWanj4", a1.getAddress());
 	assertNull(a1.getCallbackUrl());
 	assertNull(a1.getLabel());
 	assertEquals(DateTime.parse("2013-05-09T23:07:08-07:00"), a1.getCreatedAt());
 	
-	Address a2 = addresses.get(1).getAddress();
+	Address a2 = addresses.get(1);
 	assertEquals("mwigfecvyG4MZjb6R5jMbmNcs7TkzhUaCj", a2.getAddress());
 	assertEquals("http://localhost/callback", a2.getCallbackUrl());
 	assertEquals("My Label", a2.getLabel());
@@ -345,8 +341,8 @@ public class CoinbaseTest {
 
 	ContactsResponse r = cb.getContacts();
 
-	Contact c1 = r.getContacts().get(0).getContact();
-	Contact c2 = r.getContacts().get(1).getContact();
+	Contact c1 = r.getContacts().get(0);
+	Contact c2 = r.getContacts().get(1);
 
 	assertEquals("user1@example.com", c1.getEmail());
 	assertEquals("user2@example.com", c2.getEmail());
@@ -416,7 +412,7 @@ public class CoinbaseTest {
 	};
 
 	OrdersResponse r = cb.getOrders();
-	Order order = r.getOrders().get(0).getOrder();
+	Order order = r.getOrders().get(0);
 	Transaction t = order.getTransaction();
 	Button b = order.getButton();
 
@@ -476,8 +472,8 @@ public class CoinbaseTest {
 	assertEquals("530eb5b217cb34e07a000011", r.getDefaultBuy());
 	assertEquals("530eb5b217cb34e07a000011", r.getDefaultSell());
 	
-	PaymentMethod p1 = r.getPaymentMethods().get(0).getPaymentMethod();
-	PaymentMethod p2 = r.getPaymentMethods().get(1).getPaymentMethod();
+	PaymentMethod p1 = r.getPaymentMethods().get(0);
+	PaymentMethod p2 = r.getPaymentMethods().get(1);
 	
 	assertEquals("530eb5b217cb34e07a000011", p1.getId());
 	assertEquals("US Bank ****4567", p1.getName());
