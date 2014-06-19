@@ -37,7 +37,7 @@ Notice here that we did not hard code the API keys into our codebase, but set it
 Start by [creating a new OAuth 2.0 application](https://coinbase.com/oauth/applications)
 
 ```java
-# Obtaining the OAuth token is outside the scope of this library
+// Obtaining the OAuth token is outside the scope of this library
 String token = "the_oauth_token"
 Coinbase cb = new CoinbaseBuilder()
                       .withAccessToken(token)
@@ -205,7 +205,7 @@ This will create the code for a payment button (and modal window) that you can u
 
 The `custom` param will get passed through in [callbacks](https://coinbase.com/docs/merchant_tools/callbacks) to your site.  The list of valid `parameters` [are described here](https://coinbase.com/api/doc/1.0/buttons/create.html).
 
-
+```java
 Button buttonParams = new Button();
 buttonParams.setText("This is the text");
 buttonParams.setDescription("This is the description");
@@ -216,9 +216,9 @@ buttonParams.setCustom("Custom tracking code here");
 Button button = cbMain.createButton(buttonParams);
 
 button.getCode(); // "93865b9cae83706ae59220c013bc0afd"
+```
 
-TODO
-### Create an order for a button
+### TODO Create an order for a button
 
 This will generate an order associated with a button. You can read [more about creating an order for a button here](https://coinbase.com/api/doc/1.0/buttons/create_order.html).
 
@@ -227,8 +227,7 @@ r = coinbase.create_order_for_button "93865b9cae83706ae59220c013bc0afd"
 => "{\"success\"=>true, \"order\"=>{\"id\"=>\"ASXTKPZM\", \"created_at\"=>\"2013-12-13T01:36:47-08:00\", \"status\"=>\"new\", \"total_btc\"=>{\"cents\"=>6859115, \"currency_iso\"=>\"BTC\"}, \"total_native\"=>{\"cents\"=>4295, \"currency_iso\"=>\"EUR\"}, \"custom\"=>\"my custom tracking code for this order\", \"receive_address\"=>\"mpJKwdmJKYjiyfNo26eRp4j6qGwuUUnw9x\", \"button\"=>{\"type\"=>\"buy_now\", \"name\"=>\"Your Order #1234\", \"description\"=>\"1 widget at 42.95\", \"id\"=>\"93865b9cae83706ae59220c013bc0afd\"}, \"transaction\"=>nil}}"
 ```
 
-TODO
-### Create a new user
+### TODO Create a new user
 
 ```ruby
 r = coinbase.create_user "newuser@example.com", "some password"
@@ -254,9 +253,9 @@ r.oauth.access_token
 
 ## Security Notes
 
-If someone gains access to your API Key and they will have complete control of your Coinbase account.  This includes the abillity to send all of your bitcoins elsewhere.
+When creating an API Key, make sure you only grant it the permissions necessary for your application to function.
 
-For this reason, API access is disabled on all Coinbase accounts by default.  If you decide to enable API key access you should take precautions to store your API key securely in your application.  How to do this is application specific, but it's something you should [research](http://programmers.stackexchange.com/questions/65601/is-it-smart-to-store-application-keys-ids-etc-directly-inside-an-application) if you have never done this before.
+You should take precautions to store your API key securely in your application.  How to do this is application specific, but it's something you should [research](http://programmers.stackexchange.com/questions/65601/is-it-smart-to-store-application-keys-ids-etc-directly-inside-an-application) if you have never done this before.
 
 ## Decimal precision
 
