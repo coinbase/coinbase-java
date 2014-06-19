@@ -218,13 +218,13 @@ Button button = cbMain.createButton(buttonParams);
 button.getCode(); // "93865b9cae83706ae59220c013bc0afd"
 ```
 
-### TODO Create an order for a button
+### Create an order for a button
 
 This will generate an order associated with a button. You can read [more about creating an order for a button here](https://coinbase.com/api/doc/1.0/buttons/create_order.html).
 
-```ruby
-r = coinbase.create_order_for_button "93865b9cae83706ae59220c013bc0afd"
-=> "{\"success\"=>true, \"order\"=>{\"id\"=>\"ASXTKPZM\", \"created_at\"=>\"2013-12-13T01:36:47-08:00\", \"status\"=>\"new\", \"total_btc\"=>{\"cents\"=>6859115, \"currency_iso\"=>\"BTC\"}, \"total_native\"=>{\"cents\"=>4295, \"currency_iso\"=>\"EUR\"}, \"custom\"=>\"my custom tracking code for this order\", \"receive_address\"=>\"mpJKwdmJKYjiyfNo26eRp4j6qGwuUUnw9x\", \"button\"=>{\"type\"=>\"buy_now\", \"name\"=>\"Your Order #1234\", \"description\"=>\"1 widget at 42.95\", \"id\"=>\"93865b9cae83706ae59220c013bc0afd\"}, \"transaction\"=>nil}}"
+```java
+Order order = cb.createOrderForButton("93865b9cae83706ae59220c013bc0afd");
+order.getReceiveAddress(); // "12mYY1z31J6mmYgzMXzRY8s8fAENiksWB8"
 ```
 
 ### TODO Create a new user
