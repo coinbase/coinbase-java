@@ -284,6 +284,11 @@ class CoinbaseImpl implements Coinbase {
 	return post(ordersTarget, request, OrderResponse.class).getOrder();
     }
 
+    public Order createOrderForButton(String buttonCode) throws CoinbaseException {
+	WebTarget orderForButtonTarget = _authenticated_target.path("buttons/" + buttonCode + "/create_order");
+	return post(orderForButtonTarget, new Request(), OrderResponse.class).getOrder();
+    }
+
     public ContactsResponse getContacts(int page) {
 	WebTarget contactsTarget =
 		_authenticated_target

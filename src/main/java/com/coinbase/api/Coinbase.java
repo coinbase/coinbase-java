@@ -374,14 +374,24 @@ public interface Coinbase {
     public Button createButton(Button button) throws CoinbaseException;
     
     /**
-     * Create a new order
+     * Create an order for a new button
      * 
-     * @param button a Button object containing the parameters for creating an order
+     * @param button a Button object containing the parameters for creating a button
      * @return the created Order
      * 
      * @see <a href="https://coinbase.com/api/doc/1.0/orders/create.html">Online Documentation</a>
      */
     public Order createOrder(Button button) throws CoinbaseException;
+
+    /**
+     * Create an order for an existing button
+     * 
+     * @param buttonCode the code of the button for which to create an order
+     * @return the created Order
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/buttons/create_order.html">Online Documentation</a>
+     */
+    public Order createOrderForButton(String buttonCode) throws CoinbaseException;
 
     /**
      * Sell a given quantity of BTC to Coinbase
