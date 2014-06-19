@@ -1,5 +1,6 @@
 package com.coinbase.api.entity;
 
+import org.joda.money.Money;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -31,11 +32,105 @@ public class RecurringPayment {
 	}
     }
     
+    public static final Integer INDEFINITE = -1;
+    
     private String _id;
     private DateTime _createdAt;
     private Status _status;
     private String _custom;
     private Button _button;
+    private String _to;
+    private String _from;
+    private Integer _timesRun;
+    private Integer _times;
+    private Button.Repeat _repeat;
+    private DateTime _lastRun;
+    private DateTime _nextRun;
+    private String _notes;
+    private String _description;
+    private Money _amount;
+
+    // TODO add type and start_type
+
+    public String getTo() {
+        return _to;
+    }
+
+    public void setTo(String to) {
+        _to = to;
+    }
+
+    public String getFrom() {
+        return _from;
+    }
+
+    public void setFrom(String from) {
+        _from = from;
+    }
+
+    public Integer getTimesRun() {
+        return _timesRun;
+    }
+
+    public void setTimesRun(Integer timesRun) {
+        _timesRun = timesRun;
+    }
+
+    public Integer getTimes() {
+        return _times;
+    }
+
+    public void setTimes(Integer times) {
+        _times = times;
+    }
+
+    public Button.Repeat getRepeat() {
+        return _repeat;
+    }
+
+    public void setRepeat(Button.Repeat repeat) {
+        _repeat = repeat;
+    }
+
+    public DateTime getLastRun() {
+        return _lastRun;
+    }
+
+    public void setLastRun(DateTime lastRun) {
+        _lastRun = lastRun;
+    }
+
+    public DateTime getNextRun() {
+        return _nextRun;
+    }
+
+    public void setNextRun(DateTime nextRun) {
+        _nextRun = nextRun;
+    }
+
+    public String getNotes() {
+        return _notes;
+    }
+
+    public void setNotes(String notes) {
+        _notes = notes;
+    }
+
+    public String getDescription() {
+        return _description;
+    }
+
+    public void setDescription(String description) {
+        _description = description;
+    }
+
+    public Money getAmount() {
+        return _amount;
+    }
+
+    public void setAmount(Money amount) {
+        _amount = amount;
+    }
 
     public String getId() {
         return _id;

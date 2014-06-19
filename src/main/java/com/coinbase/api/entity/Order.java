@@ -13,7 +13,9 @@ public class Order {
 	COMPLETED("completed"),
 	CANCELED("canceled"),
 	EXPIRED("expired"),
-	NEW("new");
+	NEW("new"),
+	MISPAID("mispaid"),
+	REFUNDED("refunded");
 	
 	private String _value;
 	private Status(String value) { this._value = value; }

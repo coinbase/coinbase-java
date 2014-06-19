@@ -497,8 +497,8 @@ public class CoinbaseTest {
 	
 	RecurringPaymentsResponse r = cb.getSubscribers();
 
-	RecurringPayment p1 = r.getRecurringPayments().get(0).getRecurringPayment();
-	RecurringPayment p2 = r.getRecurringPayments().get(1).getRecurringPayment();
+	RecurringPayment p1 = r.getRecurringPayments().get(0);
+	RecurringPayment p2 = r.getRecurringPayments().get(1);
 	
 	assertEquals("51a7cf58f8182b4b220000d5", p1.getId());
 	assertEquals(DateTime.parse("2013-05-30T15:14:48-07:00"), p1.getCreatedAt());
@@ -512,5 +512,31 @@ public class CoinbaseTest {
 	assertEquals("1b7a1019f371402ec02af389d1b24e55", b1.getId());
 	
 	assertEquals("51a7be2ff8182b4b220000a5", p2.getId());
+    }
+
+    @Test
+    public void getRecurringPayments() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/recurring_payments.json");
+	final RecurringPaymentsResponse response = mapper.readValue(in, RecurringPaymentsResponse.class);
+
+	new NonStrictExpectations() {{
+		invoker.get(RecurringPaymentsResponse.class);
+		times = 1;
+		result = response;
+	}};
+	
+	RecurringPaymentsResponse r = cb.getRecurringPayments();
+
+	RecurringPayment p1 = r.getRecurringPayments().get(0);
+	RecurringPayment p2 = r.getRecurringPayments().get(1);
+	
+	assertEquals("51a7b9e9f8182b4b22000013", p1.getId());
+	assertEquals(RecurringPayment.INDEFINITE, p1.getTimes());
+	assertEquals(Button.Repeat.MONTHLY, p1.getRepeat());
+	assertEquals(Money.parse("BTC 0.02"), p1.getAmount());
+	
+	
+	assertEquals(DateTime.parse("2013-05-15T00:22:57-07:00"), p2.getLastRun());
+	assertEquals(DateTime.parse("2013-05-16T00:22:57-07:00"), p2.getNextRun());
     }
 }

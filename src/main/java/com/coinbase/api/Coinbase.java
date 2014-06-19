@@ -433,6 +433,24 @@ public interface Coinbase {
     public PaymentMethodsResponse getPaymentMethods();
 
     /**
+     * Retrieve all the recurring payments (scheduled buys, sells, and subscriptions) you've created with merchants.
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/recurring_payments/index.html">Online Documentation</a>
+     * @see <a href="https://coinbase.com/docs/merchant_tools/recurring_payments">About recurring payments</a>
+     */
+    public RecurringPaymentsResponse getRecurringPayments();
+
+    /**
+     * Retrieve all the recurring payments (scheduled buys, sells, and subscriptions) you've created with merchants.
+     *
+     * @param page the page of recurring payments to retrieve
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/recurring_payments/index.html">Online Documentation</a>
+     * @see <a href="https://coinbase.com/docs/merchant_tools/recurring_payments">About recurring payments</a>
+     */
+    public RecurringPaymentsResponse getRecurringPayments(int page);
+
+    /**
      * Retrieve all the subscriptions customers have made with you
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/subscribers/index.html">Online Documentation</a>

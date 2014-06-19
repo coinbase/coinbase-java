@@ -391,6 +391,16 @@ class CoinbaseImpl implements Coinbase {
 	return getSubscribers(1);
     }
 
+    public RecurringPaymentsResponse getRecurringPayments(int page) {
+	// TODO can this endpoint take account_id?
+	WebTarget recurringPaymentsTarget = _authenticated_target.path("recurring_payments").queryParam("page", page);
+	return get(recurringPaymentsTarget, RecurringPaymentsResponse.class);
+    }
+
+    public RecurringPaymentsResponse getRecurringPayments() {
+	return getRecurringPayments(1);
+    }
+
     private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).get(responseClass);
     }

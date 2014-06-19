@@ -2,15 +2,19 @@ package com.coinbase.api.entity;
 
 import java.util.List;
 
+import com.coinbase.api.deserializer.RecurringPaymentsLifter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 public class RecurringPaymentsResponse extends Response {
 
-    private List<RecurringPaymentNode> _recurringPayments;
+    private List<RecurringPayment> _recurringPayments;
 
-    public List<RecurringPaymentNode> getRecurringPayments() {
+    public List<RecurringPayment> getRecurringPayments() {
 	return _recurringPayments;
     }
 
-    public void setRecurringPayments(List<RecurringPaymentNode> recurringPayments) {
+    @JsonDeserialize(converter=RecurringPaymentsLifter.class)
+    public void setRecurringPayments(List<RecurringPayment> recurringPayments) {
 	_recurringPayments = recurringPayments;
     }
 
