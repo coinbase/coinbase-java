@@ -271,7 +271,11 @@ class CoinbaseImpl implements Coinbase {
 
     public Account createAccount(Account account) throws CoinbaseException {
 	WebTarget accountsTarget = _authenticated_target.path("accounts");
-	return post(accountsTarget, account, AccountResponse.class).getAccount();
+	
+	Request request = new Request();
+	request.setAccount(account);
+	
+	return post(accountsTarget, request, AccountResponse.class).getAccount();
     }
 
     // TODO test that account_specific_target still works here
