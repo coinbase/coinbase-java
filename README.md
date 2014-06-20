@@ -227,28 +227,24 @@ Order order = cb.createOrderForButton("93865b9cae83706ae59220c013bc0afd");
 order.getReceiveAddress(); // "12mYY1z31J6mmYgzMXzRY8s8fAENiksWB8"
 ```
 
-### TODO Create a new user
+### Create a new user
 
-```ruby
-r = coinbase.create_user "newuser@example.com", "some password"
-r.user.email
-=> "newuser@example.com"
-r.receive_address
-=> "mpJKwdmJKYjiyfNo26eRp4j6qGwuUUnw9x"
+```java
+User userParams = new User();
+userParams.setEmail("newuser@example.com");
+userParams.setPassword("correct horse battery staple");
+User newUser = cb.createUser(userParams);
+newUser.getEmail(); // "newuser@example.com"
 ```
 
-A receive address is returned also in case you need to send the new user a payment right away.
+You can optionally pass in a client_id parameter that corresponds to your OAuth2 application and space separated list of permissions. When these are provided, the generated user will automatically have the permissions you’ve specified granted for your application. See the [API Reference](https://coinbase.com/api/doc/1.0/users/create.html) for more details.
 
-You can optionally pass in a client_id parameter that corresponds to your OAuth2 application and an array of permissions. When these are provided, the generated user will automatically have the permissions you’ve specified granted for your application. See the [API Reference](https://coinbase.com/api/doc/1.0/users/create.html) for more details.
-
-```ruby
-r = coinbase.create_user "newuser@example.com", "some password", client_id, ['transactions', 'buy', 'sell']
-r.user.email
-=> "newuser@example.com"
-r.receive_address
-=> "mpJKwdmJKYjiyfNo26eRp4j6qGwuUUnw9x"
-r.oauth.access_token
-=> "93865b9cae83706ae59220c013bc0afd93865b9cae83706ae59220c013bc0afd"
+```java
+User userParams = new User();
+userParams.setEmail("newuser@example.com");
+userParams.setPassword("correct horse battery staple");
+User newUser = cb.createUser(userParams, "oauth_client_id_here", "user merchant");
+newUser.getEmail(); // "newuser@example.com"
 ```
 
 ## Security Notes
