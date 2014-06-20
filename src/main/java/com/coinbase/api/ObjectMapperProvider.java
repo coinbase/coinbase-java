@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import com.coinbase.api.deserializer.CurrencyUnitDeserializer;
 import com.coinbase.api.deserializer.DateTimeDeserializer;
 import com.coinbase.api.deserializer.MoneyDeserializer;
+import com.coinbase.api.serializer.CurrencyUnitSerializer;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,6 +42,7 @@ public class ObjectMapperProvider implements ContextResolver<ObjectMapper> {
 	module.addDeserializer(Money.class, new MoneyDeserializer());
 	module.addDeserializer(DateTime.class, new DateTimeDeserializer());
 	module.addDeserializer(CurrencyUnit.class, new CurrencyUnitDeserializer());
+	module.addSerializer(CurrencyUnit.class, new CurrencyUnitSerializer());
 	result.registerModule(module);
 
 	return result;

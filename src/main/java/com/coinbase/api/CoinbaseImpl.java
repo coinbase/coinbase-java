@@ -89,7 +89,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     public User getUser() {
-	WebTarget usersTarget = _base_target.path("users");
+	WebTarget usersTarget = _authenticated_target.path("users");
 	return get(usersTarget, UsersResponse.class).getUsers().get(0).getUser();
     }
 
@@ -463,6 +463,15 @@ class CoinbaseImpl implements Coinbase {
 	request.setClientId(clientId);
 
 	return post(createUserTarget, request, UserResponse.class).getUser();
+    }
+
+    public User updateUser(String userId, User userParams) throws CoinbaseException {
+	WebTarget updateUserTarget = _authenticated_target.path("users/" + userId);
+	
+	Request request = new Request();
+	request.setUser(userParams);
+	
+	return put(updateUserTarget, request, UserResponse.class).getUser();
     }
 
     private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {

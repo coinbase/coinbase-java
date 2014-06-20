@@ -527,5 +527,20 @@ public interface Coinbase {
      *
      */
     public User createUser(User userParams, String clientId, String scope) throws CoinbaseException;
+    
+    /**
+     * Updates account settings for the current user
+     *
+     * @param userId the user's id
+     * @param userParams a User object containing the parameters to update
+     * 
+     * @return the updated user
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/users/update.html">Online Documentation</a>
+     *
+     */
+    public User updateUser(String userId, User userParams) throws CoinbaseException;
 
 }
