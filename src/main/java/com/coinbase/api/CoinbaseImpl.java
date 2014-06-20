@@ -1,9 +1,14 @@
 package com.coinbase.api;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 
 import org.glassfish.jersey.client.ClientConfig;
@@ -38,6 +43,7 @@ import com.coinbase.api.entity.User;
 import com.coinbase.api.entity.UsersResponse;
 import com.coinbase.api.exception.CoinbaseException;
 import com.coinbase.api.exception.UnspecifiedAccount;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 class CoinbaseImpl implements Coinbase {
 
@@ -404,6 +410,13 @@ class CoinbaseImpl implements Coinbase {
 
     public RecurringPaymentsResponse getRecurringPayments() {
 	return getRecurringPayments(1);
+    }
+
+    public Map<String, BigDecimal> getExchangeRates() {
+	WebTarget exchangeRatesTarget = _base_target.path("currencies/exchange_rates");
+	return exchangeRatesTarget
+		.request(MediaType.APPLICATION_JSON_TYPE)
+		.get(new GenericType<HashMap<String, BigDecimal>>() {});
     }
 
     private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {

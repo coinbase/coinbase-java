@@ -6,9 +6,13 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
 
 import mockit.Capturing;
 import mockit.Cascading;
@@ -47,6 +51,7 @@ import com.coinbase.api.entity.TransfersResponse;
 import com.coinbase.api.entity.User;
 import com.coinbase.api.entity.UsersResponse;
 import com.coinbase.api.exception.CoinbaseException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CoinbaseTest {
@@ -538,5 +543,22 @@ public class CoinbaseTest {
 	
 	assertEquals(DateTime.parse("2013-05-15T00:22:57-07:00"), p2.getLastRun());
 	assertEquals(DateTime.parse("2013-05-16T00:22:57-07:00"), p2.getNextRun());
+    }
+
+    @Test
+    public void getExchangeRates() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/rates_response.json");
+	final Map<String, BigDecimal> response = mapper.readValue(in, new TypeReference<HashMap<String, BigDecimal>>() {});
+
+	new NonStrictExpectations() {{
+		invoker.get((GenericType) any);
+		times = 1;
+		result = response;
+	}};
+	
+	Map<String, BigDecimal> rates = cb.getExchangeRates();
+
+	assertEquals(new BigDecimal("0.000076"), rates.get("czk_to_btc"));
+	assertEquals(new BigDecimal("22.98199"), rates.get("usd_to_uyu"));
     }
 }

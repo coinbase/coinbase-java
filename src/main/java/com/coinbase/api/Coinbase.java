@@ -1,5 +1,8 @@
 package com.coinbase.api;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 
@@ -477,4 +480,13 @@ public interface Coinbase {
      * @see <a href="https://coinbase.com/docs/merchant_tools/recurring_payments">About recurring payments</a>
      */
     public RecurringPaymentsResponse getSubscribers(int page);
+
+    /**
+     * Unauthenticated resource that returns BTC to fiat (and vice versus) exchange rates in various currencies.
+     *
+     * It has keys for both btc_to_xxx and xxx_to_btc so you can convert either way. The key always contains downcase representations of the currency ISO.
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/currencies/exchange_rates.html">Online Documentation</a>
+     */
+    public Map<String, BigDecimal> getExchangeRates();
 }
