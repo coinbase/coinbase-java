@@ -17,7 +17,26 @@ public class User {
 	private Integer _sellLevel;
 	private Money _buyLimit;
 	private Money _sellLimit;
-	
+	private String _password;
+	private String _referrerId;
+	private String _receiveAddress;
+
+	public String getPassword() {
+	    return _password;
+	}
+
+	public void setPassword(String password) {
+	    _password = password;
+	}
+
+	public String getReferrerId() {
+	    return _referrerId;
+	}
+
+	public void setReferrerId(String referrerId) {
+	    _referrerId = referrerId;
+	}
+
 	public String getId() {
 		return _id;
 	}
@@ -99,6 +118,14 @@ public class User {
 	@JsonDeserialize(using=MoneyDeserializer.class)
 	public void setSellLimit(Money sellLimit) {
 		_sellLimit = sellLimit;
+	}
+
+	public String getReceiveAddress() {
+	    return _receiveAddress;
+	}
+
+	public void setReceiveAddress(String receiveAddress) {
+	    _receiveAddress = receiveAddress;
 	}
 	
 }

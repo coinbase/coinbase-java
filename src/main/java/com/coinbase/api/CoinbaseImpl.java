@@ -43,6 +43,7 @@ import com.coinbase.api.entity.Transfer;
 import com.coinbase.api.entity.TransferResponse;
 import com.coinbase.api.entity.TransfersResponse;
 import com.coinbase.api.entity.User;
+import com.coinbase.api.entity.UserResponse;
 import com.coinbase.api.entity.UsersResponse;
 import com.coinbase.api.exception.CoinbaseException;
 import com.coinbase.api.exception.UnspecifiedAccount;
@@ -442,6 +443,26 @@ class CoinbaseImpl implements Coinbase {
 	}
 	
 	return result;
+    }
+
+    public User createUser(User userParams) throws CoinbaseException {
+	WebTarget createUserTarget = _base_target.path("users");
+	
+	Request request = new Request();
+	request.setUser(userParams);
+	
+	return post(createUserTarget, request, UserResponse.class).getUser();
+    }
+
+    public User createUser(User userParams, String clientId, String scope) throws CoinbaseException {
+	WebTarget createUserTarget = _base_target.path("users");
+
+	Request request = new Request();
+	request.setUser(userParams);
+	request.setScopes(scope);
+	request.setClientId(clientId);
+
+	return post(createUserTarget, request, UserResponse.class).getUser();
     }
 
     private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {

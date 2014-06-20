@@ -9,6 +9,33 @@ public class Request {
     private Button _button;
     private Double _qty;
     private String _paymentMethodId;
+    private User _user;
+    private String _clientId;
+    private String _scopes;
+
+    public String getClientId() {
+        return _clientId;
+    }
+
+    public void setClientId(String clientId) {
+        _clientId = clientId;
+    }
+
+    public String getScopes() {
+        return _scopes;
+    }
+
+    public void setScopes(String scopes) {
+        _scopes = scopes;
+    }
+
+    public User getUser() {
+        return _user;
+    }
+
+    public void setUser(User user) {
+        _user = user;
+    }
 
     public String getPaymentMethodId() {
         return _paymentMethodId;

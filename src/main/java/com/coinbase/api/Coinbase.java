@@ -496,4 +496,36 @@ public interface Coinbase {
      *
      */
     public List<CurrencyUnit> getSupportedCurrencies();
+
+    /**
+     * Unauthenticated resource that creates a user with an email and password.
+     *
+     * @param userParams a User object containing the parameters to create a new User
+     * 
+     * @return the created user
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/users/create.html">Online Documentation</a>
+     *
+     */
+    public User createUser(User userParams) throws CoinbaseException;
+
+    /**
+     * Unauthenticated resource that creates a user with an email and password.
+     *
+     * @param userParams a User object containing the parameters to create a new User
+     * @param clientId your OAuth application's client id
+     * @param scope a space-separated list of Coinbase OAuth permissions
+     * 
+     * @return the created user
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/users/create.html">Online Documentation</a>
+     * @see <a href="https://coinbase.com/docs/api/permissions">Permissions Reference</a>
+     *
+     */
+    public User createUser(User userParams, String clientId, String scope) throws CoinbaseException;
+
 }
