@@ -1,7 +1,9 @@
 package com.coinbase.api;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.client.Client;
@@ -15,6 +17,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.oauth2.OAuth2ClientSupport;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.joda.money.CurrencyUnit;
+import org.joda.money.IllegalCurrencyException;
 import org.joda.money.Money;
 
 import com.coinbase.api.auth.HmacClientFilter;
@@ -417,6 +420,24 @@ class CoinbaseImpl implements Coinbase {
 	return exchangeRatesTarget
 		.request(MediaType.APPLICATION_JSON_TYPE)
 		.get(new GenericType<HashMap<String, BigDecimal>>() {});
+    }
+
+    public List<CurrencyUnit> getSupportedCurrencies() {
+	WebTarget supportedCurrenciesTarget = _base_target.path("currencies");
+	
+	List<List<String>> rawResponse =
+		supportedCurrenciesTarget
+		.request(MediaType.APPLICATION_JSON_TYPE)
+		.get(new GenericType<List<List<String>>>() {});
+	
+	List<CurrencyUnit> result = new ArrayList<CurrencyUnit>();
+	for (List<String> currency : rawResponse) {
+	    try {
+		result.add(CurrencyUnit.getInstance(currency.get(1)));
+	    } catch (IllegalCurrencyException ex) {}
+	}
+	
+	return result;
     }
 
     private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {

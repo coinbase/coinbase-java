@@ -20,6 +20,7 @@ import mockit.Mocked;
 import mockit.NonStrictExpectations;
 
 import org.glassfish.jersey.client.JerseyInvocation;
+import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -560,5 +561,23 @@ public class CoinbaseTest {
 
 	assertEquals(new BigDecimal("0.000076"), rates.get("czk_to_btc"));
 	assertEquals(new BigDecimal("22.98199"), rates.get("usd_to_uyu"));
+    }
+
+    @Test
+    public void getSupportedCurrencies() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/currencies_response.json");
+	final List<List<String>> response = mapper.readValue(in, new TypeReference<List<List<String>>>() {});
+	
+	
+	new NonStrictExpectations() {{
+		invoker.get((GenericType) any);
+		times = 1;
+		result = response;
+	}};
+
+	List<CurrencyUnit> currencies = cb.getSupportedCurrencies();
+
+	assertTrue(currencies.contains(CurrencyUnit.CAD));
+	
     }
 }

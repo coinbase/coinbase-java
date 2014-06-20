@@ -1,6 +1,7 @@
 package com.coinbase.api;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 import org.joda.money.CurrencyUnit;
@@ -489,4 +490,10 @@ public interface Coinbase {
      * @see <a href="https://coinbase.com/api/doc/1.0/currencies/exchange_rates.html">Online Documentation</a>
      */
     public Map<String, BigDecimal> getExchangeRates();
+
+    /**
+     * Unauthenticated resource that returns currencies supported on Coinbase
+     *
+     */
+    public List<CurrencyUnit> getSupportedCurrencies();
 }
