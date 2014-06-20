@@ -156,7 +156,7 @@ public class CoinbaseTest {
 	assertEquals("User One", user.getName());
 	assertEquals("user1@example.com", user.getEmail());
 	assertEquals("Pacific Time (US & Canada)", user.getTimeZone());
-	assertEquals("USD", user.getNativeCurrency());
+	assertEquals(CurrencyUnit.USD, user.getNativeCurrency());
 	assertEquals(Money.parse("BTC 49.76"), user.getBalance());
 	assertEquals(1, user.getBuyLevel().intValue());
 	assertEquals(1, user.getSellLevel().intValue());

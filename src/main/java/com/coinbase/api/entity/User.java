@@ -1,5 +1,6 @@
 package com.coinbase.api.entity;
 
+import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 
 import com.coinbase.api.deserializer.MoneyDeserializer;
@@ -11,7 +12,7 @@ public class User {
 	private String _name;
 	private String _email;
 	private String _timeZone;
-	private String _nativeCurrency;
+	private CurrencyUnit _nativeCurrency;
 	private Money _balance;
 	private Integer _buyLevel;
 	private Integer _sellLevel;
@@ -69,11 +70,11 @@ public class User {
 		_timeZone = timeZone;
 	}
 	
-	public String getNativeCurrency() {
+	public CurrencyUnit getNativeCurrency() {
 		return _nativeCurrency;
 	}
 	
-	public void setNativeCurrency(String nativeCurrency) {
+	public void setNativeCurrency(CurrencyUnit nativeCurrency) {
 		_nativeCurrency = nativeCurrency;
 	}
 	
