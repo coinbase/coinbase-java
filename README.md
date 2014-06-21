@@ -47,7 +47,7 @@ Coinbase cb = new CoinbaseBuilder()
 Now you can call methods on `coinbase` similar to the ones described in the [api reference](https://coinbase.com/api/doc).  For example:
 
 ```java
-cb.getUser().getEmail() // user@example.com
+cb.getUser().getEmail(); // user@example.com
 ```
 
 [Joda Money objects](http://www.joda.org/joda-money/) are returned for most amounts dealing with currency.  You can call `getAmount`, `toString`, or perform math operations on money objects.
@@ -108,7 +108,7 @@ cb.completeRequest(requestId);
 Sorted in descending order by createdAt, 30 transactions per page
 
 ```java
-TransactionsResponse r = cb.getTransactions;
+TransactionsResponse r = cb.getTransactions();
 
 r.getTotalCount(); // 45
 r.getCurrentPage(); // 1
