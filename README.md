@@ -247,6 +247,19 @@ User newUser = cb.createUser(userParams, "oauth_client_id_here", "user merchant"
 newUser.getEmail(); // "newuser@example.com"
 ```
 
+## Building an account specific client
+
+Some API calls only apply to a single account and take an account_id parameter. To easily make account specific calls, build a client with an account id as follows:
+
+```java
+Coinbase cb = new CoinbaseBuilder()
+                      .withApiKey(System.getenv("COINBASE_API_KEY"), System.getenv("COINBASE_API_SECRET"))
+                      .withAccountId("DESIRED_ACCOUNT_ID")
+                      .build();
+
+cb.getBalance(); // Gets the balance of desired account
+```
+
 ## Security Notes
 
 When creating an API Key, make sure you only grant it the permissions necessary for your application to function.
