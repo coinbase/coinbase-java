@@ -5,9 +5,32 @@ import org.joda.time.DateTime;
 
 import com.coinbase.api.deserializer.DateTimeDeserializer;
 import com.coinbase.api.deserializer.MoneyDeserializer;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class Transaction {
+
+    public enum Status {
+	PENDING("pending"),
+	COMPLETE("complete");
+	
+	private String _value;
+	private Status(String value) { this._value = value; }
+	
+	@JsonValue
+	public String toString() { return this._value; }
+	
+	@JsonCreator
+	public static Status create(String val) {
+	    for (Status status : Status.values()) {
+		if (status.toString().equalsIgnoreCase(val)) {
+		    return status;
+		}
+	    }
+	    return null;
+	}
+    }
 
     private String _id;
     private DateTime _createdAt;
@@ -15,8 +38,7 @@ public class Transaction {
     private String _notes;
     private Money _amount;
     private Boolean _request;
-    // TODO maybe should be an enum?
-    private String _status;
+    private Status _status;
     private User _sender;
     private User _recipient;
     
@@ -129,11 +151,11 @@ public class Transaction {
         _request = request;
     }
     
-    public String getStatus() {
+    public Status getStatus() {
         return _status;
     }
     
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         _status = status;
     }
     

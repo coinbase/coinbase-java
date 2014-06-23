@@ -181,7 +181,7 @@ public class CoinbaseTest {
 	assertEquals(DateTime.parse("2012-08-01T02:34:43-07:00"), t.getCreatedAt());
 	assertEquals(Money.parse("BTC -1.1"), t.getAmount());
 	assertTrue(t.isRequest());
-	assertEquals("pending", t.getStatus());
+	assertEquals(Transaction.Status.PENDING, t.getStatus());
 	
 	User sender = t.getSender();
 	
@@ -538,6 +538,7 @@ public class CoinbaseTest {
 	
 	assertEquals("51a7b9e9f8182b4b22000013", p1.getId());
 	assertEquals(RecurringPayment.INDEFINITE, p1.getTimes());
+	assertEquals(RecurringPayment.StartType.NOW, p1.getStartType());
 	assertEquals(Button.Repeat.MONTHLY, p1.getRepeat());
 	assertEquals(Money.parse("BTC 0.02"), p1.getAmount());
 	

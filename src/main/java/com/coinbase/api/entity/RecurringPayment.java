@@ -31,7 +31,28 @@ public class RecurringPayment {
 	    return null;
 	}
     }
-    
+
+    public enum StartType {
+	ON("on"),
+	NOW("now");
+	
+	private String _value;
+	private StartType(String value) { this._value = value; }
+	
+	@JsonValue
+	public String toString() { return this._value; }
+	
+	@JsonCreator
+	public static StartType create(String val) {
+	    for (StartType type : StartType.values()) {
+		if (type.toString().equalsIgnoreCase(val)) {
+		    return type;
+		}
+	    }
+	    return null;
+	}
+    }
+
     public static final Integer INDEFINITE = -1;
     
     private String _id;
@@ -49,8 +70,9 @@ public class RecurringPayment {
     private String _notes;
     private String _description;
     private Money _amount;
+    private StartType _startType;
 
-    // TODO add type and start_type
+    // TODO add type
 
     public String getTo() {
         return _to;
@@ -170,6 +192,14 @@ public class RecurringPayment {
 
     public void setButton(Button button) {
         _button = button;
+    }
+
+    public StartType getStartType() {
+	return _startType;
+    }
+
+    public void setStartType(StartType startType) {
+	_startType = startType;
     }
 
 }

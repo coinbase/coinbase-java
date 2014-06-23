@@ -22,15 +22,11 @@ public class HmacClientFilter implements ClientRequestFilter {
     public static final String API_KEY_NAME = "hmacApiKey";
     public static final String API_SECRET_NAME = "hmacApiSecret";
 
-   @Context
+    @Context
     private MessageBodyWorkers workers;
 
-   @Context
-   private Configuration configuration;
-
-    // TODO
-    // private static final Logger log =
-    // LoggerFactory.getLogger(HmacClientFilter.class);
+    @Context
+    private Configuration configuration;
 
     public HmacClientFilter() {
 	

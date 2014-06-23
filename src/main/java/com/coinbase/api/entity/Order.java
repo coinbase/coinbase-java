@@ -6,7 +6,6 @@ import org.joda.time.DateTime;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-// TODO revisit when better docs are up
 public class Order {
 
     public enum Status {
