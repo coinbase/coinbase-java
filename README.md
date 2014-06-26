@@ -1,5 +1,7 @@
 # coinbase-java
 
+**This library is under development, and is not yet ready for production use.**
+
 An easy way to buy, sell, send, and accept [bitcoin](http://en.wikipedia.org/wiki/Bitcoin) through the [Coinbase API](https://coinbase.com/docs/api/overview).
 
 This library is a wrapper around the [Coinbase JSON API](https://coinbase.com/api/doc). It supports both the the [api key + secret authentication method](https://coinbase.com/docs/api/authentication) as well as OAuth 2.0 for performing actions on other people's account.
