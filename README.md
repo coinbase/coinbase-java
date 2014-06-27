@@ -8,7 +8,15 @@ This library is a wrapper around the [Coinbase JSON API](https://coinbase.com/ap
 
 ## Installation
 
-Add the following dependency to your Maven pom.xml:
+Until this library is added to Maven Central, it must be built and installed locally:
+
+```bash
+git clone git@github.com:coinbase/coinbase-java.git
+cd coinbase-java
+mvn clean install
+```
+
+Then add the following dependency to your project's Maven pom.xml:
 
 ```xml
 <dependency>
@@ -24,15 +32,18 @@ Add the following dependency to your Maven pom.xml:
 
 Start by [enabling an API Key on your account](https://coinbase.com/settings/api)
 
-Next, build an instance of the client buy passing your API Key + Secret to a CoinbaseBuilder object.
+Next, build an instance of the client by passing your API Key + Secret to a CoinbaseBuilder object.
 
 ```java
+import com.coinbase.api.Coinbase;
+import com.coinbase.api.CoinbaseBuilder;
+
 Coinbase cb = new CoinbaseBuilder()
                       .withApiKey(System.getenv("COINBASE_API_KEY"), System.getenv("COINBASE_API_SECRET"))
                       .build();
 ```
 
-Notice here that we did not hard code the API keys into our codebase, but set it in an environment variable instead. This is just one example, but keeping your credentials separate from your code base is a good [security practice](https://coinbase.com/docs/api/authentication#security).
+Notice here that we did not hard code the API keys into our codebase, but set them in environment variables instead. This is just one example, but keeping your credentials separate from your code base is a good [security practice](https://coinbase.com/docs/api/authentication#security).
 
 ### OAuth 2.0 Authentication (for accessing others' accounts)
 
