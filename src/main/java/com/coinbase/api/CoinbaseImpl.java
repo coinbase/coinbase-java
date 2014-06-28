@@ -1,5 +1,8 @@
 package com.coinbase.api;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +22,9 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.IllegalCurrencyException;
 import org.joda.money.Money;
+import org.joda.time.DateTime;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 import com.coinbase.api.auth.HmacClientFilter;
 import com.coinbase.api.entity.Account;
@@ -33,6 +39,7 @@ import com.coinbase.api.entity.ApplicationsResponse;
 import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.ButtonResponse;
 import com.coinbase.api.entity.ContactsResponse;
+import com.coinbase.api.entity.HistoricalPrice;
 import com.coinbase.api.entity.Order;
 import com.coinbase.api.entity.OrderResponse;
 import com.coinbase.api.entity.OrdersResponse;
@@ -544,6 +551,38 @@ class CoinbaseImpl implements Coinbase {
     public Application getApplication(String id) {
 	WebTarget applicationTarget = _authenticated_target.path("oauth/applications/" + id);
 	return get(applicationTarget, ApplicationResponse.class).getApplication();
+    }
+
+    public List<HistoricalPrice> getHistoricalPrices(int page) throws CoinbaseException {
+	WebTarget historicalTarget = _base_target.path("prices/historical").queryParam("page", page);
+
+	javax.ws.rs.core.Response response = historicalTarget.request().get();
+	InputStream responseBody = (InputStream) response.getEntity();
+	CSVReader reader = new CSVReader(new InputStreamReader(responseBody));
+
+	ArrayList<HistoricalPrice> result = new ArrayList<HistoricalPrice>();
+	String[] nextLine;
+
+	try {
+	    while ((nextLine = reader.readNext()) != null) {
+		HistoricalPrice hp = new HistoricalPrice();
+		hp.setTime(DateTime.parse(nextLine[0]));
+		hp.setSpotPrice(Money.of(CurrencyUnit.USD, new BigDecimal(nextLine[1])));
+		result.add(hp);
+	    }
+	} catch (IOException e) {
+	    throw new CoinbaseException("Error parsing csv response");
+	} finally {
+	    try {
+		reader.close();
+	    } catch (IOException e) {}
+	}
+
+	return result;
+    }
+
+    public List<HistoricalPrice> getHistoricalPrices() throws CoinbaseException {
+	return getHistoricalPrices(1);
     }
 
     private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {

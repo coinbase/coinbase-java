@@ -38,6 +38,7 @@ import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.ButtonResponse;
 import com.coinbase.api.entity.Contact;
 import com.coinbase.api.entity.ContactsResponse;
+import com.coinbase.api.entity.HistoricalPrice;
 import com.coinbase.api.entity.Order;
 import com.coinbase.api.entity.OrderResponse;
 import com.coinbase.api.entity.OrdersResponse;
@@ -67,6 +68,11 @@ public class CoinbaseTest {
     @Cascading
     JerseyInvocation.Builder invoker;
     
+    @Mocked(stubOutClassInitialization = true)
+    @Capturing
+    @Cascading
+    javax.ws.rs.core.Response raw_response;
+
     private Coinbase cb;
     private ObjectMapper mapper;
 
@@ -641,5 +647,21 @@ public class CoinbaseTest {
 	assertEquals("ee0ed3e5092e75e2b66afed97ecb54b8408b5e1b153f9841ce3f9c555f45db74", app.getClientId());
 	assertEquals("8c9217790a1fc001a37d09aa2d28e218868242390670f41440822dbb1173fe58", app.getClientSecret());
 	assertEquals(Integer.valueOf(0), app.getNumUsers());
+    }
+
+    @Test
+    public void getHistoricalPrices() throws Exception {
+	final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/historical_prices.csv");
+
+	new NonStrictExpectations() {{
+		raw_response.getEntity();
+		times = 1;
+		result = in;
+	}};
+
+	List<HistoricalPrice> prices = cb.getHistoricalPrices();
+	
+	assertEquals(DateTime.parse("2014-01-06T00:25:24-08:00"), prices.get(0).getTime());
+	assertEquals(Money.parse("USD 10"), prices.get(0).getSpotPrice());
     }
 }

@@ -16,6 +16,7 @@ import com.coinbase.api.entity.Application;
 import com.coinbase.api.entity.ApplicationsResponse;
 import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.ContactsResponse;
+import com.coinbase.api.entity.HistoricalPrice;
 import com.coinbase.api.entity.Order;
 import com.coinbase.api.entity.OrdersResponse;
 import com.coinbase.api.entity.PaymentMethodsResponse;
@@ -666,4 +667,27 @@ public interface Coinbase {
      *
      */
     public Application createApplication(Application application) throws CoinbaseException;
+    
+    /**
+     * Get the historical spot price of bitcoin in USD.
+     * 
+     * @param page the page of results to retrieve
+     * 
+     * @return a list of HistoricalPrice
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/prices/historical.html">Online Documentation</a>
+     *
+     */
+    public List<HistoricalPrice> getHistoricalPrices(int page) throws CoinbaseException;
+
+    /**
+     * Get the historical spot price of bitcoin in USD.
+     * 
+     * @return a list of HistoricalPrice
+     * @throws CoinbaseException 
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/prices/historical.html">Online Documentation</a>
+     *
+     */
+    public List<HistoricalPrice> getHistoricalPrices() throws CoinbaseException;
 }
