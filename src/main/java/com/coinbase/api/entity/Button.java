@@ -103,7 +103,14 @@ public class Button {
     private Boolean _includeEmail;
     private Money _price;
     private String _code;
+    private Repeat _repeat;
     
+    public Repeat getRepeat() {
+        return _repeat;
+    }
+    public void setRepeat(Repeat repeat) {
+        _repeat = repeat;
+    }
     public String getId() {
         return _code;
     }
