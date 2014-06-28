@@ -12,6 +12,8 @@ import com.coinbase.api.entity.AccountsResponse;
 import com.coinbase.api.entity.Address;
 import com.coinbase.api.entity.AddressResponse;
 import com.coinbase.api.entity.AddressesResponse;
+import com.coinbase.api.entity.Application;
+import com.coinbase.api.entity.ApplicationsResponse;
 import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.ContactsResponse;
 import com.coinbase.api.entity.Order;
@@ -625,4 +627,43 @@ public interface Coinbase {
      */
     public AddressResponse generateReceiveAddress() throws CoinbaseException;
 
+    /**
+     * Retrieve details for an individual OAuth application.
+     * 
+     * @param id the id of the OAuth application
+     * 
+     * @return the details for the OAuth application
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/applications/show.html">Online Documentation</a>
+     *
+     */
+    public Application getApplication(String id) throws CoinbaseException;
+    
+    /**
+     * List OAuth applications on your account.
+     * 
+     * @param id the id of the OAuth application
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/applications/index.html">Online Documentation</a>
+     *
+     */
+    public ApplicationsResponse getApplications() throws CoinbaseException;
+    
+    /**
+     * Create a new OAuth application
+     * 
+     * @param applicationParams an Application object containing the arguments for creating an OAuth application
+     * 
+     * @return the newly created OAuth application including client id and client secret
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/applications/create.html">Online Documentation</a>
+     *
+     */
+    public Application createApplication(Application application) throws CoinbaseException;
 }

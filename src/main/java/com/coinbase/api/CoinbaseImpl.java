@@ -27,6 +27,9 @@ import com.coinbase.api.entity.AccountsResponse;
 import com.coinbase.api.entity.Address;
 import com.coinbase.api.entity.AddressResponse;
 import com.coinbase.api.entity.AddressesResponse;
+import com.coinbase.api.entity.Application;
+import com.coinbase.api.entity.ApplicationResponse;
+import com.coinbase.api.entity.ApplicationsResponse;
 import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.ButtonResponse;
 import com.coinbase.api.entity.ContactsResponse;
@@ -518,6 +521,25 @@ class CoinbaseImpl implements Coinbase {
 
     public AddressResponse generateReceiveAddress() throws CoinbaseException {
 	return generateReceiveAddress(null);
+    }
+
+    public Application createApplication(Application applicationParams) throws CoinbaseException {
+	WebTarget createApplicationTarget = _authenticated_target.path("oauth/applications");
+	
+	Request request = new Request();
+	request.setApplication(applicationParams);
+	
+	return post(createApplicationTarget, request, ApplicationResponse.class).getApplication();
+    }
+    
+    public ApplicationsResponse getApplications() {
+	WebTarget applicationsTarget = _authenticated_target.path("oauth/applications");
+	return get(applicationsTarget, ApplicationsResponse.class);
+    }
+
+    public Application getApplication(String id) {
+	WebTarget applicationTarget = _authenticated_target.path("oauth/applications/" + id);
+	return get(applicationTarget, ApplicationResponse.class).getApplication();
     }
 
     private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {

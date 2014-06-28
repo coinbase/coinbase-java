@@ -14,6 +14,7 @@ public class Request {
     private String _scopes;
     private String _tokenId;
     private Address _address;
+    private Application _application;
 
     public Address getAddress() {
         return _address;
@@ -103,4 +104,11 @@ public class Request {
 	_tokenId = tokenId;
     }
 
+    public Application getApplication() {
+        return _application;
+    }
+
+    public void setApplication(Application application) {
+        _application = application;
+    }
 }

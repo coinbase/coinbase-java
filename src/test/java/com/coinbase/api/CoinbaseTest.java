@@ -32,6 +32,8 @@ import com.coinbase.api.entity.AccountsResponse;
 import com.coinbase.api.entity.Address;
 import com.coinbase.api.entity.AddressResponse;
 import com.coinbase.api.entity.AddressesResponse;
+import com.coinbase.api.entity.Application;
+import com.coinbase.api.entity.ApplicationResponse;
 import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.ButtonResponse;
 import com.coinbase.api.entity.Contact;
@@ -617,5 +619,27 @@ public class CoinbaseTest {
 	assertEquals("muVu2JZo8PbewBHRp6bpqFvVD87qvqEHWA", address.getAddress());
 	assertEquals("http://www.example.com/callback", address.getCallbackUrl());
 	assertEquals("Dalmation donations", address.getLabel());
+    }
+
+    @Test
+    public void createApplication() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/application_response.json");
+	final ApplicationResponse response = mapper.readValue(in, ApplicationResponse.class);
+
+	new NonStrictExpectations() {{
+		invoker.post((Entity) any, ApplicationResponse.class);
+		times = 1;
+		result = response;
+	}};
+
+	Application app = cb.createApplication(new Application());
+	
+	assertEquals("5302ebdb137f73dcf7000047", app.getId());
+	assertEquals(DateTime.parse("2014-02-17T21:12:59-08:00"), app.getCreatedAt());
+	assertEquals("Test App 3", app.getName());
+	assertEquals("http://example.com", app.getRedirectUri());
+	assertEquals("ee0ed3e5092e75e2b66afed97ecb54b8408b5e1b153f9841ce3f9c555f45db74", app.getClientId());
+	assertEquals("8c9217790a1fc001a37d09aa2d28e218868242390670f41440822dbb1173fe58", app.getClientSecret());
+	assertEquals(Integer.valueOf(0), app.getNumUsers());
     }
 }
