@@ -24,6 +24,8 @@ import com.coinbase.api.auth.HmacClientFilter;
 import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.AccountResponse;
 import com.coinbase.api.entity.AccountsResponse;
+import com.coinbase.api.entity.Address;
+import com.coinbase.api.entity.AddressResponse;
 import com.coinbase.api.entity.AddressesResponse;
 import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.ButtonResponse;
@@ -503,6 +505,19 @@ class CoinbaseImpl implements Coinbase {
 	request.setTokenId(tokenId);
 	
 	post(redeemTokenTarget, request, Response.class);
+    }
+
+    public AddressResponse generateReceiveAddress(Address addressParams) throws CoinbaseException {
+	WebTarget generateAddressTarget = _authenticated_target.path("account/generate_receive_address");
+	
+	Request request = newRequest();
+	request.setAddress(addressParams);
+	
+	return post(generateAddressTarget, request, AddressResponse.class);
+    }
+
+    public AddressResponse generateReceiveAddress() throws CoinbaseException {
+	return generateReceiveAddress(null);
     }
 
     private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {

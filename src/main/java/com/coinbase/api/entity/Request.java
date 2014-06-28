@@ -13,6 +13,15 @@ public class Request {
     private String _clientId;
     private String _scopes;
     private String _tokenId;
+    private Address _address;
+
+    public Address getAddress() {
+        return _address;
+    }
+
+    public void setAddress(Address address) {
+        _address = address;
+    }
 
     public String getClientId() {
         return _clientId;

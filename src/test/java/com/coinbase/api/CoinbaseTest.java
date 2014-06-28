@@ -30,6 +30,7 @@ import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.AccountResponse;
 import com.coinbase.api.entity.AccountsResponse;
 import com.coinbase.api.entity.Address;
+import com.coinbase.api.entity.AddressResponse;
 import com.coinbase.api.entity.AddressesResponse;
 import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.ButtonResponse;
@@ -598,5 +599,23 @@ public class CoinbaseTest {
 	
 	assertEquals("abc12e821cf6e128afc2e821cf68e12cf68e168e128af21cf682e821cf68e1fe", token.getTokenId());
 	assertEquals("n3NzN74qGYHSHPhKM1hdts3bF1zV4N1Aa3", token.getAddress());
+    }
+
+    @Test
+    public void generateReceiveAddress() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/address_response.json");
+	final AddressResponse response = mapper.readValue(in, AddressResponse.class);
+
+	new NonStrictExpectations() {{
+		invoker.post((Entity) any, AddressResponse.class);
+		times = 1;
+		result = response;
+	}};
+
+	AddressResponse address = cb.generateReceiveAddress();
+	
+	assertEquals("muVu2JZo8PbewBHRp6bpqFvVD87qvqEHWA", address.getAddress());
+	assertEquals("http://www.example.com/callback", address.getCallbackUrl());
+	assertEquals("Dalmation donations", address.getLabel());
     }
 }

@@ -9,6 +9,8 @@ import org.joda.money.Money;
 
 import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.AccountsResponse;
+import com.coinbase.api.entity.Address;
+import com.coinbase.api.entity.AddressResponse;
 import com.coinbase.api.entity.AddressesResponse;
 import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.ContactsResponse;
@@ -596,5 +598,31 @@ public interface Coinbase {
      *
      */
     public void redeemToken(String tokenId) throws CoinbaseException;
+    
+    /**
+     * Generate a new receive address
+     *
+     * @param addressParams an Address object containing any arguments for the new address
+     * 
+     * @return the generated address
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/account/generate_receive_address.html">Online Documentation</a>
+     *
+     */
+    public AddressResponse generateReceiveAddress(Address addressParams) throws CoinbaseException;
+
+    /**
+     * Generate a new receive address
+     * 
+     * @return the generated address
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/account/generate_receive_address.html">Online Documentation</a>
+     *
+     */
+    public AddressResponse generateReceiveAddress() throws CoinbaseException;
 
 }
