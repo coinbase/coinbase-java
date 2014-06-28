@@ -16,6 +16,7 @@ import com.coinbase.api.entity.Order;
 import com.coinbase.api.entity.OrdersResponse;
 import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
+import com.coinbase.api.entity.RecurringPayment;
 import com.coinbase.api.entity.RecurringPaymentsResponse;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.TransactionsResponse;
@@ -542,5 +543,19 @@ public interface Coinbase {
      *
      */
     public User updateUser(String userId, User userParams) throws CoinbaseException;
+    
+    /**
+     * Retrieves the details of a recurring payment
+     *
+     * @param id the id of the recurring payment
+     * 
+     * @return the recurring payment details
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/recurring_payments/show.html">Online Documentation</a>
+     *
+     */
+    public RecurringPayment getRecurringPayment(String id) throws CoinbaseException;
 
 }
