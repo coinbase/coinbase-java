@@ -95,6 +95,10 @@ class CoinbaseImpl implements Coinbase {
 	    _account_specific_target = _authenticated_target;
 	}
 
+	// Register BTC as a currency since Android won't let joda read from classpath resources
+	try {
+	    CurrencyUnit.registerCurrency("BTC", -1, 8, new ArrayList<String>());
+	} catch (IllegalArgumentException ex) {}
     }
 
     public User getUser() {
