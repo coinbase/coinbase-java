@@ -482,6 +482,12 @@ class CoinbaseImpl implements Coinbase {
 	return get(recurringPaymentTarget, RecurringPaymentResponse.class).getRecurringPayment();
     }
 
+    public RecurringPayment getSubscriber(String id) throws CoinbaseException {
+	WebTarget recurringPaymentTarget = _authenticated_target.path("subscribers/" + id);
+	
+	return get(recurringPaymentTarget, RecurringPaymentResponse.class).getRecurringPayment();
+    }
+
     private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {
 	return target.request(MediaType.APPLICATION_JSON_TYPE).get(responseClass);
     }

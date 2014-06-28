@@ -557,5 +557,19 @@ public interface Coinbase {
      *
      */
     public RecurringPayment getRecurringPayment(String id) throws CoinbaseException;
+    
+    /**
+     * Retrieves the details of a subscriber's recurring payment
+     *
+     * @param id the id of the recurring payment
+     * 
+     * @return the recurring payment details
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/recurring_payments/show.html">Online Documentation</a>
+     *
+     */
+    public RecurringPayment getSubscriber(String id) throws CoinbaseException;
 
 }
