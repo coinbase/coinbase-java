@@ -43,6 +43,8 @@ import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.RecurringPayment;
 import com.coinbase.api.entity.RecurringPaymentsResponse;
+import com.coinbase.api.entity.Token;
+import com.coinbase.api.entity.TokenResponse;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.TransactionResponse;
 import com.coinbase.api.entity.TransactionsResponse;
@@ -579,6 +581,22 @@ public class CoinbaseTest {
 	List<CurrencyUnit> currencies = cb.getSupportedCurrencies();
 
 	assertTrue(currencies.contains(CurrencyUnit.CAD));
+    }
+
+    @Test
+    public void createToken() throws Exception {
+	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/token_response.json");
+	final TokenResponse response = mapper.readValue(in, TokenResponse.class);
+
+	new NonStrictExpectations() {{
+		invoker.post((Entity) any, TokenResponse.class);
+		times = 1;
+		result = response;
+	}};
+
+	Token token = cb.createToken();
 	
+	assertEquals("abc12e821cf6e128afc2e821cf68e12cf68e168e128af21cf682e821cf68e1fe", token.getTokenId());
+	assertEquals("n3NzN74qGYHSHPhKM1hdts3bF1zV4N1Aa3", token.getAddress());
     }
 }

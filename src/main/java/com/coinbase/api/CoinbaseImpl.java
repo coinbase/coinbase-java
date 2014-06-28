@@ -38,6 +38,8 @@ import com.coinbase.api.entity.RecurringPaymentResponse;
 import com.coinbase.api.entity.RecurringPaymentsResponse;
 import com.coinbase.api.entity.Request;
 import com.coinbase.api.entity.Response;
+import com.coinbase.api.entity.Token;
+import com.coinbase.api.entity.TokenResponse;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.TransactionResponse;
 import com.coinbase.api.entity.TransactionsResponse;
@@ -486,6 +488,21 @@ class CoinbaseImpl implements Coinbase {
 	WebTarget recurringPaymentTarget = _authenticated_target.path("subscribers/" + id);
 	
 	return get(recurringPaymentTarget, RecurringPaymentResponse.class).getRecurringPayment();
+    }
+
+    public Token createToken() throws CoinbaseException {
+	WebTarget createTokenTarget = _authenticated_target.path("tokens");
+	
+	return post(createTokenTarget, new Request(), TokenResponse.class).getToken();
+    }
+
+    public void redeemToken(String tokenId) throws CoinbaseException {
+	WebTarget redeemTokenTarget = _authenticated_target.path("tokens/redeem");
+	
+	Request request = new Request();
+	request.setTokenId(tokenId);
+	
+	post(redeemTokenTarget, request, Response.class);
     }
 
     private static <T extends Response> T get(WebTarget target, Class<T> responseClass) {

@@ -12,6 +12,7 @@ public class Request {
     private User _user;
     private String _clientId;
     private String _scopes;
+    private String _tokenId;
 
     public String getClientId() {
         return _clientId;
@@ -83,6 +84,14 @@ public class Request {
 
     public void setTransaction(Transaction transaction) {
         _transaction = transaction;
+    }
+
+    public String getTokenId() {
+	return _tokenId;
+    }
+
+    public void setTokenId(String tokenId) {
+	_tokenId = tokenId;
     }
 
 }

@@ -18,6 +18,7 @@ import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.RecurringPayment;
 import com.coinbase.api.entity.RecurringPaymentsResponse;
+import com.coinbase.api.entity.Token;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.TransactionsResponse;
 import com.coinbase.api.entity.Transfer;
@@ -557,7 +558,7 @@ public interface Coinbase {
      *
      */
     public RecurringPayment getRecurringPayment(String id) throws CoinbaseException;
-    
+
     /**
      * Retrieves the details of a subscriber's recurring payment
      *
@@ -571,5 +572,29 @@ public interface Coinbase {
      *
      */
     public RecurringPayment getSubscriber(String id) throws CoinbaseException;
+
+    /**
+     * Create a token which can be redeemed for bitcoin
+     *
+     * @return the newly created token
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/tokens/create.html">Online Documentation</a>
+     *
+     */
+    public Token createToken() throws CoinbaseException;
+
+    /**
+     * Redeem a token, claiming its address and all its bitcoins
+     *
+     * @param tokenId the id of the token
+     * 
+     * @throws CoinbaseException on error
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/tokens/redeem.html">Online Documentation</a>
+     *
+     */
+    public void redeemToken(String tokenId) throws CoinbaseException;
 
 }
