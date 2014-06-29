@@ -10,11 +10,19 @@ import org.glassfish.jersey.SslConfigurator;
 class CoinbaseSSL {
 
     public static SSLContext context() throws Exception {
-	InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/ca-coinbase.jks");
 	
-	KeyStore trustStore = KeyStore.getInstance("JKS");
-	trustStore.load(in, "changeit".toCharArray());
+	KeyStore trustStore;
+	InputStream trustStoreInputStream;
 	
+	if (System.getProperty("java.vm.name").equalsIgnoreCase("Dalvik")) {
+	    trustStoreInputStream = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/ca-coinbase.bks");
+            trustStore = KeyStore.getInstance("BKS");
+	} else {
+	    trustStoreInputStream = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/ca-coinbase.jks");
+            trustStore = KeyStore.getInstance("JKS");
+        }
+
+        trustStore.load(trustStoreInputStream, "changeit".toCharArray());
 	SslConfigurator sslConfig = SslConfigurator.newInstance(true).trustStore(trustStore);
 
 	return sslConfig.createSSLContext();
