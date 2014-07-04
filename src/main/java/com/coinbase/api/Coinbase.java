@@ -24,6 +24,7 @@ import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.RecurringPayment;
 import com.coinbase.api.entity.RecurringPaymentsResponse;
+import com.coinbase.api.entity.Report;
 import com.coinbase.api.entity.Token;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.TransactionsResponse;
@@ -789,5 +790,17 @@ public interface Coinbase {
      *
      */
     public List<HistoricalPrice> getHistoricalPrices() throws CoinbaseException, IOException;
+    
+    /**
+     * Create a new report
+     * 
+     * @return the newly created report
+     * @throws CoinbaseException 
+     * @throws IOException 
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/reports/create.html">Online Documentation</a>
+     *
+     */
+    public Report createReport(Report reportParams) throws CoinbaseException, IOException;
 
 }

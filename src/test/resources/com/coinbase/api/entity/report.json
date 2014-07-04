@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "report": {
+    "id": "534711dd137f730e1c0000c6",
+    "type": "transfers",
+    "status": "active",
+    "email": "dummy@example.com",
+    "repeat": "never",
+    "time_range": "custom",
+    "callback_url": null,
+    "file_url": null,
+    "times": -1,
+    "times_run": 0,
+    "last_run": null,
+    "next_run": "2014-04-10T14:00:00-07:00",
+    "created_at":"2014-04-10T14:49:17-07:00"
+  }
+}

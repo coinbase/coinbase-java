@@ -41,6 +41,7 @@ import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.RecurringPayment;
 import com.coinbase.api.entity.RecurringPaymentsResponse;
+import com.coinbase.api.entity.Report;
 import com.coinbase.api.entity.Token;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.TransactionsResponse;
@@ -511,5 +512,36 @@ public class CoinbaseTest {
 
         assertEquals(DateTime.parse("2014-01-06T00:25:24-08:00"), prices.get(0).getTime());
         assertEquals(Money.parse("USD 10"), prices.get(0).getSpotPrice());
+    }
+    
+    @Test
+    public void createReport() throws Exception {
+        final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/report.json");
+        when(mockConnection.getInputStream()).thenReturn(in);
+
+        Report reportParams = new Report();
+        reportParams.setType(Report.Type.TRANSFERS);
+        reportParams.setTimeRange(Report.TimeRange.CUSTOM);
+        reportParams.setTimeRangeStart(DateTime.parse("2014-01-06T00:00:00Z"));
+        assertEquals(reportParams.getTimeRangeStart(), "01/06/2014");
+        reportParams.setTimeRangeEnd(DateTime.parse("2014-01-07T00:00:00Z"));
+        assertEquals(reportParams.getTimeRangeEnd(), "01/07/2014");
+        reportParams.setStartType(Report.StartType.ON);
+        reportParams.setNextRun(DateTime.parse("2014-02-06T12:00:00Z"));
+        assertEquals(reportParams.getNextRunDate(), "02/06/2014");
+        assertEquals(reportParams.getNextRunTime(), "12:00");
+        
+        Report report = cb.createReport(reportParams);
+        
+        assertEquals(Report.Type.TRANSFERS, report.getType());
+        assertEquals(Report.Status.ACTIVE, report.getStatus());
+        assertEquals("dummy@example.com", report.getEmail());
+        assertEquals(Report.Repeat.NEVER, report.getRepeat());
+        assertEquals(Report.TimeRange.CUSTOM, report.getTimeRange());
+        assertEquals(Report.INFINITE, report.getTimes());
+        assertEquals(Integer.valueOf(0), report.getTimesRun());
+        assertTrue(DateTime.parse("2014-04-10T14:00:00-07:00").isEqual(report.getNextRun()));
+        assertTrue(DateTime.parse("2014-04-10T14:49:17-07:00").isEqual(report.getCreatedAt()));
+        
     }
 }

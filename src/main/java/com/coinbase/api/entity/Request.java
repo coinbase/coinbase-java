@@ -15,6 +15,15 @@ public class Request {
     private String _tokenId;
     private Address _address;
     private Application _application;
+    private Report _report;
+
+    public Report getReport() {
+        return _report;
+    }
+
+    public void setReport(Report report) {
+        _report = report;
+    }
 
     public Address getAddress() {
         return _address;

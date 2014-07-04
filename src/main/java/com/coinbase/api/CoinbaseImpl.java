@@ -49,6 +49,8 @@ import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.RecurringPayment;
 import com.coinbase.api.entity.RecurringPaymentResponse;
 import com.coinbase.api.entity.RecurringPaymentsResponse;
+import com.coinbase.api.entity.Report;
+import com.coinbase.api.entity.ReportResponse;
 import com.coinbase.api.entity.Request;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Token;
@@ -805,6 +807,20 @@ class CoinbaseImpl implements Coinbase {
             throw new CoinbaseException("Invalid application id");
         }
         return get(applicationUrl, ApplicationResponse.class).getApplication();
+    }
+
+    public Report createReport(Report reportParams) throws CoinbaseException, IOException {
+        URL reportsUrl;
+        try {
+            reportsUrl = new URL(_baseUrl, "reports");
+        } catch (MalformedURLException ex) {
+            throw new AssertionError(ex);
+        }
+
+        Request request = newAccountSpecificRequest();
+        request.setReport(reportParams);
+
+        return post(reportsUrl, request, ReportResponse.class).getReport();
     }
 
     private void doHmacAuthentication (URL url, String body, HttpsURLConnection conn) throws IOException {
