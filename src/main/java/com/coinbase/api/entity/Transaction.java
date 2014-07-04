@@ -3,7 +3,6 @@ package com.coinbase.api.entity;
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 
-import com.coinbase.api.deserializer.DateTimeDeserializer;
 import com.coinbase.api.deserializer.MoneyDeserializer;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -105,7 +104,6 @@ public class Transaction {
         return _createdAt;
     }
     
-    @JsonDeserialize(using=DateTimeDeserializer.class)
     public void setCreatedAt(DateTime createdAt) {
         _createdAt = createdAt;
     }
