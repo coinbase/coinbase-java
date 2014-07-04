@@ -8,6 +8,8 @@ This library is a wrapper around the [Coinbase JSON API](https://coinbase.com/ap
 
 ## Installation
 
+### Using Maven
+
 Until this library is added to Maven Central, it must be built and installed locally:
 
 ```bash
@@ -24,6 +26,18 @@ Then add the following dependency to your project's Maven pom.xml:
 	<artifactId>coinbase-java</artifactId>
 	<version>1.0.0</version>
 </dependency>
+```
+
+### Manual
+
+You can copy this library jar and all its dependency jars to a folder as follows:
+
+```bash
+git clone git@github.com:coinbase/coinbase-java.git
+cd coinbase-java
+mvn dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=$YOUR_JAR_DIRECTORY
+mvn package
+cp target/coinbase-java-1.0.0.jar $YOUR_JAR_DIRECTORY
 ```
 
 ## Usage
