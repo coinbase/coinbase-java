@@ -25,6 +25,7 @@ import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.RecurringPayment;
 import com.coinbase.api.entity.RecurringPaymentsResponse;
 import com.coinbase.api.entity.Report;
+import com.coinbase.api.entity.ReportsResponse;
 import com.coinbase.api.entity.Token;
 import com.coinbase.api.entity.Transaction;
 import com.coinbase.api.entity.TransactionsResponse;
@@ -802,5 +803,41 @@ public interface Coinbase {
      *
      */
     public Report createReport(Report reportParams) throws CoinbaseException, IOException;
+
+    /**
+     * Retrieve details for a report
+     * 
+     * @param  reportId the id of the report to retrieve
+     * @return the requested report
+     * @throws CoinbaseException 
+     * @throws IOException 
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/reports/show.html">Online Documentation</a>
+     *
+     */
+    public Report getReport(String reportId) throws CoinbaseException, IOException;
+    
+    /**
+     * Retrieve all reports
+     * 
+     * @param  page the page of results to retrieve
+     * @throws CoinbaseException 
+     * @throws IOException 
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/reports/index.html">Online Documentation</a>
+     *
+     */
+    public ReportsResponse getReports(int page) throws CoinbaseException, IOException;
+
+    /**
+     * Retrieve all reports
+     * 
+     * @throws CoinbaseException 
+     * @throws IOException 
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/reports/index.html">Online Documentation</a>
+     *
+     */
+    public ReportsResponse getReports() throws CoinbaseException, IOException;
 
 }

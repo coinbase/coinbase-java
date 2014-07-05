@@ -533,6 +533,7 @@ public class CoinbaseTest {
         
         Report report = cb.createReport(reportParams);
         
+        assertEquals("534711dd137f730e1c0000c6", report.getId());
         assertEquals(Report.Type.TRANSFERS, report.getType());
         assertEquals(Report.Status.ACTIVE, report.getStatus());
         assertEquals("dummy@example.com", report.getEmail());

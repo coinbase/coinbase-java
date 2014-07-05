@@ -51,6 +51,7 @@ import com.coinbase.api.entity.RecurringPaymentResponse;
 import com.coinbase.api.entity.RecurringPaymentsResponse;
 import com.coinbase.api.entity.Report;
 import com.coinbase.api.entity.ReportResponse;
+import com.coinbase.api.entity.ReportsResponse;
 import com.coinbase.api.entity.Request;
 import com.coinbase.api.entity.Response;
 import com.coinbase.api.entity.Token;
@@ -821,6 +822,38 @@ class CoinbaseImpl implements Coinbase {
         request.setReport(reportParams);
 
         return post(reportsUrl, request, ReportResponse.class).getReport();
+    }
+
+    public Report getReport(String reportId) throws IOException, CoinbaseException {
+        URL reportUrl;
+        try {
+            reportUrl = new URL(
+                _baseUrl,
+                "reports/" + reportId +
+                (_accountId != null ? "?account_id=" + _accountId : "")
+            );
+        } catch (MalformedURLException ex) {
+            throw new CoinbaseException("Invalid report id");
+        }
+        return get(reportUrl, ReportResponse.class).getReport();
+    }
+
+    public ReportsResponse getReports(int page) throws IOException, CoinbaseException {
+        URL reportsUrl;
+        try {
+            reportsUrl = new URL(
+                _baseUrl,
+                "reports?page=" + page +
+                (_accountId != null ? "&account_id=" + _accountId : "")
+            );
+        } catch (MalformedURLException ex) {
+            throw new CoinbaseException("Invalid account id");
+        }
+        return get(reportsUrl, ReportsResponse.class);
+    }
+
+    public ReportsResponse getReports() throws IOException, CoinbaseException {
+        return getReports(1);
     }
 
     private void doHmacAuthentication (URL url, String body, HttpsURLConnection conn) throws IOException {

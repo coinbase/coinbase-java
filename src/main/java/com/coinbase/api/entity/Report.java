@@ -128,6 +128,7 @@ public class Report {
     
     public static final Integer INFINITE = Integer.valueOf(-1);
 
+    private String id;
     private Type type;
     private String email;
     private String callbackUrl;
@@ -244,4 +245,11 @@ public class Report {
     public void setTimesRun(Integer timesRun) {
         this.timesRun = timesRun;
     }
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
 }
+
