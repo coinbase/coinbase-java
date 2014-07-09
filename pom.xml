@@ -1,13 +1,40 @@
 <project>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
 	<!-- model version is always 4.0.0 for Maven 2.x POMs -->
 	<modelVersion>4.0.0</modelVersion>
 
 	<!-- project coordinates, i.e. a group of values which uniquely identify 
 		this project -->
-
 	<groupId>com.coinbase.api</groupId>
 	<artifactId>coinbase-java</artifactId>
 	<version>1.0.0</version>
+	<packaging>jar</packaging>
+	<name>coinbase-java</name>
+	<description>A first-party java wrapper around the Coinbase API</description>
+	<url>https://github.com/coinbase/coinbase-java</url>
+
+	<scm>
+		<connection>scm:git:git@github.com:coinbase/coinbase-java.git</connection>
+		<developerConnection>scm:git:git@github.com:coinbase/coinbase-java.git</developerConnection>
+		<url>git@github.com:coinbase/coinbase-java.git</url>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>aianus</id>
+			<name>Alex Ianus</name>
+			<email>aianus@coinbase.com</email>
+			<url>http://alexianus.com</url>
+			<organization>Coinbase Inc.</organization>
+			<organizationUrl>https://coinbase.com</organizationUrl>
+		</developer>
+	</developers>
 
 	<licenses>
 		<license>
