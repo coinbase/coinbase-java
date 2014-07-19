@@ -1,7 +1,5 @@
 # coinbase-java
 
-**This library is under development, and is not yet ready for production use.**
-
 An easy way to buy, sell, send, and accept [bitcoin](http://en.wikipedia.org/wiki/Bitcoin) through the [Coinbase API](https://coinbase.com/docs/api/overview).
 
 This library is a wrapper around the [Coinbase JSON API](https://coinbase.com/api/doc). It supports both the the [api key + secret authentication method](https://coinbase.com/docs/api/authentication) as well as OAuth 2.0 for performing actions on other people's account.
@@ -10,15 +8,7 @@ This library is a wrapper around the [Coinbase JSON API](https://coinbase.com/ap
 
 ### Using Maven
 
-Until this library is added to Maven Central, it must be built and installed locally:
-
-```bash
-git clone git@github.com:coinbase/coinbase-java.git
-cd coinbase-java
-mvn clean install
-```
-
-Then add the following dependency to your project's Maven pom.xml:
+Add the following dependency to your project's Maven pom.xml:
 
 ```xml
 <dependency>
@@ -27,6 +17,8 @@ Then add the following dependency to your project's Maven pom.xml:
 	<version>1.0.0</version>
 </dependency>
 ```
+
+The library will automatically be pulled from Maven Central.
 
 ### Manual
 
@@ -297,7 +289,7 @@ You should take precautions to store your API key securely in your application. 
 
 This gem relies on the [Joda Money](http://www.joda.org/joda-money/) library, based on the [JDK BigDecimal](http://docs.oracle.com/javase/7/docs/api/java/math/BigDecimal.html) class for arithmetic to maintain decimal precision for all values returned.
 
-When working with currency values in your application, it's important to remember that floating point arithmetic is prone to [rounding errors](http://en.wikipedia.org/wiki/Round-off_error). 
+When working with currency values in your application, it's important to remember that floating point arithmetic is prone to [rounding errors](http://en.wikipedia.org/wiki/Round-off_error).
 
 ## Testing
 
