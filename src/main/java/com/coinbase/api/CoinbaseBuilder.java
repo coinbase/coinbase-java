@@ -12,7 +12,7 @@ public class CoinbaseBuilder {
      * 
      * @return a new Coinbase client object
      */
-    public Coinbase build() throws Exception {
+    public Coinbase build() {
 	return new CoinbaseImpl(this);
     }
 

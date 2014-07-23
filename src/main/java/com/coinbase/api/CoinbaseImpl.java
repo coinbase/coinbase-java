@@ -73,14 +73,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 class CoinbaseImpl implements Coinbase {
 
     private static final ObjectMapper objectMapper = ObjectMapperProvider.createDefaultMapper();
-    private URL    _baseUrl = new URL("https://coinbase.com/api/v1/");
-    private String _accountId = null;
-    private String _apiKey = null;
-    private String _apiSecret = null;
-    private String _accessToken = null;
-    private SSLSocketFactory _socketFactory = null;
+    
+    private URL    _baseUrl;
+    private String _accountId;
+    private String _apiKey;
+    private String _apiSecret;
+    private String _accessToken;
+    private SSLSocketFactory _socketFactory;
 
-    CoinbaseImpl(CoinbaseBuilder builder) throws Exception {
+    CoinbaseImpl(CoinbaseBuilder builder) {
+
+        try {
+            _baseUrl = new URL("https://coinbase.com/api/v1/");
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
 
         _apiKey = builder.api_key;
         _apiSecret = builder.api_secret;
