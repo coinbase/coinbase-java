@@ -1,0 +1,38 @@
+{
+  "current_user": {
+    "id": "524a75a3f8182b7d2a00000a",
+    "email": "user2@example.com",
+    "name": "User 2"
+  },
+  "balance": {
+    "amount": "50.00000000",
+    "currency": "BTC"
+  },
+  "native_balance": {
+    "amount": "500.00",
+    "currency": "USD"
+  },
+  "account_changes": [
+    {
+      "id": "524a75a3f8182b7d2a000018",
+      "created_at": "2013-10-01T00:11:31-07:00",
+      "transaction_id": "524a75a3f8182b7d2a000010",
+      "confirmed": false,
+      "cache": {
+        "notes_present": false,
+        "category": "tx",
+        "other_user": {
+          "id": null,
+          "name": "an external account"
+        }
+      },
+      "amount": {
+        "amount": "50.00000000",
+        "currency": "BTC"
+      }
+    }
+  ],
+  "total_count": 1,
+  "num_pages": 1,
+  "current_page": 1
+}

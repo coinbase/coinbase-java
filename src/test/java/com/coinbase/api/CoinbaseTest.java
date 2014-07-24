@@ -25,6 +25,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.coinbase.api.entity.Account;
+import com.coinbase.api.entity.AccountChange;
+import com.coinbase.api.entity.AccountChangesResponse;
 import com.coinbase.api.entity.AccountsResponse;
 import com.coinbase.api.entity.Address;
 import com.coinbase.api.entity.AddressResponse;
@@ -543,6 +545,34 @@ public class CoinbaseTest {
         assertEquals(Integer.valueOf(0), report.getTimesRun());
         assertTrue(DateTime.parse("2014-04-10T14:00:00-07:00").isEqual(report.getNextRun()));
         assertTrue(DateTime.parse("2014-04-10T14:49:17-07:00").isEqual(report.getCreatedAt()));
+    }
+    
+    @Test
+    public void getAccountChanges() throws Exception {
+        final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/account_changes_response.json");
+        when(mockConnection.getInputStream()).thenReturn(in);
+        
+        AccountChangesResponse response = cb.getAccountChanges();
+        User user = response.getCurrentUser();
+        AccountChange transaction = response.getAccountChanges().get(0);
+        
+        assertEquals(Money.parse("BTC 50"), response.getBalance());
+        assertEquals(Money.parse("USD 500"), response.getNativeBalance());
+        
+        assertEquals("524a75a3f8182b7d2a00000a", user.getId());
+        assertEquals("user2@example.com", user.getEmail());
+        assertEquals("User 2", user.getName());
+        
+        assertEquals("524a75a3f8182b7d2a000018", transaction.getId());
+        assertEquals("524a75a3f8182b7d2a000010", transaction.getTransactionId());
+        assertTrue(DateTime.parse("2013-10-01T00:11:31-07:00").isEqual(transaction.getCreatedAt()));   
+        assertFalse(transaction.isConfirmed().booleanValue());
+        assertEquals(Money.parse("BTC 50"), transaction.getAmount());
+        
+        AccountChange.Cache cache = transaction.getCache();
+        assertFalse(cache.isNotesPresent().booleanValue());
+        assertEquals(AccountChange.Cache.Category.TRANSACTION, cache.getCategory());
+        assertEquals("an external account", cache.getOtherUser().getName());        
         
     }
 }

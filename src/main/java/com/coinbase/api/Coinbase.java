@@ -9,6 +9,7 @@ import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 
 import com.coinbase.api.entity.Account;
+import com.coinbase.api.entity.AccountChangesResponse;
 import com.coinbase.api.entity.AccountsResponse;
 import com.coinbase.api.entity.Address;
 import com.coinbase.api.entity.AddressResponse;
@@ -839,5 +840,27 @@ public interface Coinbase {
      *
      */
     public ReportsResponse getReports() throws CoinbaseException, IOException;
+    
+    /**
+     * Retrieve account changes
+     * 
+     * @param  page the page of results to retrieve
+     * @throws CoinbaseException 
+     * @throws IOException 
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/account_changes/index.html">Online Documentation</a>
+     *
+     */
+    public AccountChangesResponse getAccountChanges(int page) throws CoinbaseException, IOException;
 
+    /**
+     * Retrieve account changes
+     * 
+     * @throws CoinbaseException 
+     * @throws IOException 
+     * 
+     * @see <a href="https://coinbase.com/api/doc/1.0/account_changes/index.html">Online Documentation</a>
+     *
+     */
+    public AccountChangesResponse getAccountChanges() throws CoinbaseException, IOException;
 }

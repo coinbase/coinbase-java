@@ -29,6 +29,7 @@ import org.joda.time.DateTime;
 import au.com.bytecode.opencsv.CSVReader;
 
 import com.coinbase.api.entity.Account;
+import com.coinbase.api.entity.AccountChangesResponse;
 import com.coinbase.api.entity.AccountResponse;
 import com.coinbase.api.entity.AccountsResponse;
 import com.coinbase.api.entity.Address;
@@ -861,6 +862,24 @@ class CoinbaseImpl implements Coinbase {
 
     public ReportsResponse getReports() throws IOException, CoinbaseException {
         return getReports(1);
+    }
+
+    public AccountChangesResponse getAccountChanges(int page) throws IOException, CoinbaseException {
+        URL accountChangesUrl;
+        try {
+            accountChangesUrl = new URL(
+                _baseUrl,
+                "account_changes?page=" + page +
+                (_accountId != null ? "&account_id=" + _accountId : "")
+            );
+        } catch (MalformedURLException ex) {
+            throw new CoinbaseException("Invalid account id");
+        }
+        return get(accountChangesUrl, AccountChangesResponse.class);
+    }
+
+    public AccountChangesResponse getAccountChanges() throws IOException, CoinbaseException {
+        return getAccountChanges(1);
     }
 
     private void doHmacAuthentication (URL url, String body, HttpsURLConnection conn) throws IOException {
