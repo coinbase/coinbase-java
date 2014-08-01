@@ -1,5 +1,7 @@
 package com.coinbase.api.entity;
 
+import java.math.BigDecimal;
+
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 
@@ -35,6 +37,7 @@ public class Transaction {
     private DateTime _createdAt;
     private String _hsh;
     private String _notes;
+    private String _userFee;
     private Money _amount;
     private Boolean _request;
     private Status _status;
@@ -172,6 +175,12 @@ public class Transaction {
     public void setRecipient(User recipient) {
         _recipient = recipient;
     }
-    
 
+    public String getUserFee() {
+        return _userFee;
+    }
+
+    public void setUserFee(BigDecimal userFee) {
+        _userFee = userFee.toPlainString();
+    }
 }
