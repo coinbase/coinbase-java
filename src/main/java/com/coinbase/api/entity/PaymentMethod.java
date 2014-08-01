@@ -1,7 +1,13 @@
 package com.coinbase.api.entity;
 
-public class PaymentMethod {
+import java.io.Serializable;
 
+public class PaymentMethod implements Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3574818318535801143L;
     private String _id;
     private String _name;
     private Boolean _canBuy;

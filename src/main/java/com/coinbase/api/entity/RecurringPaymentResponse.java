@@ -1,6 +1,10 @@
 package com.coinbase.api.entity;
 
 public class RecurringPaymentResponse extends Response {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -1740844042364630330L;
     private RecurringPayment _recurringPayment;
 
     public RecurringPayment getRecurringPayment() {

@@ -1,8 +1,14 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
+
 import org.joda.time.DateTime;
 
-public class Application {
+public class Application implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8979526541382258919L;
     private String _id;
     private DateTime _createdAt;
     private String _name;

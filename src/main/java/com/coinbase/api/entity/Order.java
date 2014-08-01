@@ -1,12 +1,14 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
+
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class Order {
+public class Order implements Serializable {
 
     public enum Status {
 	COMPLETED("completed"),
@@ -33,6 +35,10 @@ public class Order {
 	}
     }
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8221149393524031079L;
     private String _id;
     private DateTime _createdAt;
     private Status _status;

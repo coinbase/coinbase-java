@@ -1,7 +1,13 @@
 package com.coinbase.api.entity;
 
-public class TransactionNode {
+import java.io.Serializable;
 
+public class TransactionNode implements Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7122426900695444540L;
     private Transaction _transaction;
 
     public Transaction getTransaction() {

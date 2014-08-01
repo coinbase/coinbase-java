@@ -6,6 +6,10 @@ import com.coinbase.api.deserializer.PaymentMethodsLifter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class PaymentMethodsResponse extends Response {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4752885593284986181L;
     private String _defaultBuy;
     private String _defaultSell;
     private List<PaymentMethod> _paymentMethods;

@@ -8,6 +8,10 @@ import com.coinbase.api.deserializer.TransactionsLifter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class TransactionsResponse extends Response {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1738758156595044771L;
     private User _currentUser;
     private Money _balance;
     private Money _nativeBalance;

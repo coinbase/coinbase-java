@@ -1,12 +1,14 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
+
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class Report {
-    
+public class Report implements Serializable {
+
     public enum Type {
         TRANSACTIONS("transactions"),
         ORDERS("orders"),
@@ -125,6 +127,11 @@ public class Report {
             return null;
         }
     }
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8462599652861673119L;
     
     public static final Integer INFINITE = Integer.valueOf(-1);
 

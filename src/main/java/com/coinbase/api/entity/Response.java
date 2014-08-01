@@ -1,10 +1,16 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
+
 import com.coinbase.api.deserializer.ErrorsCollector;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-public class Response {
+public class Response implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -3392031826211907894L;
     private Boolean _success;
     private String _error;
     private String _errors;

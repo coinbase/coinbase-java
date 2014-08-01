@@ -1,12 +1,14 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
+
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class RecurringPayment {
+public class RecurringPayment implements Serializable {
 
     public enum Status {
 	NEW("new"),
@@ -53,6 +55,11 @@ public class RecurringPayment {
 	}
     }
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7769736829519464743L;
+    
     public static final Integer INDEFINITE = -1;
     
     private String _id;

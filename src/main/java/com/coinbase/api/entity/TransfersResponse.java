@@ -6,6 +6,10 @@ import com.coinbase.api.deserializer.TransfersLifter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class TransfersResponse extends Response {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -812292521739103434L;
     private List<Transfer> _transfers;
     
     public List<Transfer> getTransfers() {

@@ -1,6 +1,10 @@
 package com.coinbase.api.entity;
 
 public class ApplicationResponse extends Response {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -8421060498323905062L;
     private Application _application;
 
     public Application getApplication() {

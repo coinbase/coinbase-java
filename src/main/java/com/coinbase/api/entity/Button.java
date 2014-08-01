@@ -1,12 +1,14 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
+
 import org.joda.money.Money;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public class Button {
-    
+public class Button implements Serializable {
+
     public enum Type {
 	BUY_NOW("buy_now"),
 	DONATION("donation"),
@@ -83,6 +85,10 @@ public class Button {
 	}
     }
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5470904374812796853L;
     private String _name;
     private String _priceString;
     private String _priceCurrencyIso;

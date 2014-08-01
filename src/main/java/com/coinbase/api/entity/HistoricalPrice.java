@@ -1,9 +1,15 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
+
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 
-public class HistoricalPrice {
+public class HistoricalPrice implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7026579109955379515L;
     private DateTime _time;
     private Money _spotPrice;
 

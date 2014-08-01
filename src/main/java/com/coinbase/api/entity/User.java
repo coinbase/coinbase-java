@@ -1,14 +1,17 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
+
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 
 import com.coinbase.api.deserializer.MoneyDeserializer;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-public class User {
+public class User implements Serializable {
 	
-	private String _id;
+        private static final long serialVersionUID = 7772234749971786319L;
+        private String _id;
 	private String _name;
 	private String _email;
 	private String _timeZone;

@@ -1,8 +1,14 @@
 package com.coinbase.api.entity;
 
-public class Token {
-    String tokenId;
-    String address;
+import java.io.Serializable;
+
+public class Token implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5190861502452162126L;
+    private String tokenId;
+    private String address;
 
     public String getTokenId() {
         return tokenId;

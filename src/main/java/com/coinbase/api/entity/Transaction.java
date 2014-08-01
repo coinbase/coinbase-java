@@ -1,5 +1,6 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import org.joda.money.Money;
@@ -10,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-public class Transaction {
+public class Transaction implements Serializable {
 
     public enum Status {
 	PENDING("pending"),
@@ -33,6 +34,10 @@ public class Transaction {
 	}
     }
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2817857314208431664L;
     private String _id;
     private DateTime _createdAt;
     private String _hsh;

@@ -1,5 +1,6 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import org.joda.money.Money;
@@ -9,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-public class Transfer {
-    
+public class Transfer implements Serializable {
+
     public enum Type {
 	SELL("Sell"),
 	BUY("Buy");
@@ -56,6 +57,10 @@ public class Transfer {
 	}
     }
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -5717063284463576652L;
     private Type _type;
     private Status _status;
     private String _code;

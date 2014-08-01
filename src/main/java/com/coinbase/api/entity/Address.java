@@ -2,8 +2,14 @@ package com.coinbase.api.entity;
 
 import org.joda.time.DateTime;
 
-public class Address {
+import java.io.Serializable;
+
+public class Address implements Serializable {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2215555555599527880L;
     private String _address;
     private String _callbackUrl;
     private String _label;

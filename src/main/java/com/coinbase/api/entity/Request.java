@@ -1,8 +1,14 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
 
-public class Request {
 
+public class Request implements Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3130834102229546418L;
     private String _accountId;
     private Transaction _transaction;
     private Account _account;

@@ -1,7 +1,13 @@
 package com.coinbase.api.entity;
 
-public class AddressNode {
+import java.io.Serializable;
 
+public class AddressNode implements Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3331153178753180883L;
     private Address _address;
 
     public Address getAddress() {

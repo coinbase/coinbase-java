@@ -1,5 +1,7 @@
 package com.coinbase.api.entity;
 
+import java.io.Serializable;
+
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 
@@ -8,10 +10,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-public class AccountChange {
-    
-    public static class Cache {
+public class AccountChange implements Serializable {
+
+    public static class Cache implements Serializable {
         
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 4007178459010851945L;
+
         public enum Category {
             TRANSFER("transfer"),
             TRANSACTION("tx");
@@ -72,6 +79,10 @@ public class AccountChange {
         
     }
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8367935513400871799L;
     private String _id;
     private String _transaction_id;
     private DateTime _createdAt;

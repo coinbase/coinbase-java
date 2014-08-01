@@ -1,6 +1,12 @@
 package com.coinbase.api.entity;
 
-public class OrderNode {
+import java.io.Serializable;
+
+public class OrderNode implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 9143405822047138714L;
     private Order _order;
 
     public Order getOrder() {

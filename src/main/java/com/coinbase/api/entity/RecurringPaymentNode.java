@@ -1,6 +1,12 @@
 package com.coinbase.api.entity;
 
-public class RecurringPaymentNode {
+import java.io.Serializable;
+
+public class RecurringPaymentNode implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6607883611045097912L;
     private RecurringPayment _recurringPayment;
 
     public RecurringPayment getRecurringPayment() {
