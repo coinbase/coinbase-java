@@ -48,7 +48,8 @@ public class Transaction implements Serializable {
     private Status _status;
     private User _sender;
     private User _recipient;
-    
+    private String _recipientAddress;
+
     // Request Money
     private String _amountString;
     private String _amountCurrencyIso;
@@ -187,5 +188,13 @@ public class Transaction implements Serializable {
 
     public void setUserFee(BigDecimal userFee) {
         _userFee = userFee.toPlainString();
+    }
+
+    public String getRecipientAddress() {
+        return _recipientAddress;
+    }
+
+    public void setRecipientAddress(String recipientAddress) {
+        _recipientAddress = recipientAddress;
     }
 }
