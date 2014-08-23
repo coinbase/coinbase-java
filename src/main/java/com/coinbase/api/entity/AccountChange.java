@@ -21,7 +21,17 @@ public class AccountChange implements Serializable {
 
         public enum Category {
             TRANSFER("transfer"),
-            TRANSACTION("tx");
+            TRANSACTION("tx"),
+            REQUEST("request"),
+            INVOICE("invoice"),
+            ORDER("order"),
+            DEPOSIT_WITHDRAWAL("deposit_withdraw"),
+            TRANSFER_MONEY("transfer_money"),
+            PAYMENT_REQUEST("payment_request"),
+            ORDER_REFUND("order_refund"),
+            CANCELED("canceled"),
+            MISPAYMENT_REFUND("mispayment_refund"),
+            VAULT_WITHDRAWAL("vault_withdrawal");
             
             private String _value;
             private Category(String value) { this._value = value; }
