@@ -67,6 +67,7 @@ import com.coinbase.api.entity.User;
 import com.coinbase.api.entity.UserResponse;
 import com.coinbase.api.entity.UsersResponse;
 import com.coinbase.api.exception.CoinbaseException;
+import com.coinbase.api.exception.UnauthorizedException;
 import com.coinbase.api.exception.UnspecifiedAccount;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -940,13 +941,17 @@ class CoinbaseImpl implements Coinbase {
             return IOUtils.toString(is, "UTF-8");
         } catch (IOException e) {
             es = conn.getErrorStream();
+            String errorMessage = null;
             if (es != null) {
-                String errorBody = IOUtils.toString(es, "UTF-8");
-                if (conn.getContentType().toLowerCase().contains("json")) {
-                    CoinbaseException cbEx = new CoinbaseException(errorBody);
-                    cbEx.addSuppressed(e);
-                    throw cbEx;
-                }
+                errorMessage = IOUtils.toString(es, "UTF-8");
+            }
+            if (HttpsURLConnection.HTTP_UNAUTHORIZED == conn.getResponseCode()) {
+              throw new UnauthorizedException(errorMessage);
+            }
+            if (conn.getContentType().toLowerCase().contains("json")) {
+                CoinbaseException cbEx = new CoinbaseException(errorMessage);
+                cbEx.addSuppressed(e);
+                throw cbEx;
             }
             throw e;
         } finally {
