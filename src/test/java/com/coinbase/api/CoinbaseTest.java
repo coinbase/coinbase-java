@@ -36,6 +36,7 @@ import com.coinbase.api.entity.Button;
 import com.coinbase.api.entity.Contact;
 import com.coinbase.api.entity.ContactsResponse;
 import com.coinbase.api.entity.HistoricalPrice;
+import com.coinbase.api.entity.Merchant;
 import com.coinbase.api.entity.Order;
 import com.coinbase.api.entity.OrdersResponse;
 import com.coinbase.api.entity.PaymentMethod;
@@ -144,6 +145,10 @@ public class CoinbaseTest {
         assertEquals(1, user.getSellLevel().intValue());
         assertEquals(Money.parse("BTC 10"), user.getBuyLimit());
         assertEquals(Money.parse("BTC 100"), user.getSellLimit());
+        
+        Merchant merchant = user.getMerchant();
+        assertEquals("test company name", merchant.getCompanyName());
+        assertEquals("http://localhost/logo.jpeg", merchant.getLogo().getSmall());
     }
 
     @Test

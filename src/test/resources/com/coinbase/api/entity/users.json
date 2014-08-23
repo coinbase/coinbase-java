@@ -20,6 +20,12 @@
         "sell_limit": {
           "amount": "100.00000000",
           "currency": "BTC"
+        },
+        "merchant": {
+          "company_name": "test company name",
+          "logo": {
+          	"small": "http://localhost/logo.jpeg"
+          }
         }
       }
     }

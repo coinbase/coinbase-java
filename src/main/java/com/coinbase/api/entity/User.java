@@ -24,6 +24,7 @@ public class User implements Serializable {
 	private String _password;
 	private String _referrerId;
 	private String _receiveAddress;
+	private Merchant _merchant;
 
 	public String getPassword() {
 	    return _password;
@@ -131,5 +132,12 @@ public class User implements Serializable {
 	public void setReceiveAddress(String receiveAddress) {
 	    _receiveAddress = receiveAddress;
 	}
-	
+
+        public Merchant getMerchant() {
+            return _merchant;
+        }
+    
+        public void setMerchant(Merchant merchant) {
+            _merchant = merchant;
+        }
 }
