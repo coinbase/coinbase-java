@@ -313,7 +313,9 @@ class CoinbaseImpl implements Coinbase {
             throw new AssertionError(ex);
         }
 
-        serializeAmount(transaction);
+        if (transaction.getAmount() == null) {
+            throw new CoinbaseException("Amount is a required field");
+        }
 
         Request request = newAccountSpecificRequest();
         request.setTransaction(transaction);
@@ -359,7 +361,9 @@ class CoinbaseImpl implements Coinbase {
             throw new AssertionError(ex);
         }
 
-        serializeAmount(transaction);
+        if (transaction.getAmount() == null) {
+            throw new CoinbaseException("Amount is a required field");
+        }
 
         Request request = newAccountSpecificRequest();
         request.setTransaction(transaction);
@@ -987,21 +991,6 @@ class CoinbaseImpl implements Coinbase {
 
     private <T extends Response> T delete(URL url, Class<T> responseClass) throws CoinbaseException, IOException {
         return handleErrors(deserialize(doHttp(url, "DELETE", null), responseClass));
-    }
-
-    private static Transaction serializeAmount(Transaction transaction) throws CoinbaseException {
-        if (transaction.getAmount() == null) {
-            throw new CoinbaseException("Amount is a required field");
-        }
-
-        // Massage amount
-        Money amount = transaction.getAmount();
-        transaction.setAmount(null);
-
-        transaction.setAmountString(amount.getAmount().toPlainString());
-        transaction.setAmountCurrencyIso(amount.getCurrencyUnit().getCurrencyCode());
-
-        return transaction;
     }
 
     private static Button serializePrice(Button button) throws CoinbaseException {

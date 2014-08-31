@@ -8,6 +8,8 @@ import org.joda.time.DateTime;
 
 import com.coinbase.api.deserializer.MoneyDeserializer;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
@@ -140,14 +142,23 @@ public class Transaction implements Serializable {
     public void setNotes(String notes) {
         _notes = notes;
     }
-    
+
+    @JsonIgnore
     public Money getAmount() {
         return _amount;
     }
     
+    @JsonProperty
     @JsonDeserialize(using=MoneyDeserializer.class)
     public void setAmount(Money amount) {
         _amount = amount;
+        if (amount != null) {
+            setAmountString(amount.getAmount().toPlainString());
+            setAmountCurrencyIso(amount.getCurrencyUnit().getCurrencyCode());
+        } else {
+            setAmountString(null);
+            setAmountCurrencyIso(null);
+        }
     }
     
     public Boolean isRequest() {
