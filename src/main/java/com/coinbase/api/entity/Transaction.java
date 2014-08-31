@@ -43,6 +43,7 @@ public class Transaction implements Serializable {
     private String _id;
     private DateTime _createdAt;
     private String _hsh;
+    private String _idem;
     private String _notes;
     private String _userFee;
     private Money _amount;
@@ -207,5 +208,13 @@ public class Transaction implements Serializable {
 
     public void setRecipientAddress(String recipientAddress) {
         _recipientAddress = recipientAddress;
+    }
+
+    public String getIdem() {
+        return _idem;
+    }
+
+    public void setIdem(String idem) {
+        _idem = idem;
     }
 }
