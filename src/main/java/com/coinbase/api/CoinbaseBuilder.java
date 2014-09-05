@@ -6,6 +6,7 @@ public class CoinbaseBuilder {
     String api_key;
     String api_secret;
     String acct_id;
+    boolean useSunHttpHandler = false;
 
     /**
      * Build a new Coinbase client object with the specified options
@@ -57,6 +58,17 @@ public class CoinbaseBuilder {
     public CoinbaseBuilder withAccountId(String acct_id) {
 	this.acct_id = acct_id;
 	return this;
+    }
+    
+    /**
+     * Force all connections to use the sun http handler instead of any which may
+     * be provided by the application server / container.
+     * 
+     * @return this CoinbaseBuilder object
+     */
+    public CoinbaseBuilder useSunHttpHandler() {
+        this.useSunHttpHandler = true;
+        return this;
     }
 
 }

@@ -86,7 +86,19 @@ class CoinbaseImpl implements Coinbase {
     CoinbaseImpl(CoinbaseBuilder builder) {
 
         try {
-            _baseUrl = new URL("https://coinbase.com/api/v1/");
+            String coinbaseBaseUrl = "https://coinbase.com/api/v1/";
+            if (builder.useSunHttpHandler) {
+                // An application server may decide to provide its own http handler. We can 
+                // force the standard http handler by explicitly passing it in. By default 
+                // Weblogic likes to do this. This causes an issue when calling 
+                // URL.openConnection() because the Weblogic handler returns 
+                // SOAPHttpsURLConnection which is not the expected HttpsURLConnection. 
+                // An alternate solution is to force Weblogic in its entirety to use the standard 
+                // http handler with the -DUseSunHttpHandler=true argument.
+                _baseUrl = new URL(null, coinbaseBaseUrl, new sun.net.www.protocol.https.Handler());
+            } else {
+                _baseUrl = new URL(coinbaseBaseUrl);
+            }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
