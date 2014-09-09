@@ -954,7 +954,6 @@ class CoinbaseImpl implements Coinbase {
             }
             if (conn.getContentType().toLowerCase().contains("json")) {
                 CoinbaseException cbEx = new CoinbaseException(errorMessage);
-                cbEx.addSuppressed(e);
                 throw cbEx;
             }
             throw e;
