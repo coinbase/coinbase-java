@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.net.URLStreamHandler;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -81,20 +82,30 @@ class CoinbaseImpl implements Coinbase {
     private String _apiKey;
     private String _apiSecret;
     private String _accessToken;
+    private URLStreamHandler _streamHandler;
     private SSLSocketFactory _socketFactory;
 
     CoinbaseImpl(CoinbaseBuilder builder) {
-
-        try {
-            _baseUrl = new URL("https://coinbase.com/api/v1/");
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-
         _apiKey = builder.api_key;
         _apiSecret = builder.api_secret;
         _accessToken = builder.access_token;
         _accountId = builder.acct_id;
+        _streamHandler = builder.stream_handler;
+
+        try {
+            if (_streamHandler != null) {
+                _baseUrl = new URL(null, "https://coinbase.com/api/v1/", _streamHandler);
+            } else {
+                _baseUrl = new URL("https://coinbase.com/api/v1/");
+            }
+            if (!(_baseUrl.openConnection() instanceof HttpsURLConnection)) {
+                throw new RuntimeException(
+                    "Custom URLStreamHandler must return javax.net.ssl.HttpsURLConnection on openConnection."
+                );
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
 
         // Register BTC as a currency since Android won't let joda read from classpath resources
         try {

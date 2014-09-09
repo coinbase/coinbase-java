@@ -1,11 +1,14 @@
 package com.coinbase.api;
 
+import java.net.URLStreamHandler;
+
 public class CoinbaseBuilder {
 
     String access_token;
     String api_key;
     String api_secret;
     String acct_id;
+    URLStreamHandler stream_handler;
 
     /**
      * Build a new Coinbase client object with the specified options
@@ -59,4 +62,18 @@ public class CoinbaseBuilder {
 	return this;
     }
 
+    /**
+     * Specify the URLStreamHandler to use for handling https connections to Coinbase
+     * 
+     * Must have URLStreamHandler.openConnection(URL) returning an instance of javax.net.ssl.HttpsURLConnection
+     * 
+     * @param stream_handler
+     * 
+     * @return this CoinbaseBuilder object
+     */
+    public CoinbaseBuilder withStreamHandler(URLStreamHandler stream_handler) {
+        this.stream_handler = stream_handler;
+        return this;
+    }
+    
 }
