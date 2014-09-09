@@ -86,7 +86,14 @@ class CoinbaseImpl implements Coinbase {
     CoinbaseImpl(CoinbaseBuilder builder) {
 
         try {
-            _baseUrl = new URL("https://coinbase.com/api/v1/");
+            // This class expects URL.openConnection() to return an instance of
+            // javax.net.ssl.HttpsURLConnection. If another https handler had already
+            // been resolved, openConnection() can return other implementations.
+            // One instance this is a problem is with Weblogic. By default Weblogic
+            // will return weblogic.net.http.SOAPHttpsURLConnection which is not
+            // an instance of HttpsUrlConnection. To resolve, specify the default
+            // sun https handler.
+            _baseUrl = new URL(null, "https://coinbase.com/api/v1/", new sun.net.www.protocol.https.Handler());
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
