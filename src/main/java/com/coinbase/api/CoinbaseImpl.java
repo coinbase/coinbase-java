@@ -611,7 +611,7 @@ class CoinbaseImpl implements Coinbase {
         }
 
         Request request = newAccountSpecificRequest();
-        request.setButton(serializePrice(button));
+        request.setButton(button);
 
         return post(buttonsUrl, request, ButtonResponse.class).getButton();
     }
@@ -625,7 +625,7 @@ class CoinbaseImpl implements Coinbase {
         }
 
         Request request = newAccountSpecificRequest();
-        request.setButton(serializePrice(button));
+        request.setButton(button);
 
         return post(ordersUrl, request, OrderResponse.class).getOrder();
     }
@@ -1005,21 +1005,6 @@ class CoinbaseImpl implements Coinbase {
         return handleErrors(deserialize(doHttp(url, "DELETE", null), responseClass));
     }
 
-    private static Button serializePrice(Button button) throws CoinbaseException {
-        if (button.getPrice() == null) {
-            throw new CoinbaseException("Price is a required field");
-        }
-
-        // Massage amount
-        Money price = button.getPrice();
-        button.setPrice(null);
-
-        button.setPriceString(price.getAmount().toPlainString());
-        button.setPriceCurrencyIso(price.getCurrencyUnit().getCurrencyCode());
-
-        return button;
-    }
-
     private static <T extends Response> T handleErrors(T response) throws CoinbaseException {
         if (response.hasErrors()) {
             throw new CoinbaseException(response.getErrors());
@@ -1039,5 +1024,4 @@ class CoinbaseImpl implements Coinbase {
         }
         return request;
     }
-
 }

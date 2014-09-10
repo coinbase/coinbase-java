@@ -236,6 +236,12 @@ public class Button implements Serializable {
     }
     public void setPrice(Money price) {
         _price = price;
+        if (price != null) {
+            setPriceString(price.getAmount().toPlainString());
+            setPriceCurrencyIso(price.getCurrencyUnit().getCurrencyCode());
+        } else {
+            setPriceString(null);
+            setPriceCurrencyIso(null);
+        }
     }
-
 }
