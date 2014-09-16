@@ -1,11 +1,17 @@
 package com.coinbase.api;
 
+import java.net.URL;
+
+import javax.net.ssl.SSLContext;
+
 public class CoinbaseBuilder {
 
     String access_token;
     String api_key;
     String api_secret;
     String acct_id;
+    SSLContext ssl_context;
+    URL base_url;
 
     /**
      * Build a new Coinbase client object with the specified options
@@ -58,5 +64,31 @@ public class CoinbaseBuilder {
 	this.acct_id = acct_id;
 	return this;
     }
-
+    
+    /**
+     * Specify the ssl context to be used when creating SSL sockets
+     * 
+     * @param ssl_context the SSLContext to be used
+     * 
+     * @return this CoinbaseBuilder object
+     */
+    public CoinbaseBuilder withSSLContext(SSLContext ssl_context) {
+        this.ssl_context = ssl_context;
+        return this;
+    }
+    
+    /**
+     * Specify the base URL to be used for API requests
+     * 
+     * By default, this is 'https://coinbase.com/api/v1/'
+     * 
+     * @param base_url the base URL to use for API requests. Must return an instance of javax.net.ssl.HttpsURLConnection on openConnection.
+     * 
+     * @return this CoinbaseBuilder object
+     */
+    public CoinbaseBuilder withBaseURL(URL base_url) {
+        this.base_url = base_url;
+        return this;
+    }
+    
 }

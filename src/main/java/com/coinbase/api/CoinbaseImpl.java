@@ -7,6 +7,7 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.Map;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
 import org.apache.commons.codec.binary.Hex;
@@ -81,27 +83,36 @@ class CoinbaseImpl implements Coinbase {
     private String _apiKey;
     private String _apiSecret;
     private String _accessToken;
+    private SSLContext _sslContext;
     private SSLSocketFactory _socketFactory;
 
     CoinbaseImpl(CoinbaseBuilder builder) {
 
-        try {
-            _baseUrl = new URL("https://coinbase.com/api/v1/");
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-
+        _baseUrl = builder.base_url;
         _apiKey = builder.api_key;
         _apiSecret = builder.api_secret;
         _accessToken = builder.access_token;
         _accountId = builder.acct_id;
+        _sslContext = builder.ssl_context;
 
+        if (_baseUrl == null) {
+            try {
+                _baseUrl = new URL("https://coinbase.com/api/v1/");
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+        
         // Register BTC as a currency since Android won't let joda read from classpath resources
         try {
             CurrencyUnit.registerCurrency("BTC", -1, 8, new ArrayList<String>());
         } catch (IllegalArgumentException ex) {}
 
-        _socketFactory = CoinbaseSSL.getSSLSocketFactory();
+        if (_sslContext != null) {
+            _socketFactory = _sslContext.getSocketFactory();
+        } else {
+            _socketFactory = CoinbaseSSL.getSSLContext().getSocketFactory();
+        }
 
     }
 
@@ -912,7 +923,12 @@ class CoinbaseImpl implements Coinbase {
     }
 
     private String doHttp(URL url, String method, Object requestBody) throws IOException, CoinbaseException {
-        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+        URLConnection urlConnection = url.openConnection();
+        if (!(urlConnection instanceof HttpsURLConnection)) {
+            throw new RuntimeException(
+                    "Custom Base URL must return javax.net.ssl.HttpsURLConnection on openConnection.");
+        }
+        HttpsURLConnection conn = (HttpsURLConnection) urlConnection;
         conn.setSSLSocketFactory(_socketFactory);
         conn.setRequestMethod(method);
 

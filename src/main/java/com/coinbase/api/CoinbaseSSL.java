@@ -10,12 +10,12 @@ import javax.net.ssl.TrustManagerFactory;
 
 class CoinbaseSSL {
 
-    private static SSLSocketFactory socketFactory = null;
+    private static SSLContext sslContext = null;
 
-    public static synchronized SSLSocketFactory getSSLSocketFactory() {
+    public static synchronized SSLContext getSSLContext() {
 
-        if (socketFactory != null) {
-            return socketFactory;
+        if (sslContext != null) {
+            return sslContext;
         }
 
         KeyStore trustStore = null;
@@ -36,7 +36,7 @@ class CoinbaseSSL {
             tmf.init(trustStore);
             SSLContext ctx = SSLContext.getInstance("TLS");
             ctx.init(null, tmf.getTrustManagers(), null);
-            socketFactory = ctx.getSocketFactory();
+            sslContext = ctx;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
@@ -49,6 +49,6 @@ class CoinbaseSSL {
             }
         }
 
-        return socketFactory;
+        return sslContext;
     }
 }
