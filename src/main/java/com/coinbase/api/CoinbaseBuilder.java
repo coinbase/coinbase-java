@@ -11,7 +11,8 @@ public class CoinbaseBuilder {
     String api_secret;
     String acct_id;
     SSLContext ssl_context;
-    URL base_url;
+    URL base_oauth_url;
+    URL base_api_url;
 
     /**
      * Build a new Coinbase client object with the specified options
@@ -82,12 +83,26 @@ public class CoinbaseBuilder {
      * 
      * By default, this is 'https://coinbase.com/api/v1/'
      * 
-     * @param base_url the base URL to use for API requests. Must return an instance of javax.net.ssl.HttpsURLConnection on openConnection.
+     * @param base_api_url the base URL to use for API requests. Must return an instance of javax.net.ssl.HttpsURLConnection on openConnection.
      * 
      * @return this CoinbaseBuilder object
      */
-    public CoinbaseBuilder withBaseURL(URL base_url) {
-        this.base_url = base_url;
+    public CoinbaseBuilder withBaseApiURL(URL base_api_url) {
+        this.base_api_url = base_api_url;
+        return this;
+    }
+    
+    /**
+     * Specify the base URL to be used for OAuth requests
+     * 
+     * By default, this is 'https://coinbase.com/oauth/'
+     * 
+     * @param base_oauth_url the base URL to use for OAuth requests. Must return an instance of javax.net.ssl.HttpsURLConnection on openConnection.
+     * 
+     * @return this CoinbaseBuilder object
+     */
+    public CoinbaseBuilder withBaseOAuthURL(URL base_oauth_url) {
+        this.base_oauth_url = base_oauth_url;
         return this;
     }
     
