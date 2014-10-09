@@ -24,3 +24,4 @@ pom.xml.releaseBackup
 pom.xml.next
 release.properties
 coverage-report
+bin/
