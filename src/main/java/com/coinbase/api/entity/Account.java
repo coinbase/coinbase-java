@@ -5,11 +5,41 @@ import java.io.Serializable;
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public class Account implements Serializable {
-    
-    /**
-     * 
-     */
+
+    public enum Type {
+        WALLET("wallet"),
+        VAULT("vault"),
+        MULTISIG_VAULT("multisig_vault"),
+        MULTISIG_WALLET("multisig_wallet"),
+        FIAT("fiat");
+
+        private String _value;
+
+        private Type(String value) {
+            this._value = value;
+        }
+
+        @Override
+        @JsonValue
+        public String toString() {
+            return this._value;
+        }
+
+        @JsonCreator
+        public static Type create(String val) {
+            for (Type type : Type.values()) {
+                if (type.toString().equalsIgnoreCase(val)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
+
     private static final long serialVersionUID = 8248810301818113960L;
     private String _id;
     private String _name;
@@ -18,6 +48,7 @@ public class Account implements Serializable {
     private DateTime _createdAt;
     private Boolean _primary;
     private Boolean _active;
+    private Type _type;
 
     public String getId() {
         return _id;
@@ -75,4 +106,11 @@ public class Account implements Serializable {
         _active = active;
     }
 
+    public Type getType() {
+        return _type;
+    }
+
+    public void setType(Type type) {
+        _type = type;
+    }
 }
