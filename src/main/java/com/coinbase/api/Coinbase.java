@@ -2,6 +2,7 @@ package com.coinbase.api;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -911,4 +912,12 @@ public interface Coinbase {
      * @throws IOException
      */
     public void sendSMS(String clientId, String clientSecret, String email, String password) throws CoinbaseException, IOException;
+
+    /**
+     * Get Three-Legged OAuth Authorization URI
+     *
+     * @throws CoinbaseException
+     * @throws IOException
+     */
+    public URI getAuthorizationUri(OAuthCodeRequest params) throws CoinbaseException, IOException;
 }

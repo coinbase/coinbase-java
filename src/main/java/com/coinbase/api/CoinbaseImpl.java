@@ -6,6 +6,8 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -23,6 +25,7 @@ import javax.net.ssl.SSLSocketFactory;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.IllegalCurrencyException;
 import org.joda.money.Money;
@@ -1052,6 +1055,60 @@ class CoinbaseImpl implements Coinbase {
         request.setPassword(password);
 
         post(smsUrl, request, Response.class);
+    }
+
+    @Override
+    public URI getAuthorizationUri(OAuthCodeRequest params) throws CoinbaseException, IOException {
+        URL authorizeURL = new URL(_baseOAuthUrl, "authorize");
+        URIBuilder uriBuilder;
+
+        try {
+            uriBuilder = new URIBuilder(authorizeURL.toURI());
+        } catch (URISyntaxException ex) {
+            throw new AssertionError(ex);
+        }
+
+        uriBuilder.addParameter("response_type", "code");
+
+        if (params.getClientId() != null) {
+            uriBuilder.addParameter("client_id", params.getClientId());
+        } else {
+            throw new CoinbaseException("client_id is required");
+        }
+
+        if (params.getRedirectUri() != null) {
+            uriBuilder.addParameter("redirect_uri", params.getRedirectUri());
+        } else {
+            throw new CoinbaseException("redirect_uri is required");
+        }
+
+        if (params.getScope() != null) {
+            uriBuilder.addParameter("scope", params.getScope());
+        } else {
+            throw new CoinbaseException("scope is required");
+        }
+
+        if (params.getMeta() != null) {
+            OAuthCodeRequest.Meta meta = params.getMeta();
+
+            if (meta.getName() != null) {
+                uriBuilder.addParameter("meta[name]", meta.getName());
+            }
+            if (meta.getSendLimitAmount() != null) {
+                Money sendLimit = meta.getSendLimitAmount();
+                uriBuilder.addParameter("meta[send_limit_amount]", sendLimit.getAmount().toPlainString());
+                uriBuilder.addParameter("meta[send_limit_currency]", sendLimit.getCurrencyUnit().getCurrencyCode());
+                if (meta.getSendLimitPeriod() != null) {
+                    uriBuilder.addParameter("meta[send_limit_period]", meta.getSendLimitPeriod().toString());
+                }
+            }
+        }
+
+        try {
+            return uriBuilder.build();
+        } catch (URISyntaxException e) {
+            throw new AssertionError(e);
+        }
     }
 
     private void doHmacAuthentication (URL url, String body, HttpsURLConnection conn) throws IOException {

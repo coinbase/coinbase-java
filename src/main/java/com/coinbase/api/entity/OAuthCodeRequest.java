@@ -2,13 +2,51 @@ package com.coinbase.api.entity;
 
 import java.io.Serializable;
 
+import org.joda.money.Money;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public class OAuthCodeRequest implements Serializable {
     private static final long serialVersionUID = 3716938132337502204L;
 
     public static class Meta implements Serializable {
         private static final long serialVersionUID = -5468361596726979847L;
 
+        public enum Period {
+            DAILY("daily"),
+            WEEKLY("weekly"),
+            BIWEEKLY("every_two_weeks"),
+            MONTHLY("monthly"),
+            QUARTERLY("quarterly"),
+            YEARLY("yearly");
+
+            private String _value;
+
+            private Period(String value) {
+                this._value = value;
+            }
+
+            @Override
+            @JsonValue
+            public String toString() {
+                return this._value;
+            }
+
+            @JsonCreator
+            public static Period create(String val) {
+                for (Period period : Period.values()) {
+                    if (period.toString().equalsIgnoreCase(val)) {
+                        return period;
+                    }
+                }
+                return null;
+            }
+        }
+
         private String _name;
+        private Money _sendLimitAmount;
+        private Period _sendLimitPeriod;
 
         public String getName() {
             return _name;
@@ -16,6 +54,30 @@ public class OAuthCodeRequest implements Serializable {
 
         public void setName(String name) {
             _name = name;
+        }
+
+        public Money getSendLimitAmount() {
+            return _sendLimitAmount;
+        }
+
+        public void setSendLimitAmount(Money sendLimitAmount) {
+            _sendLimitAmount = sendLimitAmount;
+        }
+
+        public Period getSendLimitPeriod() {
+            return _sendLimitPeriod;
+        }
+
+        public void setSendLimitPeriod(Period sendLimitPeriod) {
+            _sendLimitPeriod = sendLimitPeriod;
+        }
+
+        public String getSendLimitCurrency() {
+            if (_sendLimitAmount != null) {
+                return _sendLimitAmount.getCurrencyUnit().getCurrencyCode();
+            } else {
+                return null;
+            }
         }
     }
 
