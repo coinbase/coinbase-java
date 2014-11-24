@@ -57,9 +57,11 @@ public class Transaction implements Serializable {
     private String _amountString;
     private String _amountCurrencyIso;
     private String _from;
-    
+
     // Send Money
     private String _to;
+    private Boolean _instantBuy;
+    private String _orderId; // Used for refunds
 
     // Order
     private Integer _confirmations;
@@ -216,5 +218,21 @@ public class Transaction implements Serializable {
 
     public void setIdem(String idem) {
         _idem = idem;
+    }
+
+    public Boolean getInstantBuy() {
+        return _instantBuy;
+    }
+
+    public void setInstantBuy(Boolean instantBuy) {
+        _instantBuy = instantBuy;
+    }
+
+    public String getOrderId() {
+        return _orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        _orderId = orderId;
     }
 }

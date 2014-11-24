@@ -47,6 +47,7 @@ public class Order implements Serializable {
     private String _custom;
     private String _receiveAddress;
     private Button _button;
+    private String _refundAddress;
     private Transaction _transaction;
 
     public String getId() {
@@ -111,6 +112,14 @@ public class Order implements Serializable {
 
     public void setButton(Button button) {
         _button = button;
+    }
+
+    public String getRefundAddress() {
+        return _refundAddress;
+    }
+
+    public void setRefundAddress(String refundAddress) {
+        _refundAddress = refundAddress;
     }
 
     public Transaction getTransaction() {
