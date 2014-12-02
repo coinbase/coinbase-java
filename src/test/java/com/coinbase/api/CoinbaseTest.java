@@ -55,7 +55,7 @@ import com.coinbase.api.exception.*;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore("javax.net.ssl.*")
-@PrepareForTest(CoinbaseImpl.class)
+@PrepareForTest({CoinbaseImpl.class, CoinbaseConnectionImpl.class})
 public class CoinbaseTest {
 
     private HttpsURLConnection mockConnection;

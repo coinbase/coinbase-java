@@ -13,6 +13,7 @@ public class CoinbaseBuilder {
     SSLContext ssl_context;
     URL base_oauth_url;
     URL base_api_url;
+    CoinbaseConnection coinbaseConnection;
 
     /**
      * Build a new Coinbase client object with the specified options
@@ -105,5 +106,16 @@ public class CoinbaseBuilder {
         this.base_oauth_url = base_oauth_url;
         return this;
     }
-    
+
+    /**
+     * Specify Coinbase connection implementation
+     *
+     * @param coinbaseConnection Coinbase connection
+     *
+     * @return this CoinbaseBuilder object
+     */
+    public CoinbaseBuilder withCoinbaseConnection(CoinbaseConnection coinbaseConnection) {
+        this.coinbaseConnection = coinbaseConnection;
+        return this;
+    }
 }

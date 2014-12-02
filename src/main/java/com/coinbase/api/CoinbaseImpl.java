@@ -1,30 +1,19 @@
 package com.coinbase.api;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.io.IOUtils;
+import com.coinbase.api.exception.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.IllegalCurrencyException;
@@ -75,13 +64,6 @@ import com.coinbase.api.entity.TransfersResponse;
 import com.coinbase.api.entity.User;
 import com.coinbase.api.entity.UserResponse;
 import com.coinbase.api.entity.UsersResponse;
-import com.coinbase.api.exception.CoinbaseException;
-import com.coinbase.api.exception.CredentialsIncorrectException;
-import com.coinbase.api.exception.TwoFactorIncorrectException;
-import com.coinbase.api.exception.TwoFactorRequiredException;
-import com.coinbase.api.exception.UnauthorizedDeviceException;
-import com.coinbase.api.exception.UnauthorizedException;
-import com.coinbase.api.exception.UnspecifiedAccount;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -92,21 +74,13 @@ class CoinbaseImpl implements Coinbase {
     private URL    _baseApiUrl;
     private URL    _baseOAuthUrl;
     private String _accountId;
-    private String _apiKey;
-    private String _apiSecret;
-    private String _accessToken;
-    private SSLContext _sslContext;
-    private SSLSocketFactory _socketFactory;
+    private CoinbaseConnection coinbaseConnection;
 
     CoinbaseImpl(CoinbaseBuilder builder) {
 
         _baseApiUrl = builder.base_api_url;
         _baseOAuthUrl = builder.base_oauth_url;
-        _apiKey = builder.api_key;
-        _apiSecret = builder.api_secret;
-        _accessToken = builder.access_token;
         _accountId = builder.acct_id;
-        _sslContext = builder.ssl_context;
 
         try {
             if (_baseApiUrl == null) {
@@ -124,10 +98,10 @@ class CoinbaseImpl implements Coinbase {
             CurrencyUnit.registerCurrency("BTC", -1, 8, new ArrayList<String>());
         } catch (IllegalArgumentException ex) {}
 
-        if (_sslContext != null) {
-            _socketFactory = _sslContext.getSocketFactory();
+        if (builder.coinbaseConnection == null) {
+            this.coinbaseConnection = new CoinbaseConnectionImpl(builder.ssl_context, objectMapper, builder.api_key, builder.api_secret, builder.access_token);
         } else {
-            _socketFactory = CoinbaseSSL.getSSLContext().getSocketFactory();
+            this.coinbaseConnection = builder.coinbaseConnection;
         }
     }
 
@@ -192,7 +166,7 @@ class CoinbaseImpl implements Coinbase {
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid account id");
         }
-        return deserialize(doHttp(accountBalanceUrl, "GET", null), Money.class);
+        return deserialize(coinbaseConnection.doHttp(accountBalanceUrl, "GET", null), Money.class);
     }
 
     @Override
@@ -281,7 +255,7 @@ class CoinbaseImpl implements Coinbase {
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
-        return deserialize(doHttp(spotPriceUrl, "GET", null), Money.class);
+        return deserialize(coinbaseConnection.doHttp(spotPriceUrl, "GET", null), Money.class);
     }
 
     @Override
@@ -299,7 +273,7 @@ class CoinbaseImpl implements Coinbase {
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
-        return deserialize(doHttp(buyPriceUrl, "GET", null), Quote.class);
+        return deserialize(coinbaseConnection.doHttp(buyPriceUrl, "GET", null), Quote.class);
     }
 
     @Override
@@ -317,7 +291,7 @@ class CoinbaseImpl implements Coinbase {
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
-        return deserialize(doHttp(sellPriceUrl, "GET", null), Quote.class);
+        return deserialize(coinbaseConnection.doHttp(sellPriceUrl, "GET", null), Quote.class);
     }
 
     @Override
@@ -598,7 +572,7 @@ class CoinbaseImpl implements Coinbase {
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
-        return deserialize(doHttp(ratesUrl, "GET", null), new TypeReference<HashMap<String, BigDecimal>>() {});
+        return deserialize(coinbaseConnection.doHttp(ratesUrl, "GET", null), new TypeReference<HashMap<String, BigDecimal>>() {});
     }
 
     @Override
@@ -611,7 +585,7 @@ class CoinbaseImpl implements Coinbase {
         }
 
         List<List<String>> rawResponse =
-                deserialize(doHttp(currenciesUrl, "GET", null), new TypeReference<List<List<String>>>() {});
+                deserialize(coinbaseConnection.doHttp(currenciesUrl, "GET", null), new TypeReference<List<List<String>>>() {});
 
         List<CurrencyUnit> result = new ArrayList<CurrencyUnit>();
         for (List<String> currency : rawResponse) {
@@ -635,7 +609,7 @@ class CoinbaseImpl implements Coinbase {
             throw new AssertionError(ex);
         }
 
-        String responseBody = doHttp(historicalPricesUrl, "GET", null);
+        String responseBody = coinbaseConnection.doHttp(historicalPricesUrl, "GET", null);
 
         CSVReader reader = new CSVReader(new StringReader(responseBody));
 
@@ -1111,122 +1085,31 @@ class CoinbaseImpl implements Coinbase {
         }
     }
 
-    private void doHmacAuthentication (URL url, String body, HttpsURLConnection conn) throws IOException {
-        String nonce = String.valueOf(System.currentTimeMillis());
-
-        String message = nonce + url.toString() + (body != null ? body : "");
-
-        Mac mac = null;
-        try {
-            mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(_apiSecret.getBytes(), "HmacSHA256"));
-        } catch (Throwable t) {
-            throw new IOException(t);
-        }
-
-        String signature = new String(Hex.encodeHex(mac.doFinal(message.getBytes())));
-
-        conn.setRequestProperty("ACCESS_KEY", _apiKey);
-        conn.setRequestProperty("ACCESS_SIGNATURE", signature);
-        conn.setRequestProperty("ACCESS_NONCE", nonce);
-    }
-
-    private void doAccessTokenAuthentication(HttpsURLConnection conn) {
-        conn.setRequestProperty("Authorization", "Bearer " + _accessToken);
-    }
-
-    private String doHttp(URL url, String method, Object requestBody) throws IOException, CoinbaseException {
-        URLConnection urlConnection = url.openConnection();
-        if (!(urlConnection instanceof HttpsURLConnection)) {
-            throw new RuntimeException(
-                    "Custom Base URL must return javax.net.ssl.HttpsURLConnection on openConnection.");
-        }
-        HttpsURLConnection conn = (HttpsURLConnection) urlConnection;
-        conn.setSSLSocketFactory(_socketFactory);
-        conn.setRequestMethod(method);
-
-        String body = null;
-        if (requestBody != null) {
-            body = objectMapper.writeValueAsString(requestBody);
-            conn.setRequestProperty("Content-Type", "application/json");
-        }
-
-        if (_apiKey != null && _apiSecret != null) {
-            doHmacAuthentication(url, body, conn);
-        } else if (_accessToken != null) {
-            doAccessTokenAuthentication(conn);
-        }
-
-        if (body != null) {
-            conn.setDoOutput(true);
-            OutputStream outputStream = conn.getOutputStream();
-            try {
-                outputStream.write(body.getBytes(Charset.forName("UTF-8")));
-            } finally {
-                outputStream.close();
-            }
-        }
-
-        InputStream is = null;
-        InputStream es = null;
-        try {
-            is = conn.getInputStream();
-            return IOUtils.toString(is, "UTF-8");
-        } catch (IOException e) {
-            es = conn.getErrorStream();
-            String errorBody = null;
-            if (es != null) {
-                errorBody = IOUtils.toString(es, "UTF-8");
-                if (errorBody != null && conn.getContentType().toLowerCase().contains("json")) {
-                    Response coinbaseResponse;
-                    try {
-                        coinbaseResponse = deserialize(errorBody, Response.class);
-                    } catch (Exception ex) {
-                        throw new CoinbaseException(errorBody);
-                    }
-                    handleErrors(coinbaseResponse);
-                }
-            }
-            if (HttpsURLConnection.HTTP_UNAUTHORIZED == conn.getResponseCode()) {
-                throw new UnauthorizedException(errorBody);
-            }
-            throw e;
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-
-            if (es != null) {
-                es.close();
-            }
-        }
-    }
-
-    private static <T> T deserialize(String json, Class<T> clazz) throws IOException {
+    public static <T> T deserialize(String json, Class<T> clazz) throws IOException {
         return objectMapper.readValue(json, clazz);
     }
 
-    private static <T> T deserialize(String json, TypeReference<T> typeReference) throws IOException {
+    public static <T> T deserialize(String json, TypeReference<T> typeReference) throws IOException {
         return objectMapper.readValue(json, typeReference);
     }
 
     private <T extends Response> T get(URL url, Class<T> responseClass) throws IOException, CoinbaseException {
-        return handleErrors(deserialize(doHttp(url, "GET", null), responseClass));
+        return handleErrors(deserialize(coinbaseConnection.doHttp(url, "GET", null), responseClass));
     }
 
     private <T extends Response> T post(URL url, Object entity, Class<T> responseClass) throws CoinbaseException, IOException {
-        return handleErrors(deserialize(doHttp(url, "POST", entity), responseClass));
+        return handleErrors(deserialize(coinbaseConnection.doHttp(url, "POST", entity), responseClass));
     }
 
     private <T extends Response> T put(URL url, Object entity, Class<T> responseClass) throws CoinbaseException, IOException {
-        return handleErrors(deserialize(doHttp(url, "PUT", entity), responseClass));
+        return handleErrors(deserialize(coinbaseConnection.doHttp(url, "PUT", entity), responseClass));
     }
 
     private <T extends Response> T delete(URL url, Class<T> responseClass) throws CoinbaseException, IOException {
-        return handleErrors(deserialize(doHttp(url, "DELETE", null), responseClass));
+        return handleErrors(deserialize(coinbaseConnection.doHttp(url, "DELETE", null), responseClass));
     }
 
-    private static <T extends Response> T handleErrors(T response) throws CoinbaseException {
+    public static <T extends Response> T handleErrors(T response) throws CoinbaseException {
         String errors = response.getErrors();
         if (errors != null) {
             if (errors.contains("device_confirmation_required")) {

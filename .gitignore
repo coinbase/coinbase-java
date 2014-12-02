@@ -16,6 +16,10 @@ hs_err_pid*
 .classpath
 .settings/
 
+#Idea
+.idea/
+*.iml
+
 # Maven
 target/
 pom.xml.asc
