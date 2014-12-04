@@ -12,6 +12,7 @@ public class PaymentMethod implements Serializable {
     private String _name;
     private Boolean _canBuy;
     private Boolean _canSell;
+    private String _accountId;
     
     public String getId() {
         return _id;
@@ -44,5 +45,12 @@ public class PaymentMethod implements Serializable {
     public void setCanSell(Boolean canSell) {
         _canSell = canSell;
     }
-    
+
+    public String getAccountId() {
+        return _accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this._accountId = _accountId;
+    }
 }

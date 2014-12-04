@@ -54,6 +54,9 @@ public class AccountChange implements Serializable {
         private Boolean _fiat;
         private Boolean _notes_present;
         private User _other_user;
+        private PaymentMethod _payment_method;
+        private String _status;
+        private Account _other_account;
         
         public Category getCategory() {
             return _category;
@@ -86,7 +89,22 @@ public class AccountChange implements Serializable {
         public void setOtherUser(User other_user) {
             _other_user = other_user;
         }
-        
+
+        public PaymentMethod getPaymentMethod() {
+            return _payment_method;
+        }
+
+        public void setPaymentMethod(PaymentMethod payment_method) {
+            this._payment_method = payment_method;
+        }
+
+        public String getStatus() {
+            return _status;
+        }
+
+        public void setStatus(String status) {
+            this._status = status;
+        }
     }
 
     /**
