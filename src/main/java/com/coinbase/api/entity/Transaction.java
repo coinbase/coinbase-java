@@ -66,6 +66,12 @@ public class Transaction implements Serializable {
     // Order
     private Integer _confirmations;
 
+    //Accounts
+    private Account _senderAccount;
+    private Account _recipientAccount;
+
+    private String _detailedStatus;
+
     public Integer getConfirmations() {
         return _confirmations;
     }
@@ -234,5 +240,29 @@ public class Transaction implements Serializable {
 
     public void setOrderId(String orderId) {
         _orderId = orderId;
+    }
+
+    public Account getSenderAccount() {
+        return _senderAccount;
+    }
+
+    public void setSenderAccount(Account senderAccount) {
+        this._senderAccount = senderAccount;
+    }
+
+    public Account getRecipientAccount() {
+        return _recipientAccount;
+    }
+
+    public void setRecipientAccount(Account recipientAccount) {
+        this._recipientAccount = recipientAccount;
+    }
+
+    public String getDetailedStatus() {
+        return _detailedStatus;
+    }
+
+    public void setDetailedStatus(String detailedStatus) {
+        this._detailedStatus = detailedStatus;
     }
 }
