@@ -1,5 +1,7 @@
 package com.coinbase.api.entity;
 
+import org.joda.money.CurrencyUnit;
+
 import java.io.Serializable;
 
 
@@ -22,6 +24,8 @@ public class Request implements Serializable {
     private Address _address;
     private Application _application;
     private Report _report;
+    private String _currency;
+    private Boolean _commit;
 
     public Report getReport() {
         return _report;
@@ -125,5 +129,21 @@ public class Request implements Serializable {
 
     public void setApplication(Application application) {
         _application = application;
+    }
+
+    public String getCurrency() {
+        return _currency;
+    }
+
+    public void setCurrency(String currency) {
+        this._currency = currency;
+    }
+
+    public Boolean getCommit() {
+        return _commit;
+    }
+
+    public void setCommit(Boolean commit) {
+        this._commit = commit;
     }
 }

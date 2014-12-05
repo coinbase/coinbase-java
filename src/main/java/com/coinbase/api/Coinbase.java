@@ -425,24 +425,24 @@ public interface Coinbase {
     /**
      * Get a quote for purchasing a given amount of BTC
      *
-     * @param btcAmount the amount of bitcoin for which to retrieve a quote
+     * @param amount the amount for which to retrieve a quote. Can be either bitcoin or native currency
      * @throws IOException
      * @throws CoinbaseException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/prices/buy.html">Online Documentation</a>
      */
-    public Quote getBuyQuote(Money btcAmount) throws IOException, CoinbaseException;
+    public Quote getBuyQuote(Money amount) throws IOException, CoinbaseException;
 
     /**
      * Get a quote for selling a given amount of BTC
      *
-     * @param btcAmount the amount of bitcoin for which to retrieve a quote
+     * @param amount the amount for which to retrieve a quote. Can be either bitcoin or native currency
      * @throws IOException
      * @throws CoinbaseException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/prices/sell.html">Online Documentation</a>
      */
-    public Quote getSellQuote(Money btcAmount) throws IOException, CoinbaseException;
+    public Quote getSellQuote(Money amount) throws IOException, CoinbaseException;
 
     /**
      * Create a new payment button, page, or iFrame.
@@ -504,6 +504,19 @@ public interface Coinbase {
     public Transfer sell(Money amount, String paymentMethodId) throws CoinbaseException, IOException;
 
     /**
+     * Sell a given quantity of BTC to Coinbase
+     *
+     * @param amount the quantity of BTC to sell
+     * @param paymentMethodId the ID of the payment method to credit with the proceeds of the sale
+     * @param commit create the transfer in 'created' state
+     * @return the resulting Transfer object
+     * @throws IOException
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/sells/create.html">Online Documentation</a>
+     */
+    public Transfer sell(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException;
+
+    /**
      * Buy a given quantity of BTC from Coinbase
      *
      * @param amount the quantity of BTC to buy
@@ -525,6 +538,29 @@ public interface Coinbase {
      * @see <a href="https://coinbase.com/api/doc/1.0/buys/create.html">Online Documentation</a>
      */
     public Transfer buy(Money amount, String paymentMethodId) throws CoinbaseException, IOException;
+
+    /**
+     * Buy a given quantity of BTC from Coinbase
+     *
+     * @param amount the quantity of BTC to buy
+     * @param paymentMethodId the ID of the payment method to debit for the purchase
+     * @param commit create the transfer in 'created' state
+     * @return the resulting Transfer object
+     * @throws IOException
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/buys/create.html">Online Documentation</a>
+     */
+    public Transfer buy(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException;
+
+    /**
+     * Commit a transaction to make sure it is in created state
+     *
+     * @return the resulting Transfer object
+     * @throws IOException
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/transfers/index.html">Online Documentation</a>
+     */
+    public Transfer commitTransfer(String transferId) throws CoinbaseException, IOException;
 
     /**
      * Get the user's payment methods
