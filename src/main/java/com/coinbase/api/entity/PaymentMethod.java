@@ -13,6 +13,8 @@ public class PaymentMethod implements Serializable {
     private Boolean _canBuy;
     private Boolean _canSell;
     private String _accountId;
+    private String _currency;
+    private String _type;
     
     public String getId() {
         return _id;
@@ -52,5 +54,21 @@ public class PaymentMethod implements Serializable {
 
     public void setAccountId(String accountId) {
         this._accountId = _accountId;
+    }
+
+    public String getCurrency() {
+        return _currency;
+    }
+
+    public void setCurrency(String currency) {
+        this._currency = currency;
+    }
+
+    public String getType() {
+        return _type;
+    }
+
+    public void setType(String type) {
+        this._type = type;
     }
 }
