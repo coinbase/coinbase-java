@@ -105,6 +105,14 @@ public class AccountChange implements Serializable {
         public void setStatus(String status) {
             this._status = status;
         }
+
+        public Account getOtherAccount() {
+            return _other_account;
+        }
+
+        public void setOtherAccount(Account other_account) {
+            this._other_account = other_account;
+        }
     }
 
     /**
