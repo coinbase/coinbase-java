@@ -287,10 +287,12 @@ class CoinbaseImpl implements Coinbase {
     @Override
     public Quote getBuyQuote(Money amount) throws IOException, CoinbaseException {
         String qtyParam;
-        if(amount.getCurrencyUnit().getCode().equals("BTC"))
+        if(amount.getCurrencyUnit().getCode().equals("BTC")) {
             qtyParam = "qty";
-        else
+        }
+        else {
             qtyParam = "native_qty";
+        }
 
         URL buyPriceUrl;
         try {
@@ -307,10 +309,12 @@ class CoinbaseImpl implements Coinbase {
     @Override
     public Quote getSellQuote(Money amount) throws IOException, CoinbaseException {
         String qtyParam;
-        if(amount.getCurrencyUnit().getCode().equals("BTC"))
+        if(amount.getCurrencyUnit().getCode().equals("BTC")) {
             qtyParam = "qty";
-        else
+        }
+        else {
             qtyParam = "native_qty";
+        }
 
         URL sellPriceUrl;
         try {
@@ -469,8 +473,7 @@ class CoinbaseImpl implements Coinbase {
         request.setQty(amount.getAmount().doubleValue());
         request.setPaymentMethodId(paymentMethodId);
         request.setCurrency(amount.getCurrencyUnit().getCurrencyCode());
-        if(commit != null)
-            request.setCommit(commit);
+        request.setCommit(commit);
 
         return post(sellsUrl, request, TransferResponse.class).getTransfer();
     }
@@ -498,8 +501,7 @@ class CoinbaseImpl implements Coinbase {
         request.setQty(amount.getAmount().doubleValue());
         request.setPaymentMethodId(paymentMethodId);
         request.setCurrency(amount.getCurrencyUnit().getCurrencyCode());
-        if(commit != null)
-            request.setCommit(commit);
+        request.setCommit(commit);
 
         return post(buysUrl, request, TransferResponse.class).getTransfer();
     }
@@ -510,7 +512,7 @@ class CoinbaseImpl implements Coinbase {
         try {
             commitUrl = new URL(_baseApiUrl, "transfers/" + transactionId + "/commit");
         } catch (MalformedURLException ex) {
-            throw new AssertionError(ex);
+            throw new CoinbaseException("Invalid transaction id");
         }
 
         return post(commitUrl, null, TransferResponse.class).getTransfer();
