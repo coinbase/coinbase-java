@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.joda.money.Money;
+import org.joda.time.DateTime;
 
 import com.coinbase.api.deserializer.FeesCollector;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -18,6 +19,7 @@ public class Quote implements Serializable {
     private HashMap<String, Money> _fees;
     private Money _subtotal;
     private Money _total;
+    private DateTime _payout_date;
 
     public Money getSubtotal() {
         return _subtotal;
@@ -44,4 +46,11 @@ public class Quote implements Serializable {
         _fees = fees;
     }
 
+    public DateTime getPayoutDate() {
+        return _payout_date;
+    }
+
+    public void setPayoutDate(DateTime payout_date) {
+        this._payout_date = payout_date;
+    }
 }
