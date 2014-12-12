@@ -64,6 +64,7 @@ import com.coinbase.api.entity.ReportResponse;
 import com.coinbase.api.entity.ReportsResponse;
 import com.coinbase.api.entity.Request;
 import com.coinbase.api.entity.Response;
+import com.coinbase.api.entity.RevokeTokenRequest;
 import com.coinbase.api.entity.Token;
 import com.coinbase.api.entity.TokenResponse;
 import com.coinbase.api.entity.Transaction;
@@ -1036,6 +1037,29 @@ class CoinbaseImpl implements Coinbase {
         request.setRedirectUri(redirectUri != null? redirectUri : "2_legged");
 
         return post(tokenUrl, request, OAuthTokensResponse.class);
+    }
+
+    @Override
+    public void revokeToken() throws CoinbaseException, IOException {
+
+        if (_accessToken == null) {
+            throw new CoinbaseException(
+                "This client must have been initialized with an access token in order to call revokeToken()"
+            );
+        }
+
+        URL revokeTokenUrl;
+        try {
+            revokeTokenUrl = new URL(_baseOAuthUrl, "revoke");
+        } catch (MalformedURLException ex) {
+            throw new AssertionError(ex);
+        }
+
+        RevokeTokenRequest request = new RevokeTokenRequest();
+        request.setToken(_accessToken);
+
+        post(revokeTokenUrl, request, Response.class);
+        _accessToken = null;
     }
 
     @Override

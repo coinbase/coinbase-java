@@ -933,6 +933,17 @@ public interface Coinbase {
     public OAuthTokensResponse getTokens(String clientId, String clientSecret, String authCode, String redirectUri) throws UnauthorizedDeviceException, CoinbaseException, IOException;
 
     /**
+     * Revoke current access token.
+     *
+     * This client must have previously been initialized with an access token.
+     * Future methods requiring authentication will fail.
+     *
+     * @throws CoinbaseException
+     * @throws IOException
+     */
+    public void revokeToken() throws CoinbaseException, IOException;
+
+    /**
      * Refresh OAuth tokens
      *
      * @throws CoinbaseException
