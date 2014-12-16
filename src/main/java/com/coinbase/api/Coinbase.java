@@ -36,6 +36,7 @@ import com.coinbase.api.entity.TransactionsResponse;
 import com.coinbase.api.entity.Transfer;
 import com.coinbase.api.entity.TransfersResponse;
 import com.coinbase.api.entity.User;
+import com.coinbase.api.entity.UserResponse;
 import com.coinbase.api.exception.CoinbaseException;
 import com.coinbase.api.exception.CredentialsIncorrectException;
 import com.coinbase.api.exception.TwoFactorIncorrectException;
@@ -666,6 +667,25 @@ public interface Coinbase {
      *
      */
     public User createUser(User userParams, String clientId, String scope) throws CoinbaseException, IOException;
+
+    /**
+     * Authenticated resource that creates a user with an email and password and gets the OAuth
+     * tokens from the server.
+     *
+     * @param userParams a User object containing the parameters to create a new User
+     * @param clientId your OAuth application's client id
+     * @param scope a space-separated list of Coinbase OAuth permissions
+     *
+     * @return the user response
+     *
+     * @throws CoinbaseException on error
+     * @throws IOException
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/users/create.html">Online Documentation</a>
+     * @see <a href="https://coinbase.com/docs/api/permissions">Permissions Reference</a>
+     *
+     */
+    public UserResponse createUserWithOAuth(User userParams, String clientId, String scope) throws CoinbaseException, IOException;
 
     /**
      * Updates account settings for the current user

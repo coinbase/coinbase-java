@@ -856,6 +856,23 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
+    public UserResponse createUserWithOAuth(User userParams, String clientId, String scope) throws CoinbaseException, IOException {
+        URL usersUrl;
+        try {
+            usersUrl = new URL(_baseApiUrl, "users");
+        } catch (MalformedURLException ex) {
+            throw new AssertionError(ex);
+        }
+
+        Request request = new Request();
+        request.setUser(userParams);
+        request.setScopes(scope);
+        request.setClientId(clientId);
+
+        return post(usersUrl, request, UserResponse.class);
+    }
+
+    @Override
     public User updateUser(String userId, User userParams) throws CoinbaseException, IOException {
         URL userUrl;
         try {
