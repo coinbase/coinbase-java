@@ -14,6 +14,7 @@ public class User implements Serializable {
     private String _id;
     private String _name;
     private String _email;
+    private Boolean _email_verified;
     private String _timeZone;
     private CurrencyUnit _nativeCurrency;
     private Money _balance;
@@ -70,6 +71,14 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         _email = email;
+    }
+
+    public Boolean getEmailVerified() {
+        return _email_verified;
+    }
+
+    public void setEmailVerified(Boolean email_verified) {
+        this._email_verified = email_verified;
     }
 
     public String getTimeZone() {
