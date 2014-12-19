@@ -8,13 +8,23 @@ This library is a wrapper around the [Coinbase JSON API](https://coinbase.com/ap
 
 ### Using Maven
 
+#### Native
 Add the following dependency to your project's Maven pom.xml:
 
 ```xml
 <dependency>
 	<groupId>com.coinbase.api</groupId>
 	<artifactId>coinbase-java</artifactId>
-	<version>1.9.0</version>
+	<version>1.10.0</version>
+</dependency>
+```
+
+#### Google AppEngine
+```xml
+<dependency>
+	<groupId>com.coinbase.api</groupId>
+	<artifactId>coinbase-java-appengine</artifactId>
+	<version>1.10.0</version>
 </dependency>
 ```
 
@@ -29,7 +39,7 @@ git clone git@github.com:coinbase/coinbase-java.git
 cd coinbase-java
 mvn dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=$YOUR_JAR_DIRECTORY
 mvn package
-cp target/coinbase-java-1.9.0.jar $YOUR_JAR_DIRECTORY
+cp target/coinbase-java-1.10.0.jar $YOUR_JAR_DIRECTORY
 ```
 
 ## Usage
@@ -40,6 +50,7 @@ Start by [enabling an API Key on your account](https://coinbase.com/settings/api
 
 Next, build an instance of the client by passing your API Key + Secret to a CoinbaseBuilder object.
 
+#### Native
 ```java
 import com.coinbase.api.Coinbase;
 import com.coinbase.api.CoinbaseBuilder;
@@ -70,6 +81,42 @@ cb.getUser().getEmail(); // user@example.com
 ```
 
 [Joda Money objects](http://www.joda.org/joda-money/) are returned for most amounts dealing with currency.  You can call `getAmount`, `toString`, or perform math operations on money objects.
+
+#### Google AppEngine
+```java
+import com.coinbase.api.Coinbase;
+import com.coinbase.api.CoinbaseBuilder;
+import com.coinbase.api.CoinbaseConnectionAppengineImpl;
+
+Coinbase cb = new CoinbaseBuilder()
+                      .withCoinbaseConnection(new CoinbaseConnectionAppengineImpl(System.getenv("COINBASE_API_KEY"), System.getenv("COINBASE_API_SECRET"), null))
+                      .withApiKey(System.getenv("COINBASE_API_KEY"), System.getenv("COINBASE_API_SECRET"))
+                      .build();
+```
+
+Notice here that we did not hard code the API keys into our codebase, but set them in environment variables instead. This is just one example, but keeping your credentials separate from your code base is a good [security practice](https://coinbase.com/docs/api/authentication#security).
+
+### OAuth 2.0 Authentication (for accessing others' accounts)
+
+Start by [creating a new OAuth 2.0 application](https://coinbase.com/oauth/applications)
+
+```java
+// Obtaining the OAuth token is outside the scope of this library
+String token = "the_oauth_token"
+Coinbase cb = new CoinbaseBuilder()
+                      .withCoinbaseConnection(new CoinbaseConnectionAppengineImpl(null, null, token))
+                      .withAccessToken(token)
+                      .build();
+```
+
+Now you can call methods on `coinbase` similar to the ones described in the [api reference](https://coinbase.com/api/doc).  For example:
+
+```java
+cb.getUser().getEmail(); // user@example.com
+```
+
+[Joda Money objects](http://www.joda.org/joda-money/) are returned for most amounts dealing with currency.  You can call `getAmount`, `toString`, or perform math operations on money objects.
+
 
 ## Examples
 
