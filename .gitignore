@@ -29,3 +29,7 @@ pom.xml.next
 release.properties
 coverage-report
 bin/
+
+#IntelliJ IDEA
+.idea/
+*.iml

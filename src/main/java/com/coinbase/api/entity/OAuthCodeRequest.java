@@ -16,10 +16,7 @@ public class OAuthCodeRequest implements Serializable {
         public enum Period {
             DAILY("daily"),
             WEEKLY("weekly"),
-            BIWEEKLY("every_two_weeks"),
-            MONTHLY("monthly"),
-            QUARTERLY("quarterly"),
-            YEARLY("yearly");
+            MONTHLY("monthly");
 
             private String _value;
 

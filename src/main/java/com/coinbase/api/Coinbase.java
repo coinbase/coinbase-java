@@ -36,6 +36,7 @@ import com.coinbase.api.entity.TransactionsResponse;
 import com.coinbase.api.entity.Transfer;
 import com.coinbase.api.entity.TransfersResponse;
 import com.coinbase.api.entity.User;
+import com.coinbase.api.entity.UserResponse;
 import com.coinbase.api.exception.CoinbaseException;
 import com.coinbase.api.exception.CredentialsIncorrectException;
 import com.coinbase.api.exception.TwoFactorIncorrectException;
@@ -425,24 +426,24 @@ public interface Coinbase {
     /**
      * Get a quote for purchasing a given amount of BTC
      *
-     * @param btcAmount the amount of bitcoin for which to retrieve a quote
+     * @param amount the amount for which to retrieve a quote. Can be either bitcoin or native currency
      * @throws IOException
      * @throws CoinbaseException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/prices/buy.html">Online Documentation</a>
      */
-    public Quote getBuyQuote(Money btcAmount) throws IOException, CoinbaseException;
+    public Quote getBuyQuote(Money amount) throws IOException, CoinbaseException;
 
     /**
      * Get a quote for selling a given amount of BTC
      *
-     * @param btcAmount the amount of bitcoin for which to retrieve a quote
+     * @param amount the amount for which to retrieve a quote. Can be either bitcoin or native currency
      * @throws IOException
      * @throws CoinbaseException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/prices/sell.html">Online Documentation</a>
      */
-    public Quote getSellQuote(Money btcAmount) throws IOException, CoinbaseException;
+    public Quote getSellQuote(Money amount) throws IOException, CoinbaseException;
 
     /**
      * Create a new payment button, page, or iFrame.
@@ -504,6 +505,19 @@ public interface Coinbase {
     public Transfer sell(Money amount, String paymentMethodId) throws CoinbaseException, IOException;
 
     /**
+     * Sell a given quantity of BTC to Coinbase
+     *
+     * @param amount the quantity of BTC to sell
+     * @param paymentMethodId the ID of the payment method to credit with the proceeds of the sale
+     * @param commit create the transfer in 'created' state
+     * @return the resulting Transfer object
+     * @throws IOException
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/sells/create.html">Online Documentation</a>
+     */
+    public Transfer sell(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException;
+
+    /**
      * Buy a given quantity of BTC from Coinbase
      *
      * @param amount the quantity of BTC to buy
@@ -525,6 +539,29 @@ public interface Coinbase {
      * @see <a href="https://coinbase.com/api/doc/1.0/buys/create.html">Online Documentation</a>
      */
     public Transfer buy(Money amount, String paymentMethodId) throws CoinbaseException, IOException;
+
+    /**
+     * Buy a given quantity of BTC from Coinbase
+     *
+     * @param amount the quantity of BTC to buy
+     * @param paymentMethodId the ID of the payment method to debit for the purchase
+     * @param commit create the transfer in 'created' state
+     * @return the resulting Transfer object
+     * @throws IOException
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/buys/create.html">Online Documentation</a>
+     */
+    public Transfer buy(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException;
+
+    /**
+     * Commit a transaction to make sure it is in created state
+     *
+     * @return the resulting Transfer object
+     * @throws IOException
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/transfers/index.html">Online Documentation</a>
+     */
+    public Transfer commitTransfer(String transferId) throws CoinbaseException, IOException;
 
     /**
      * Get the user's payment methods
@@ -630,6 +667,25 @@ public interface Coinbase {
      *
      */
     public User createUser(User userParams, String clientId, String scope) throws CoinbaseException, IOException;
+
+    /**
+     * Authenticated resource that creates a user with an email and password and gets the OAuth
+     * tokens from the server.
+     *
+     * @param userParams a User object containing the parameters to create a new User
+     * @param clientId your OAuth application's client id
+     * @param scope a space-separated list of Coinbase OAuth permissions
+     *
+     * @return the user response
+     *
+     * @throws CoinbaseException on error
+     * @throws IOException
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/users/create.html">Online Documentation</a>
+     * @see <a href="https://coinbase.com/docs/api/permissions">Permissions Reference</a>
+     *
+     */
+    public UserResponse createUserWithOAuth(User userParams, String clientId, String scope) throws CoinbaseException, IOException;
 
     /**
      * Updates account settings for the current user
@@ -895,6 +951,17 @@ public interface Coinbase {
      *
      */
     public OAuthTokensResponse getTokens(String clientId, String clientSecret, String authCode, String redirectUri) throws UnauthorizedDeviceException, CoinbaseException, IOException;
+
+    /**
+     * Revoke current access token.
+     *
+     * This client must have previously been initialized with an access token.
+     * Future methods requiring authentication will fail.
+     *
+     * @throws CoinbaseException
+     * @throws IOException
+     */
+    public void revokeToken() throws CoinbaseException, IOException;
 
     /**
      * Refresh OAuth tokens

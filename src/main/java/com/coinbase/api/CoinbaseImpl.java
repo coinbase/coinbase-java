@@ -53,6 +53,7 @@ import com.coinbase.api.entity.ReportResponse;
 import com.coinbase.api.entity.ReportsResponse;
 import com.coinbase.api.entity.Request;
 import com.coinbase.api.entity.Response;
+import com.coinbase.api.entity.RevokeTokenRequest;
 import com.coinbase.api.entity.Token;
 import com.coinbase.api.entity.TokenResponse;
 import com.coinbase.api.entity.Transaction;
@@ -106,7 +107,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public User getUser() throws IOException, CoinbaseException {
+    public User getUser() throws IOException, CoinbaseException {
         URL usersUrl;
         try {
             usersUrl = new URL(_baseApiUrl, "users");
@@ -117,30 +118,30 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public AccountsResponse getAccounts() throws IOException, CoinbaseException {
+    public AccountsResponse getAccounts() throws IOException, CoinbaseException {
         return getAccounts(1, 25, false);
     }
 
     @Override
-	public AccountsResponse getAccounts(int page) throws IOException, CoinbaseException {
+    public AccountsResponse getAccounts(int page) throws IOException, CoinbaseException {
         return getAccounts(page, 25, false);
     }
 
     @Override
-	public AccountsResponse getAccounts(int page, int limit) throws IOException, CoinbaseException {
+    public AccountsResponse getAccounts(int page, int limit) throws IOException, CoinbaseException {
         return getAccounts(page, limit, false);
     }
 
     @Override
-	public AccountsResponse getAccounts(int page, int limit, boolean includeInactive) throws IOException, CoinbaseException {
+    public AccountsResponse getAccounts(int page, int limit, boolean includeInactive) throws IOException, CoinbaseException {
         URL accountsUrl;
         try {
             accountsUrl = new URL(
                     _baseApiUrl,
                     "accounts?" +
-                    "&page=" + page +
-                    "&limit=" + limit +
-                    "&all_accounts=" + (includeInactive ? "true" : "false")
+                            "&page=" + page +
+                            "&limit=" + limit +
+                            "&all_accounts=" + (includeInactive ? "true" : "false")
             );
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
@@ -150,7 +151,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Money getBalance() throws IOException, CoinbaseException {
+    public Money getBalance() throws IOException, CoinbaseException {
         if (_accountId != null) {
             return getBalance(_accountId);
         } else {
@@ -159,7 +160,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Money getBalance(String accountId) throws IOException, CoinbaseException {
+    public Money getBalance(String accountId) throws IOException, CoinbaseException {
         URL accountBalanceUrl;
         try {
             accountBalanceUrl = new URL(_baseApiUrl, "accounts/" + accountId + "/balance");
@@ -170,7 +171,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public void setPrimaryAccount(String accountId) throws CoinbaseException, IOException {
+    public void setPrimaryAccount(String accountId) throws CoinbaseException, IOException {
         URL setPrimaryUrl;
         try {
             setPrimaryUrl = new URL(_baseApiUrl, "accounts/" + accountId + "/primary");
@@ -181,7 +182,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public void deleteAccount(String accountId) throws CoinbaseException, IOException {
+    public void deleteAccount(String accountId) throws CoinbaseException, IOException {
         URL accountUrl;
         try {
             accountUrl = new URL(_baseApiUrl, "accounts/" + accountId);
@@ -192,7 +193,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public void setPrimaryAccount() throws CoinbaseException, IOException {
+    public void setPrimaryAccount() throws CoinbaseException, IOException {
         if (_accountId != null) {
             setPrimaryAccount(_accountId);
         } else {
@@ -201,7 +202,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public void deleteAccount() throws CoinbaseException, IOException {
+    public void deleteAccount() throws CoinbaseException, IOException {
         if (_accountId != null) {
             deleteAccount(_accountId);
         } else {
@@ -210,7 +211,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public void updateAccount(Account account) throws CoinbaseException, IOException, UnspecifiedAccount {
+    public void updateAccount(Account account) throws CoinbaseException, IOException, UnspecifiedAccount {
         if (_accountId != null) {
             updateAccount(_accountId, account);
         } else {
@@ -219,7 +220,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Account createAccount(Account account) throws CoinbaseException, IOException {
+    public Account createAccount(Account account) throws CoinbaseException, IOException {
         URL accountsUrl;
         try {
             accountsUrl = new URL(_baseApiUrl, "accounts");
@@ -234,7 +235,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public void updateAccount(String accountId, Account account) throws CoinbaseException, IOException {
+    public void updateAccount(String accountId, Account account) throws CoinbaseException, IOException {
         URL accountUrl;
         try {
             accountUrl = new URL(_baseApiUrl, "accounts/" + accountId);
@@ -248,7 +249,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Money getSpotPrice(CurrencyUnit currency) throws IOException, CoinbaseException {
+    public Money getSpotPrice(CurrencyUnit currency) throws IOException, CoinbaseException {
         URL spotPriceUrl;
         try {
             spotPriceUrl = new URL(_baseApiUrl, "prices/spot_rate?currency=" + URLEncoder.encode(currency.getCurrencyCode(), "UTF-8"));
@@ -259,16 +260,20 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Quote getBuyQuote(Money btcAmount) throws IOException, CoinbaseException {
-        if (!btcAmount.getCurrencyUnit().getCode().equals("BTC")) {
-            throw new CoinbaseException("Only BTC amounts are supported for quotes");
+    public Quote getBuyQuote(Money amount) throws IOException, CoinbaseException {
+        String qtyParam;
+        if(amount.getCurrencyUnit().getCode().equals("BTC")) {
+            qtyParam = "qty";
+        }
+        else {
+            qtyParam = "native_qty";
         }
 
         URL buyPriceUrl;
         try {
             buyPriceUrl = new URL(
-                _baseApiUrl,
-                "prices/buy?qty=" + URLEncoder.encode(btcAmount.getAmount().toPlainString(), "UTF-8")
+                    _baseApiUrl,
+                    "prices/buy?" + qtyParam +"=" + URLEncoder.encode(amount.getAmount().toPlainString(), "UTF-8")
             );
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
@@ -277,16 +282,20 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Quote getSellQuote(Money btcAmount) throws IOException, CoinbaseException {
-        if (!btcAmount.getCurrencyUnit().getCode().equals("BTC")) {
-            throw new CoinbaseException("Only BTC amounts are supported for quotes");
+    public Quote getSellQuote(Money amount) throws IOException, CoinbaseException {
+        String qtyParam;
+        if(amount.getCurrencyUnit().getCode().equals("BTC")) {
+            qtyParam = "qty";
+        }
+        else {
+            qtyParam = "native_qty";
         }
 
         URL sellPriceUrl;
         try {
             sellPriceUrl = new URL(
-                _baseApiUrl,
-                "prices/sell?qty=" + URLEncoder.encode(btcAmount.getAmount().toPlainString(), "UTF-8")
+                    _baseApiUrl,
+                    "prices/sell?" + qtyParam + "=" + URLEncoder.encode(amount.getAmount().toPlainString(), "UTF-8")
             );
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
@@ -295,13 +304,13 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public TransactionsResponse getTransactions(int page) throws IOException, CoinbaseException {
+    public TransactionsResponse getTransactions(int page) throws IOException, CoinbaseException {
         URL transactionsUrl;
         try {
             transactionsUrl = new URL(
-                _baseApiUrl,
-                "transactions?page=" + page +
-                (_accountId != null ? "&account_id=" + _accountId : "")
+                    _baseApiUrl,
+                    "transactions?page=" + page +
+                            (_accountId != null ? "&account_id=" + _accountId : "")
             );
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid account id");
@@ -310,12 +319,12 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public TransactionsResponse getTransactions() throws IOException, CoinbaseException {
+    public TransactionsResponse getTransactions() throws IOException, CoinbaseException {
         return getTransactions(1);
     }
 
     @Override
-	public Transaction getTransaction(String id) throws IOException, CoinbaseException {
+    public Transaction getTransaction(String id) throws IOException, CoinbaseException {
         URL transactionUrl;
         try {
             transactionUrl = new URL(_baseApiUrl, "transactions/" + id);
@@ -326,7 +335,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Transaction requestMoney(Transaction transaction) throws CoinbaseException, IOException {
+    public Transaction requestMoney(Transaction transaction) throws CoinbaseException, IOException {
         URL requestMoneyUrl;
         try {
             requestMoneyUrl = new URL(_baseApiUrl, "transactions/request_money");
@@ -345,7 +354,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public void resendRequest(String id) throws CoinbaseException, IOException {
+    public void resendRequest(String id) throws CoinbaseException, IOException {
         URL resendRequestUrl;
         try {
             resendRequestUrl = new URL(_baseApiUrl, "transactions/" + id + "/resend_request");
@@ -356,7 +365,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public void deleteRequest(String id) throws CoinbaseException, IOException {
+    public void deleteRequest(String id) throws CoinbaseException, IOException {
         URL cancelRequestUrl;
         try {
             cancelRequestUrl = new URL(_baseApiUrl, "transactions/" + id + "/cancel_request");
@@ -367,7 +376,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Transaction completeRequest(String id) throws CoinbaseException, IOException {
+    public Transaction completeRequest(String id) throws CoinbaseException, IOException {
         URL completeRequestUrl;
         try {
             completeRequestUrl = new URL(_baseApiUrl, "transactions/" + id + "/complete_request");
@@ -378,7 +387,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Transaction sendMoney(Transaction transaction) throws CoinbaseException, IOException {
+    public Transaction sendMoney(Transaction transaction) throws CoinbaseException, IOException {
         URL sendMoneyUrl;
         try {
             sendMoneyUrl = new URL(_baseApiUrl, "transactions/send_money");
@@ -397,13 +406,13 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public TransfersResponse getTransfers(int page) throws IOException, CoinbaseException {
+    public TransfersResponse getTransfers(int page) throws IOException, CoinbaseException {
         URL transfersUrl;
         try {
             transfersUrl = new URL(
-                _baseApiUrl,
-                "transfers?page=" + page +
-                (_accountId != null ? "&account_id=" + _accountId : "")
+                    _baseApiUrl,
+                    "transfers?page=" + page +
+                            (_accountId != null ? "&account_id=" + _accountId : "")
             );
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid account id");
@@ -412,24 +421,22 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public TransfersResponse getTransfers() throws IOException, CoinbaseException {
+    public TransfersResponse getTransfers() throws IOException, CoinbaseException {
         return getTransfers(1);
     }
 
     @Override
-	public Transfer sell(Money amount) throws CoinbaseException, IOException {
+    public Transfer sell(Money amount) throws CoinbaseException, IOException {
         return sell(amount, null);
     }
 
     @Override
-	public Transfer sell(Money amount, String paymentMethodId) throws CoinbaseException, IOException {
-        if (!amount.getCurrencyUnit().getCode().equals("BTC")) {
-            throw new CoinbaseException(
-                "Cannot sell " + amount.getCurrencyUnit().getCode()
-                + " Only BTC amounts are supported for sells"
-            );
-        }
+    public Transfer sell(Money amount, String paymentMethodId) throws CoinbaseException, IOException {
+        return sell(amount, paymentMethodId, null);
+    }
 
+    @Override
+    public Transfer sell(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException {
         URL sellsUrl;
         try {
             sellsUrl = new URL(_baseApiUrl, "sells");
@@ -440,24 +447,24 @@ class CoinbaseImpl implements Coinbase {
         Request request = newAccountSpecificRequest();
         request.setQty(amount.getAmount().doubleValue());
         request.setPaymentMethodId(paymentMethodId);
+        request.setCurrency(amount.getCurrencyUnit().getCurrencyCode());
+        request.setCommit(commit);
 
         return post(sellsUrl, request, TransferResponse.class).getTransfer();
     }
 
     @Override
-	public Transfer buy(Money amount) throws CoinbaseException, IOException {
+    public Transfer buy(Money amount) throws CoinbaseException, IOException {
         return buy(amount, null);
     }
 
     @Override
-	public Transfer buy(Money amount, String paymentMethodId) throws CoinbaseException, IOException {
-        if (!amount.getCurrencyUnit().getCode().equals("BTC")) {
-            throw new CoinbaseException(
-                "Cannot buy " + amount.getCurrencyUnit().getCode()
-                + " Only BTC amounts are supported for buys"
-            );
-        }
+    public Transfer buy(Money amount, String paymentMethodId) throws CoinbaseException, IOException {
+        return buy(amount, paymentMethodId, null);
+    }
 
+    @Override
+    public Transfer buy(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException {
         URL buysUrl;
         try {
             buysUrl = new URL(_baseApiUrl, "buys");
@@ -468,12 +475,26 @@ class CoinbaseImpl implements Coinbase {
         Request request = newAccountSpecificRequest();
         request.setQty(amount.getAmount().doubleValue());
         request.setPaymentMethodId(paymentMethodId);
+        request.setCurrency(amount.getCurrencyUnit().getCurrencyCode());
+        request.setCommit(commit);
 
         return post(buysUrl, request, TransferResponse.class).getTransfer();
     }
 
     @Override
-	public Order getOrder(String idOrCustom) throws IOException, CoinbaseException {
+    public Transfer commitTransfer(String transactionId) throws CoinbaseException, IOException {
+        URL commitUrl;
+        try {
+            commitUrl = new URL(_baseApiUrl, "transfers/" + transactionId + "/commit");
+        } catch (MalformedURLException ex) {
+            throw new CoinbaseException("Invalid transaction id");
+        }
+
+        return post(commitUrl, null, TransferResponse.class).getTransfer();
+    }
+
+    @Override
+    public Order getOrder(String idOrCustom) throws IOException, CoinbaseException {
         URL orderUrl;
         try {
             orderUrl = new URL(_baseApiUrl, "orders/" + idOrCustom);
@@ -484,13 +505,13 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public OrdersResponse getOrders(int page) throws IOException, CoinbaseException {
+    public OrdersResponse getOrders(int page) throws IOException, CoinbaseException {
         URL ordersUrl;
         try {
             ordersUrl = new URL(
-                _baseApiUrl,
-                "orders?page=" + page +
-                (_accountId != null ? "&account_id=" + _accountId : "")
+                    _baseApiUrl,
+                    "orders?page=" + page +
+                            (_accountId != null ? "&account_id=" + _accountId : "")
             );
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid  account id");
@@ -499,18 +520,18 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public OrdersResponse getOrders() throws IOException, CoinbaseException {
+    public OrdersResponse getOrders() throws IOException, CoinbaseException {
         return getOrders(1);
     }
 
     @Override
-	public AddressesResponse getAddresses(int page) throws IOException, CoinbaseException {
+    public AddressesResponse getAddresses(int page) throws IOException, CoinbaseException {
         URL addressesUrl;
         try {
             addressesUrl = new URL(
-                _baseApiUrl,
-                "addresses?page=" + page +
-                (_accountId != null ? "&account_id=" + _accountId : "")
+                    _baseApiUrl,
+                    "addresses?page=" + page +
+                            (_accountId != null ? "&account_id=" + _accountId : "")
             );
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid account id");
@@ -519,17 +540,17 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public AddressesResponse getAddresses() throws IOException, CoinbaseException {
+    public AddressesResponse getAddresses() throws IOException, CoinbaseException {
         return getAddresses(1);
     }
 
     @Override
-	public ContactsResponse getContacts(int page) throws IOException, CoinbaseException {
+    public ContactsResponse getContacts(int page) throws IOException, CoinbaseException {
         URL contactsUrl;
         try {
             contactsUrl = new URL(
-                _baseApiUrl,
-                "contacts?page=" + page
+                    _baseApiUrl,
+                    "contacts?page=" + page
             );
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
@@ -539,18 +560,18 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public ContactsResponse getContacts() throws IOException, CoinbaseException {
+    public ContactsResponse getContacts() throws IOException, CoinbaseException {
         return getContacts(1);
     }
 
     @Override
-	public ContactsResponse getContacts(String query, int page) throws IOException, CoinbaseException {
+    public ContactsResponse getContacts(String query, int page) throws IOException, CoinbaseException {
         URL contactsUrl;
         try {
             contactsUrl = new URL(
-                _baseApiUrl,
-                "contacts?page=" + page +
-                "&query=" + URLEncoder.encode(query, "UTF-8")
+                    _baseApiUrl,
+                    "contacts?page=" + page +
+                            "&query=" + URLEncoder.encode(query, "UTF-8")
             );
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
@@ -560,12 +581,12 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public ContactsResponse getContacts(String query) throws IOException, CoinbaseException {
+    public ContactsResponse getContacts(String query) throws IOException, CoinbaseException {
         return getContacts(query, 1);
     }
 
     @Override
-	public Map<String, BigDecimal> getExchangeRates() throws IOException, CoinbaseException {
+    public Map<String, BigDecimal> getExchangeRates() throws IOException, CoinbaseException {
         URL ratesUrl;
         try {
             ratesUrl = new URL(_baseApiUrl, "currencies/exchange_rates");
@@ -576,7 +597,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public List<CurrencyUnit> getSupportedCurrencies() throws IOException, CoinbaseException {
+    public List<CurrencyUnit> getSupportedCurrencies() throws IOException, CoinbaseException {
         URL currenciesUrl;
         try {
             currenciesUrl = new URL(_baseApiUrl, "currencies");
@@ -598,12 +619,12 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public List<HistoricalPrice> getHistoricalPrices(int page) throws CoinbaseException, IOException {
+    public List<HistoricalPrice> getHistoricalPrices(int page) throws CoinbaseException, IOException {
         URL historicalPricesUrl;
         try {
             historicalPricesUrl = new URL(
-                _baseApiUrl,
-                "prices/historical?page=" + page
+                    _baseApiUrl,
+                    "prices/historical?page=" + page
             );
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
@@ -635,12 +656,12 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public List<HistoricalPrice> getHistoricalPrices() throws CoinbaseException, IOException {
+    public List<HistoricalPrice> getHistoricalPrices() throws CoinbaseException, IOException {
         return getHistoricalPrices(1);
     }
 
     @Override
-	public Button createButton(Button button) throws CoinbaseException, IOException {
+    public Button createButton(Button button) throws CoinbaseException, IOException {
         URL buttonsUrl;
         try {
             buttonsUrl = new URL(_baseApiUrl, "buttons");
@@ -655,7 +676,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Order createOrder(Button button) throws CoinbaseException, IOException {
+    public Order createOrder(Button button) throws CoinbaseException, IOException {
         URL ordersUrl;
         try {
             ordersUrl = new URL(_baseApiUrl, "orders");
@@ -670,7 +691,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Order createOrderForButton(String buttonCode) throws CoinbaseException, IOException {
+    public Order createOrderForButton(String buttonCode) throws CoinbaseException, IOException {
         URL createOrderForButtonUrl;
         try {
             createOrderForButtonUrl = new URL(_baseApiUrl, "buttons/" + buttonCode + "/create_order");
@@ -682,7 +703,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public PaymentMethodsResponse getPaymentMethods() throws IOException, CoinbaseException {
+    public PaymentMethodsResponse getPaymentMethods() throws IOException, CoinbaseException {
         URL paymentMethodsUrl;
         try {
             paymentMethodsUrl = new URL(_baseApiUrl, "payment_methods");
@@ -694,12 +715,12 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public RecurringPaymentsResponse getSubscribers(int page) throws IOException, CoinbaseException {
+    public RecurringPaymentsResponse getSubscribers(int page) throws IOException, CoinbaseException {
         URL subscribersUrl;
         try {
             subscribersUrl = new URL(
-                _baseApiUrl,
-                "subscribers?page=" + page
+                    _baseApiUrl,
+                    "subscribers?page=" + page
             );
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
@@ -709,17 +730,17 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public RecurringPaymentsResponse getSubscribers() throws IOException, CoinbaseException {
+    public RecurringPaymentsResponse getSubscribers() throws IOException, CoinbaseException {
         return getSubscribers(1);
     }
 
     @Override
-	public RecurringPaymentsResponse getRecurringPayments(int page) throws IOException, CoinbaseException {
+    public RecurringPaymentsResponse getRecurringPayments(int page) throws IOException, CoinbaseException {
         URL recurringPaymentsUrl;
         try {
             recurringPaymentsUrl = new URL(
-                _baseApiUrl,
-                "recurring_payments?page=" + page
+                    _baseApiUrl,
+                    "recurring_payments?page=" + page
             );
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
@@ -728,12 +749,12 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public RecurringPaymentsResponse getRecurringPayments() throws IOException, CoinbaseException {
+    public RecurringPaymentsResponse getRecurringPayments() throws IOException, CoinbaseException {
         return getRecurringPayments(1);
     }
 
     @Override
-	public RecurringPayment getRecurringPayment(String id) throws CoinbaseException, IOException {
+    public RecurringPayment getRecurringPayment(String id) throws CoinbaseException, IOException {
         URL recurringPaymentUrl;
         try {
             recurringPaymentUrl = new URL(_baseApiUrl, "recurring_payments/" + id);
@@ -745,7 +766,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public RecurringPayment getSubscriber(String id) throws CoinbaseException, IOException {
+    public RecurringPayment getSubscriber(String id) throws CoinbaseException, IOException {
         URL subscriberUrl;
         try {
             subscriberUrl = new URL(_baseApiUrl, "subscribers/" + id);
@@ -757,7 +778,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public AddressResponse generateReceiveAddress(Address addressParams) throws CoinbaseException, IOException {
+    public AddressResponse generateReceiveAddress(Address addressParams) throws CoinbaseException, IOException {
         URL generateAddressUrl;
         try {
             generateAddressUrl = new URL(_baseApiUrl, "account/generate_receive_address");
@@ -772,12 +793,12 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public AddressResponse generateReceiveAddress() throws CoinbaseException, IOException {
+    public AddressResponse generateReceiveAddress() throws CoinbaseException, IOException {
         return generateReceiveAddress(null);
     }
 
     @Override
-	public User createUser(User userParams) throws CoinbaseException, IOException {
+    public User createUser(User userParams) throws CoinbaseException, IOException {
         URL usersUrl;
         try {
             usersUrl = new URL(_baseApiUrl, "users");
@@ -792,7 +813,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public User createUser(User userParams, String clientId, String scope) throws CoinbaseException, IOException {
+    public User createUser(User userParams, String clientId, String scope) throws CoinbaseException, IOException {
         URL usersUrl;
         try {
             usersUrl = new URL(_baseApiUrl, "users");
@@ -809,7 +830,24 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public User updateUser(String userId, User userParams) throws CoinbaseException, IOException {
+    public UserResponse createUserWithOAuth(User userParams, String clientId, String scope) throws CoinbaseException, IOException {
+        URL usersUrl;
+        try {
+            usersUrl = new URL(_baseApiUrl, "users");
+        } catch (MalformedURLException ex) {
+            throw new AssertionError(ex);
+        }
+
+        Request request = new Request();
+        request.setUser(userParams);
+        request.setScopes(scope);
+        request.setClientId(clientId);
+
+        return post(usersUrl, request, UserResponse.class);
+    }
+
+    @Override
+    public User updateUser(String userId, User userParams) throws CoinbaseException, IOException {
         URL userUrl;
         try {
             userUrl = new URL(_baseApiUrl, "users/" + userId);
@@ -824,7 +862,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Token createToken() throws CoinbaseException, IOException {
+    public Token createToken() throws CoinbaseException, IOException {
         URL tokensUrl;
         try {
             tokensUrl = new URL(_baseApiUrl, "tokens");
@@ -836,7 +874,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public void redeemToken(String tokenId) throws CoinbaseException, IOException {
+    public void redeemToken(String tokenId) throws CoinbaseException, IOException {
         URL redeemTokenUrl;
         try {
             redeemTokenUrl = new URL(_baseApiUrl, "tokens/redeem");
@@ -851,7 +889,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Application createApplication(Application applicationParams) throws CoinbaseException, IOException {
+    public Application createApplication(Application applicationParams) throws CoinbaseException, IOException {
         URL applicationsUrl;
         try {
             applicationsUrl = new URL(_baseApiUrl, "oauth/applications");
@@ -866,7 +904,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public ApplicationsResponse getApplications() throws IOException, CoinbaseException {
+    public ApplicationsResponse getApplications() throws IOException, CoinbaseException {
         URL applicationsUrl;
         try {
             applicationsUrl = new URL(_baseApiUrl, "oauth/applications");
@@ -877,7 +915,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Application getApplication(String id) throws IOException, CoinbaseException {
+    public Application getApplication(String id) throws IOException, CoinbaseException {
         URL applicationUrl;
         try {
             applicationUrl = new URL(_baseApiUrl, "oauth/applications/" + id);
@@ -888,7 +926,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Report createReport(Report reportParams) throws CoinbaseException, IOException {
+    public Report createReport(Report reportParams) throws CoinbaseException, IOException {
         URL reportsUrl;
         try {
             reportsUrl = new URL(_baseApiUrl, "reports");
@@ -903,13 +941,13 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public Report getReport(String reportId) throws IOException, CoinbaseException {
+    public Report getReport(String reportId) throws IOException, CoinbaseException {
         URL reportUrl;
         try {
             reportUrl = new URL(
-                _baseApiUrl,
-                "reports/" + reportId +
-                (_accountId != null ? "?account_id=" + _accountId : "")
+                    _baseApiUrl,
+                    "reports/" + reportId +
+                            (_accountId != null ? "?account_id=" + _accountId : "")
             );
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid report id");
@@ -918,13 +956,13 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public ReportsResponse getReports(int page) throws IOException, CoinbaseException {
+    public ReportsResponse getReports(int page) throws IOException, CoinbaseException {
         URL reportsUrl;
         try {
             reportsUrl = new URL(
-                _baseApiUrl,
-                "reports?page=" + page +
-                (_accountId != null ? "&account_id=" + _accountId : "")
+                    _baseApiUrl,
+                    "reports?page=" + page +
+                            (_accountId != null ? "&account_id=" + _accountId : "")
             );
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid account id");
@@ -933,18 +971,18 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public ReportsResponse getReports() throws IOException, CoinbaseException {
+    public ReportsResponse getReports() throws IOException, CoinbaseException {
         return getReports(1);
     }
 
     @Override
-	public AccountChangesResponse getAccountChanges(int page) throws IOException, CoinbaseException {
+    public AccountChangesResponse getAccountChanges(int page) throws IOException, CoinbaseException {
         URL accountChangesUrl;
         try {
             accountChangesUrl = new URL(
-                _baseApiUrl,
-                "account_changes?page=" + page +
-                (_accountId != null ? "&account_id=" + _accountId : "")
+                    _baseApiUrl,
+                    "account_changes?page=" + page +
+                            (_accountId != null ? "&account_id=" + _accountId : "")
             );
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid account id");
@@ -953,7 +991,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-	public AccountChangesResponse getAccountChanges() throws IOException, CoinbaseException {
+    public AccountChangesResponse getAccountChanges() throws IOException, CoinbaseException {
         return getAccountChanges(1);
     }
 
@@ -990,6 +1028,29 @@ class CoinbaseImpl implements Coinbase {
         request.setRedirectUri(redirectUri != null? redirectUri : "2_legged");
 
         return post(tokenUrl, request, OAuthTokensResponse.class);
+    }
+
+    @Override
+    public void revokeToken() throws CoinbaseException, IOException {
+
+        if (_accessToken == null) {
+            throw new CoinbaseException(
+                "This client must have been initialized with an access token in order to call revokeToken()"
+            );
+        }
+
+        URL revokeTokenUrl;
+        try {
+            revokeTokenUrl = new URL(_baseOAuthUrl, "revoke");
+        } catch (MalformedURLException ex) {
+            throw new AssertionError(ex);
+        }
+
+        RevokeTokenRequest request = new RevokeTokenRequest();
+        request.setToken(_accessToken);
+
+        post(revokeTokenUrl, request, Response.class);
+        _accessToken = null;
     }
 
     @Override
