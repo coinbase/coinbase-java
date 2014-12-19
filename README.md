@@ -39,7 +39,9 @@ git clone git@github.com:coinbase/coinbase-java.git
 cd coinbase-java
 mvn dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=$YOUR_JAR_DIRECTORY
 mvn package
-cp target/coinbase-java-1.10.0.jar $YOUR_JAR_DIRECTORY
+cp coinbase-java/target/coinbase-java-1.10.0.jar $YOUR_JAR_DIRECTORY
+# Google AppEngine
+cp coinbase-java-appengine/target/coinbase-java-appengine-1.10.0.jar $YOUR_JAR_DIRECTORY
 ```
 
 ## Usage
