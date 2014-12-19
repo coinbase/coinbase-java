@@ -580,5 +580,18 @@ public class CoinbaseTest {
         assertEquals(AccountChange.Cache.Category.TRANSACTION, cache.getCategory());
         assertEquals("an external account", cache.getOtherUser().getName());
 
+        transaction = response.getAccountChanges().get(1);
+
+        assertEquals("546d3189543d0664da000016", transaction.getId());
+        assertEquals("546d3189543d0664da000013", transaction.getTransactionId());
+        assertTrue(DateTime.parse("2014-11-19T16:10:49-08:00").isEqual(transaction.getCreatedAt()));
+        assertTrue(transaction.isConfirmed().booleanValue());
+        assertEquals(Money.parse("BTC -0.005"), transaction.getAmount());
+
+        cache = transaction.getCache();
+        assertTrue(cache.isNotesPresent().booleanValue());
+        assertEquals(AccountChange.Cache.Category.TRANSFER, cache.getCategory());
+        assertEquals("EUR Wallet", cache.getPaymentMethod().getName());
+
     }
 }
