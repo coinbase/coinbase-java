@@ -287,6 +287,11 @@ class CoinbaseImpl implements Coinbase {
 
     @Override
     public Quote getBuyQuote(Money amount) throws IOException, CoinbaseException {
+        return getBuyQuote(amount, null);
+    }
+
+    @Override
+    public Quote getBuyQuote(Money amount, String paymentMethodId) throws IOException, CoinbaseException {
         String qtyParam;
         if(amount.getCurrencyUnit().getCode().equals("BTC")) {
             qtyParam = "qty";
@@ -299,7 +304,9 @@ class CoinbaseImpl implements Coinbase {
         try {
             buyPriceUrl = new URL(
                     _baseApiUrl,
-                    "prices/buy?" + qtyParam +"=" + URLEncoder.encode(amount.getAmount().toPlainString(), "UTF-8")
+                    "prices/buy?" + qtyParam +"=" + URLEncoder.encode(amount.getAmount().toPlainString(), "UTF-8") +
+                            (_accountId != null ? "&account_id=" + _accountId : "") +
+                            (paymentMethodId != null ? "&payment_method_id=" + paymentMethodId : "")
             );
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
@@ -309,6 +316,11 @@ class CoinbaseImpl implements Coinbase {
 
     @Override
     public Quote getSellQuote(Money amount) throws IOException, CoinbaseException {
+        return getSellQuote(amount, null);
+    }
+
+    @Override
+    public Quote getSellQuote(Money amount, String paymentMethodId) throws IOException, CoinbaseException {
         String qtyParam;
         if(amount.getCurrencyUnit().getCode().equals("BTC")) {
             qtyParam = "qty";
@@ -321,7 +333,9 @@ class CoinbaseImpl implements Coinbase {
         try {
             sellPriceUrl = new URL(
                     _baseApiUrl,
-                    "prices/sell?" + qtyParam + "=" + URLEncoder.encode(amount.getAmount().toPlainString(), "UTF-8")
+                    "prices/sell?" + qtyParam + "=" + URLEncoder.encode(amount.getAmount().toPlainString(), "UTF-8") +
+                            (_accountId != null ? "&account_id=" + _accountId : "") +
+                            (paymentMethodId != null ? "&payment_method_id=" + paymentMethodId : "")
             );
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
