@@ -578,7 +578,7 @@ public interface Coinbase {
     public Transfer buy(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException;
 
     /**
-     * Commit a transaction to make sure it is in created state
+     * Start a transfer that is in the 'created' state
      *
      * @return the resulting Transfer object
      * @throws IOException
