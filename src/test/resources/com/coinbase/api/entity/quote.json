@@ -1,4 +1,8 @@
 {
+  "btc": {
+    "amount": "1.00000000",
+    "currency": "BTC"
+  },
   "subtotal": {
     "amount": "10.10",
     "currency": "USD"
