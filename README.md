@@ -62,7 +62,7 @@ Coinbase cb = new CoinbaseBuilder()
 
 Notice here that we did not hard code the API keys into our codebase, but set them in environment variables instead. This is just one example, but keeping your credentials separate from your code base is a good [security practice](https://coinbase.com/docs/api/authentication#security).
 
-### OAuth 2.0 Authentication (for accessing others' accounts)
+##### OAuth 2.0 Authentication (for accessing others' accounts)
 
 Start by [creating a new OAuth 2.0 application](https://coinbase.com/oauth/applications)
 
@@ -96,7 +96,7 @@ Coinbase cb = new CoinbaseBuilder()
 
 Notice here that we did not hard code the API keys into our codebase, but set them in environment variables instead. This is just one example, but keeping your credentials separate from your code base is a good [security practice](https://coinbase.com/docs/api/authentication#security).
 
-### OAuth 2.0 Authentication (for accessing others' accounts)
+##### OAuth 2.0 Authentication (for accessing others' accounts)
 
 Start by [creating a new OAuth 2.0 application](https://coinbase.com/oauth/applications)
 
