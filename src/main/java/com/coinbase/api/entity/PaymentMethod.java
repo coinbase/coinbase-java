@@ -88,7 +88,7 @@ public class PaymentMethod implements Serializable {
     }
 
     public void setAccountId(String accountId) {
-        this._accountId = _accountId;
+        this._accountId = accountId;
     }
 
     public String getCurrency() {

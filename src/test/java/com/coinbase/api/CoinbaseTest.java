@@ -592,6 +592,7 @@ public class CoinbaseTest {
         assertTrue(cache.isNotesPresent().booleanValue());
         assertEquals(AccountChange.Cache.Category.TRANSFER, cache.getCategory());
         assertEquals("EUR Wallet", cache.getPaymentMethod().getName());
+        assertEquals("54630e62f1096f083e000002", cache.getPaymentMethod().getAccountId());
 
     }
 }
