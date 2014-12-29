@@ -1119,13 +1119,16 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-    public URI getAuthorizationUri(OAuthCodeRequest params) throws CoinbaseException, IOException {
-        URL authorizeURL = new URL(_baseOAuthUrl, "authorize");
+    public URI getAuthorizationUri(OAuthCodeRequest params) throws CoinbaseException {
+        URL authorizeURL;
         URIBuilder uriBuilder;
 
         try {
+            authorizeURL = new URL(_baseOAuthUrl, "authorize");
             uriBuilder = new URIBuilder(authorizeURL.toURI());
         } catch (URISyntaxException ex) {
+            throw new AssertionError(ex);
+        } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
 

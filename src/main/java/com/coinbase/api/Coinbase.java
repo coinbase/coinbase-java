@@ -984,7 +984,6 @@ public interface Coinbase {
      * Get Three-Legged OAuth Authorization URI
      *
      * @throws CoinbaseException
-     * @throws IOException
      */
-    public URI getAuthorizationUri(OAuthCodeRequest params) throws CoinbaseException, IOException;
+    public URI getAuthorizationUri(OAuthCodeRequest params) throws CoinbaseException;
 }
