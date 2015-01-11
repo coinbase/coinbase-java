@@ -435,6 +435,18 @@ public interface Coinbase {
     public Quote getBuyQuote(Money amount) throws IOException, CoinbaseException;
 
     /**
+     * Get a quote for purchasing a given amount of BTC
+     *
+     * @param amount the amount for which to retrieve a quote. Can be either bitcoin or native currency
+     * @param paymentMethodId the ID of the payment method for which to retrieve a quote
+     * @throws IOException
+     * @throws CoinbaseException
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/prices/buy.html">Online Documentation</a>
+     */
+    public Quote getBuyQuote(Money amount, String paymentMethodId) throws IOException, CoinbaseException;
+
+    /**
      * Get a quote for selling a given amount of BTC
      *
      * @param amount the amount for which to retrieve a quote. Can be either bitcoin or native currency
@@ -444,6 +456,18 @@ public interface Coinbase {
      * @see <a href="https://coinbase.com/api/doc/1.0/prices/sell.html">Online Documentation</a>
      */
     public Quote getSellQuote(Money amount) throws IOException, CoinbaseException;
+
+    /**
+     * Get a quote for selling a given amount of BTC
+     *
+     * @param amount the amount for which to retrieve a quote. Can be either bitcoin or native currency
+     * @param paymentMethodId the ID of the payment method for which to retrieve a quote
+     * @throws IOException
+     * @throws CoinbaseException
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/prices/sell.html">Online Documentation</a>
+     */
+    public Quote getSellQuote(Money amount, String paymentMethodId) throws IOException, CoinbaseException;
 
     /**
      * Create a new payment button, page, or iFrame.
@@ -554,7 +578,7 @@ public interface Coinbase {
     public Transfer buy(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException;
 
     /**
-     * Commit a transaction to make sure it is in created state
+     * Start a transfer that is in the 'created' state
      *
      * @return the resulting Transfer object
      * @throws IOException

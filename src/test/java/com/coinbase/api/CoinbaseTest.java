@@ -145,14 +145,14 @@ public class CoinbaseTest {
         assertEquals(1, user.getSellLevel().intValue());
         assertEquals(Money.parse("BTC 10"), user.getBuyLimit());
         assertEquals(Money.parse("BTC 100"), user.getSellLimit());
-        
+
         Merchant merchant = user.getMerchant();
         assertEquals("test company name", merchant.getCompanyName());
         assertEquals("http://localhost/logo.jpeg", merchant.getLogo().getSmall());
     }
 
     @Test
-    public void transaction() throws Exception {	
+    public void transaction() throws Exception {
         final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/transaction.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
@@ -239,6 +239,7 @@ public class CoinbaseTest {
 
         Quote q = cb.getBuyQuote(Money.parse("BTC 1"));
 
+        assertEquals(Money.parse("BTC 1"), q.getBtc());
         assertEquals(Money.parse("USD 10.10"), q.getSubtotal());
         assertEquals(2, q.getFees().size());
         assertEquals(Money.parse("USD 0.10"), q.getFees().get("coinbase"));
@@ -520,7 +521,7 @@ public class CoinbaseTest {
         assertEquals(DateTime.parse("2014-01-06T00:25:24-08:00"), prices.get(0).getTime());
         assertEquals(Money.parse("USD 10"), prices.get(0).getSpotPrice());
     }
-    
+
     @Test
     public void createReport() throws Exception {
         final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/report.json");
@@ -537,9 +538,9 @@ public class CoinbaseTest {
         reportParams.setNextRun(DateTime.parse("2014-02-06T12:00:00Z"));
         assertEquals(reportParams.getNextRunDate(), "02/06/2014");
         assertEquals(reportParams.getNextRunTime(), "12:00");
-        
+
         Report report = cb.createReport(reportParams);
-        
+
         assertEquals("534711dd137f730e1c0000c6", report.getId());
         assertEquals(Report.Type.TRANSFERS, report.getType());
         assertEquals(Report.Status.ACTIVE, report.getStatus());
@@ -551,33 +552,47 @@ public class CoinbaseTest {
         assertTrue(DateTime.parse("2014-04-10T14:00:00-07:00").isEqual(report.getNextRun()));
         assertTrue(DateTime.parse("2014-04-10T14:49:17-07:00").isEqual(report.getCreatedAt()));
     }
-    
+
     @Test
     public void getAccountChanges() throws Exception {
         final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/account_changes_response.json");
         when(mockConnection.getInputStream()).thenReturn(in);
-        
+
         AccountChangesResponse response = cb.getAccountChanges();
         User user = response.getCurrentUser();
         AccountChange transaction = response.getAccountChanges().get(0);
-        
+
         assertEquals(Money.parse("BTC 50"), response.getBalance());
         assertEquals(Money.parse("USD 500"), response.getNativeBalance());
-        
+
         assertEquals("524a75a3f8182b7d2a00000a", user.getId());
         assertEquals("user2@example.com", user.getEmail());
         assertEquals("User 2", user.getName());
-        
+
         assertEquals("524a75a3f8182b7d2a000018", transaction.getId());
         assertEquals("524a75a3f8182b7d2a000010", transaction.getTransactionId());
-        assertTrue(DateTime.parse("2013-10-01T00:11:31-07:00").isEqual(transaction.getCreatedAt()));   
+        assertTrue(DateTime.parse("2013-10-01T00:11:31-07:00").isEqual(transaction.getCreatedAt()));
         assertFalse(transaction.isConfirmed().booleanValue());
         assertEquals(Money.parse("BTC 50"), transaction.getAmount());
-        
+
         AccountChange.Cache cache = transaction.getCache();
         assertFalse(cache.isNotesPresent().booleanValue());
         assertEquals(AccountChange.Cache.Category.TRANSACTION, cache.getCategory());
-        assertEquals("an external account", cache.getOtherUser().getName());        
-        
+        assertEquals("an external account", cache.getOtherUser().getName());
+
+        transaction = response.getAccountChanges().get(1);
+
+        assertEquals("546d3189543d0664da000016", transaction.getId());
+        assertEquals("546d3189543d0664da000013", transaction.getTransactionId());
+        assertTrue(DateTime.parse("2014-11-19T16:10:49-08:00").isEqual(transaction.getCreatedAt()));
+        assertTrue(transaction.isConfirmed().booleanValue());
+        assertEquals(Money.parse("BTC -0.005"), transaction.getAmount());
+
+        cache = transaction.getCache();
+        assertTrue(cache.isNotesPresent().booleanValue());
+        assertEquals(AccountChange.Cache.Category.TRANSFER, cache.getCategory());
+        assertEquals("EUR Wallet", cache.getPaymentMethod().getName());
+        assertEquals("54630e62f1096f083e000002", cache.getPaymentMethod().getAccountId());
+
     }
 }

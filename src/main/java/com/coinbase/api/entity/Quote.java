@@ -13,13 +13,22 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 public class Quote implements Serializable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -4797946450079069495L;
     private HashMap<String, Money> _fees;
+    private Money _btc;
     private Money _subtotal;
     private Money _total;
     private DateTime _payout_date;
+
+    public Money getBtc() {
+        return _btc;
+    }
+
+    public void setBtc(Money btc) {
+        _btc = btc;
+    }
 
     public Money getSubtotal() {
         return _subtotal;
