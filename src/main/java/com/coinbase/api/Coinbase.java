@@ -1010,4 +1010,10 @@ public interface Coinbase {
      * @throws CoinbaseException
      */
     public URI getAuthorizationUri(OAuthCodeRequest params) throws CoinbaseException;
+
+    /**
+     * Verify authenticity of merchant callback from Coinbase
+     *
+     */
+    boolean verifyCallback(String body, String signature);
 }

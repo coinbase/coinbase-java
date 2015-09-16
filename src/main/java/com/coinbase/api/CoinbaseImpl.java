@@ -98,6 +98,7 @@ class CoinbaseImpl implements Coinbase {
     private String _accessToken;
     private SSLContext _sslContext;
     private SSLSocketFactory _socketFactory;
+    private CallbackVerifier _callbackVerifier;
 
     CoinbaseImpl(CoinbaseBuilder builder) {
 
@@ -108,6 +109,7 @@ class CoinbaseImpl implements Coinbase {
         _accessToken = builder.access_token;
         _accountId = builder.acct_id;
         _sslContext = builder.ssl_context;
+        _callbackVerifier = builder.callback_verifier;
 
         try {
             if (_baseApiUrl == null) {
@@ -129,6 +131,10 @@ class CoinbaseImpl implements Coinbase {
             _socketFactory = _sslContext.getSocketFactory();
         } else {
             _socketFactory = CoinbaseSSL.getSSLContext().getSocketFactory();
+        }
+
+        if (_callbackVerifier == null) {
+            _callbackVerifier = new CallbackVerifierImpl();
         }
     }
 
@@ -1187,6 +1193,11 @@ class CoinbaseImpl implements Coinbase {
         } catch (URISyntaxException e) {
             throw new AssertionError(e);
         }
+    }
+
+    @Override
+    public boolean verifyCallback(String body, String signature) {
+        return _callbackVerifier.verifyCallback(body, signature);
     }
 
     private void doHmacAuthentication (URL url, String body, HttpsURLConnection conn) throws IOException {
