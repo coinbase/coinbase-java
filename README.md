@@ -14,7 +14,7 @@ Add the following dependency to your project's Maven pom.xml:
 <dependency>
 	<groupId>com.coinbase.api</groupId>
 	<artifactId>coinbase-java</artifactId>
-	<version>1.9.1</version>
+	<version>1.10.0</version>
 </dependency>
 ```
 
@@ -29,7 +29,7 @@ git clone git@github.com:coinbase/coinbase-java.git
 cd coinbase-java
 mvn dependency:copy-dependencies -DincludeScope=runtime -DoutputDirectory=$YOUR_JAR_DIRECTORY
 mvn package
-cp target/coinbase-java-1.9.1.jar $YOUR_JAR_DIRECTORY
+cp target/coinbase-java-1.10.0.jar $YOUR_JAR_DIRECTORY
 ```
 
 ## Usage
