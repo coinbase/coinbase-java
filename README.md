@@ -266,6 +266,14 @@ User newUser = cb.createUser(userParams, "oauth_client_id_here", "user merchant"
 newUser.getEmail(); // "newuser@example.com"
 ```
 
+### Verifying merchant callbacks
+
+```java
+String raw_http_post_body = ...;
+String signature_header   = ...;
+cb.verifyCallback(raw_http_post_body, signature_header); // true/false
+```
+
 ## Building an account specific client
 
 Some API calls only apply to a single account and take an account_id parameter. To easily make account specific calls, build a client with an account id as follows:
