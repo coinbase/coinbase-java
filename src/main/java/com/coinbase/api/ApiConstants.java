@@ -4,10 +4,12 @@ public class ApiConstants {
     public static String BASE_URL_PRODUCTION = "https://api.coinbase.com";
     public static String SERVER_VERSION = "v2";
     public static String CLIENT_PLATFORM = "mobile";
+    public static String VERSION = "2015-03-20";
 
     // Endpoints
     public static final String TRANSACTIONS = "transactions";
     public static final String ACCOUNTS = "accounts";
+    public static final String STARTING_AFTER = "starting_after";
 
     // Params
     public static final String LOCALE = "locale";

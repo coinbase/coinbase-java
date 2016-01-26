@@ -1,5 +1,7 @@
 package com.coinbase.api;
 
+import com.coinbase.api.models.account.Account;
+import com.coinbase.api.models.account.Accounts;
 import com.coinbase.api.models.transactions.Transaction;
 import com.coinbase.api.models.transactions.Transactions;
 
@@ -13,9 +15,14 @@ import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 public interface ApiInterface {
+    @GET(ApiConstants.ACCOUNTS + "/{id}")
+    Call<Account> getAccount(@Path("id") String accountId);
+
+    @GET(ApiConstants.ACCOUNTS)
+    Call<Accounts> getAccounts();
+
     @GET(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.TRANSACTIONS)
     Call<Transactions> getTransactions(@Path("id") String accountId,
-                                       @Query("expand[]") List<String> expandOptions,
                                        @QueryMap Map<String, Object> options);
 
     @GET(ApiConstants.ACCOUNTS + "/{account_id}/" + ApiConstants.TRANSACTIONS + "/{transaction_id}")

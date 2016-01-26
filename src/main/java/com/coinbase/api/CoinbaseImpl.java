@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -13,6 +14,8 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +35,12 @@ import org.joda.money.Money;
 import org.joda.time.DateTime;
 
 import au.com.bytecode.opencsv.CSVReader;
+import okio.Buffer;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Converter;
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
 
 import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.AccountChangesResponse;
@@ -83,8 +92,18 @@ import com.coinbase.api.exception.TwoFactorRequiredException;
 import com.coinbase.api.exception.UnauthorizedDeviceException;
 import com.coinbase.api.exception.UnauthorizedException;
 import com.coinbase.api.exception.UnspecifiedAccount;
+import com.coinbase.api.models.account.Accounts;
+import com.coinbase.api.models.errors.Errors;
+import com.coinbase.api.models.transactions.Transactions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.squareup.okhttp.ConnectionSpec;
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Protocol;
+import com.squareup.okhttp.ResponseBody;
 
 class CoinbaseImpl implements Coinbase {
 
@@ -130,7 +149,8 @@ class CoinbaseImpl implements Coinbase {
         if (_sslContext != null) {
             _socketFactory = _sslContext.getSocketFactory();
         } else {
-            _socketFactory = CoinbaseSSL.getSSLContext().getSocketFactory();
+            _sslContext = CoinbaseSSL.getSSLContext();
+            _socketFactory = _sslContext.getSocketFactory();
         }
 
         if (_callbackVerifier == null) {
@@ -639,7 +659,8 @@ class CoinbaseImpl implements Coinbase {
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
-        return deserialize(doHttp(ratesUrl, "GET", null), new TypeReference<HashMap<String, BigDecimal>>() {});
+        return deserialize(doHttp(ratesUrl, "GET", null), new TypeReference<HashMap<String, BigDecimal>>() {
+        });
     }
 
     @Override
@@ -652,7 +673,8 @@ class CoinbaseImpl implements Coinbase {
         }
 
         List<List<String>> rawResponse =
-                deserialize(doHttp(currenciesUrl, "GET", null), new TypeReference<List<List<String>>>() {});
+                deserialize(doHttp(currenciesUrl, "GET", null), new TypeReference<List<List<String>>>() {
+                });
 
         List<CurrencyUnit> result = new ArrayList<CurrencyUnit>();
         for (List<String> currency : rawResponse) {
@@ -1343,5 +1365,172 @@ class CoinbaseImpl implements Coinbase {
             request.setAccountId(_accountId);
         }
         return request;
+    }
+
+    private Interceptor buildHmacAuthInterceptor() {
+        return new Interceptor() {
+            @Override
+            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                com.squareup.okhttp.Request request = chain.request();
+
+                String timestamp = String.valueOf(System.currentTimeMillis() / 1000L);
+                String method = request.method().toUpperCase();
+                String path = request.url().getFile();
+                String body = "";
+                if (request.body() != null) {
+                    final com.squareup.okhttp.Request requestCopy = request.newBuilder().build();
+                    final Buffer buffer = new Buffer();
+                    requestCopy.body().writeTo(buffer);
+                    body = buffer.readUtf8();
+                }
+
+                String message = timestamp + method + path + body;
+                Mac mac;
+                try {
+                    mac = Mac.getInstance("HmacSHA256");
+                    mac.init(new SecretKeySpec(_apiSecret.getBytes(), "HmacSHA256"));
+                } catch (Throwable t) {
+                    throw new IOException(t);
+                }
+
+                String signature = new String(Hex.encodeHex(mac.doFinal(message.getBytes())));
+
+                com.squareup.okhttp.Request newRequest = request.newBuilder()
+                        .addHeader("CB-ACCESS-KEY", _apiKey)
+                        .addHeader("CB-ACCESS_SIGN", signature)
+                        .addHeader("CB-ACCESS-TIMESTAMP", timestamp)
+                        .build();
+
+//                com.squareup.okhttp.Response response = chain.proceed(newRequest);
+//
+//                int tryCount = 0;
+//                while (!response.isSuccessful() && tryCount < 3) {
+//                    tryCount++;
+//                    response = chain.proceed(newRequest);
+//                }
+
+                return chain.proceed(newRequest);
+            }
+        };
+    }
+
+    protected Interceptor buildVersionInterceptor() {
+        return new Interceptor() {
+            @Override
+            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                com.squareup.okhttp.Request newRequest = chain.request().newBuilder().addHeader("CB-VERSION", ApiConstants.VERSION).build();
+                return chain.proceed(newRequest);
+            }
+        };
+    }
+
+
+    private ApiInterface getApiService() {
+        OkHttpClient client = new OkHttpClient();
+
+        client.setSslSocketFactory(_sslContext.getSocketFactory());
+        client.setConnectionSpecs(Collections.singletonList(ConnectionSpec.MODERN_TLS));
+
+        // Disable SPDY, causes issues on some Android versions
+        client.setProtocols(Collections.singletonList(Protocol.HTTP_1_1));
+
+        if (_apiKey != null && _apiSecret != null)
+            client.interceptors().add(buildHmacAuthInterceptor());
+
+        client.interceptors().add(buildVersionInterceptor());
+
+        String url = ApiConstants.BASE_URL_PRODUCTION + "/" + ApiConstants.SERVER_VERSION + "/";
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiInterface service = retrofit.create(ApiInterface.class);
+
+        return service;
+    }
+
+    public Call getAccount(String accountId, final Callback<Account> callback) {
+        ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.getAccount(accountId);
+        call.enqueue(new Callback<Account>() {
+            @Override
+            public void onResponse(retrofit.Response<Account> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    public Call getAccounts(final Callback<Accounts> callback) {
+        ApiInterface apiInterface = getApiService();
+
+        Call call = apiInterface.getAccounts();
+        call.enqueue(new Callback<Accounts>() {
+            @Override
+            public void onResponse(retrofit.Response<Accounts> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    public Call getTransactions(String accountId, HashMap<String, Object> options, final Callback<Transactions> callback) {
+        ApiInterface apiInterface = getApiService();
+
+        Call call = apiInterface.getTransactions(accountId, options);
+        call.enqueue(new Callback<Transactions>() {
+            @Override
+            public void onResponse(retrofit.Response<Transactions> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    public Call getTransaction(String accountId, String transactionId, final Callback<com.coinbase.api.models.transactions.Transaction> callback) {
+        ApiInterface apiInterface = getApiService();
+        List<String> expandOptions = Arrays.asList(ApiConstants.FROM, ApiConstants.TO, ApiConstants.BUY, ApiConstants.SELL);
+        Call call = apiInterface.getTransaction(accountId, transactionId, expandOptions);
+        call.enqueue(new Callback<com.coinbase.api.models.transactions.Transaction>() {
+            @Override
+            public void onResponse(retrofit.Response<com.coinbase.api.models.transactions.Transaction> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
     }
 }

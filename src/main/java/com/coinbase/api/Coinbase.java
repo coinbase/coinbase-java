@@ -3,6 +3,7 @@ package com.coinbase.api;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,12 @@ import com.coinbase.api.exception.TwoFactorIncorrectException;
 import com.coinbase.api.exception.TwoFactorRequiredException;
 import com.coinbase.api.exception.UnauthorizedDeviceException;
 import com.coinbase.api.exception.UnspecifiedAccount;
+import com.coinbase.api.models.account.Accounts;
+import com.coinbase.api.models.transactions.Transactions;
+
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.Retrofit;
 
 public interface Coinbase {
 
@@ -1016,4 +1023,9 @@ public interface Coinbase {
      *
      */
     boolean verifyCallback(String body, String signature);
+
+    public Call getAccount(String accountId, final Callback<Account> callback);
+    public Call getAccounts(final Callback<Accounts> callback);
+    public Call getTransactions(String accountId, HashMap<String, Object> options, final Callback<Transactions> callback);
+    public Call getTransaction(String accountId, String transactionId, final Callback<com.coinbase.api.models.transactions.Transaction> callback);
 }
