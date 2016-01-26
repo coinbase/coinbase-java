@@ -1,7 +1,5 @@
 package com.coinbase.api.entity;
 
-import org.joda.money.CurrencyUnit;
-
 import java.io.Serializable;
 
 

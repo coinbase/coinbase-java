@@ -2,7 +2,6 @@ package com.coinbase.api.entity;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 
 import org.joda.money.Money;
 import org.joda.time.DateTime;
