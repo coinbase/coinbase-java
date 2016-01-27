@@ -1,5 +1,7 @@
 package com.coinbase.api;
 
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.InvalidKeyException;
@@ -10,9 +12,6 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
 
 public class CallbackVerifierImpl implements CallbackVerifier {
     private static PublicKey _publicKey = null;
@@ -47,7 +46,8 @@ public class CallbackVerifierImpl implements CallbackVerifier {
             Signature sig = Signature.getInstance("SHA256withRSA");
             sig.initVerify(getPublicKey());
             sig.update(body.getBytes());
-            return sig.verify(Base64.decodeBase64(signature));
+//            return false;
+            return sig.verify(android.util.Base64.decode(signature, android.util.Base64.DEFAULT));
         } catch (NoSuchAlgorithmException ex) {
             // Should never happen
             throw new RuntimeException(ex);

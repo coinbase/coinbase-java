@@ -51,9 +51,7 @@ dependencies {
     compile 'net.sf.opencsv:opencsv:2.0'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.0'
-    compile 'commons-codec:commons-codec:1.10'
     compile 'commons-io:commons-io:2.4'
-//    compile 'org.apache.httpcomponents:httpclient:4.3.6'
     compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
     testCompile 'junit:junit:4.12'
     testCompile "org.powermock:powermock-module-junit4:1.6.2"
