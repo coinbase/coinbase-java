@@ -25,6 +25,7 @@ import com.coinbase.api.entity.OAuthCodeRequest;
 import com.coinbase.api.entity.OAuthTokensResponse;
 import com.coinbase.api.entity.Order;
 import com.coinbase.api.entity.OrdersResponse;
+import com.coinbase.api.entity.PaymentMethodResponse;
 import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.RecurringPayment;
@@ -1019,6 +1020,18 @@ public interface Coinbase {
     public URI getAuthorizationUri(OAuthCodeRequest params) throws CoinbaseException;
 
     /**
+     * Transfer money between accounts
+     *
+     * @param amount Amount to transfer, in BTC
+     * @param toAccountId Account to transfer money to
+     *
+     * @return Resulting transaction
+     * @throws CoinbaseException
+     * @throws IOException
+     */
+    public Transaction transferMoneyBetweenAccounts(String amount, String toAccountId) throws CoinbaseException, IOException;
+
+    /*
      * Verify authenticity of merchant callback from Coinbase
      *
      */

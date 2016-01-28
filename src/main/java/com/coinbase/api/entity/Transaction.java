@@ -88,13 +88,18 @@ public class Transaction implements Serializable {
     private String _to;
     private Boolean _instantBuy;
     private String _orderId; // Used for refunds
+    private String _instantExchangeQuote;
 
     // Order
     private Integer _confirmations;
 
-    //Accounts
+    // Accounts
     private Account _senderAccount;
     private Account _recipientAccount;
+
+    // Transfer money between own accounts
+    @JsonProperty(value = "amount")
+    private String _transferBitcoinAmountString;
 
     private DetailedStatus _detailedStatus;
 
@@ -138,6 +143,14 @@ public class Transaction implements Serializable {
         _amountCurrencyIso = amountCurrencyIso;
     }
 
+    public String getInstantExchangeQuote() {
+        return _instantExchangeQuote;
+    }
+
+    public void setInstantExchangeQuote(String uuid) {
+        _instantExchangeQuote = uuid;
+    }
+
     public String getId() {
         return _id;
     }
@@ -168,6 +181,14 @@ public class Transaction implements Serializable {
 
     public void setHash(String hash) {
         _hsh = hash;
+    }
+
+    public void setTransferBitcoinAmountString(String transferBitcoinAmountString) {
+        _transferBitcoinAmountString = transferBitcoinAmountString;
+    }
+
+    public String getTransferBitcoinAmountString() {
+        return _transferBitcoinAmountString;
     }
 
     public String getNotes() {
