@@ -9,7 +9,8 @@ public class ApiConstants {
     // Endpoints
     public static final String TRANSACTIONS = "transactions";
     public static final String ACCOUNTS = "accounts";
-    public static final String STARTING_AFTER = "starting_after";
+    public static final String COMPLETE = "complete";
+    public static final String RESEND = "resend";
 
     // Params
     public static final String LOCALE = "locale";

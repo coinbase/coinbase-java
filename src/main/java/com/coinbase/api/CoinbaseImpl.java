@@ -1367,6 +1367,20 @@ class CoinbaseImpl implements Coinbase {
         return request;
     }
 
+    private Interceptor buildOAuthInterceptor() {
+        return new Interceptor() {
+            @Override
+            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                com.squareup.okhttp.Request newRequest = chain
+                        .request()
+                        .newBuilder()
+                        .addHeader("Authorization", "Bearer " + _accessToken)
+                        .build();
+                return chain.proceed(newRequest);
+            }
+        };
+    }
+
     private Interceptor buildHmacAuthInterceptor() {
         return new Interceptor() {
             @Override
@@ -1434,6 +1448,8 @@ class CoinbaseImpl implements Coinbase {
         // Disable SPDY, causes issues on some Android versions
         client.setProtocols(Collections.singletonList(Protocol.HTTP_1_1));
 
+        if (_accessToken != null)
+            client.interceptors().add(buildOAuthInterceptor());
         if (_apiKey != null && _apiSecret != null)
             client.interceptors().add(buildHmacAuthInterceptor());
 
@@ -1517,6 +1533,130 @@ class CoinbaseImpl implements Coinbase {
         ApiInterface apiInterface = getApiService();
         List<String> expandOptions = Arrays.asList(ApiConstants.FROM, ApiConstants.TO, ApiConstants.BUY, ApiConstants.SELL);
         Call call = apiInterface.getTransaction(accountId, transactionId, expandOptions);
+        call.enqueue(new Callback<com.coinbase.api.models.transactions.Transaction>() {
+            @Override
+            public void onResponse(retrofit.Response<com.coinbase.api.models.transactions.Transaction> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    public Call completeRequest(String accountId, String transactionId, final Callback<Void> callback) {
+        ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.completeRequest(accountId, transactionId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    public Call resendRequest(String accountId, String transactionId, final Callback<Void> callback) {
+        ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.resendRequest(accountId, transactionId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    public Call cancelRequest(String accountId, String transactionId, final Callback<Void> callback) {
+        ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.cancelRequest(accountId, transactionId);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+
+    public Call sendMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.api.models.transactions.Transaction> callback) {
+        params.put(ApiConstants.TYPE, ApiConstants.SEND);
+        ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.sendMoney(accountId, params);
+        call.enqueue(new Callback<com.coinbase.api.models.transactions.Transaction>() {
+            @Override
+            public void onResponse(retrofit.Response<com.coinbase.api.models.transactions.Transaction> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    public Call requestMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.api.models.transactions.Transaction> callback) {
+        params.put(ApiConstants.TYPE, ApiConstants.REQUEST);
+        ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.requestMoney(accountId, params);
+        call.enqueue(new Callback<com.coinbase.api.models.transactions.Transaction>() {
+            @Override
+            public void onResponse(retrofit.Response<com.coinbase.api.models.transactions.Transaction> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    public Call transferMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.api.models.transactions.Transaction> callback) {
+        params.put(ApiConstants.TYPE, ApiConstants.TRANSFER);
+        ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.transferMoney(accountId, params);
         call.enqueue(new Callback<com.coinbase.api.models.transactions.Transaction>() {
             @Override
             public void onResponse(retrofit.Response<com.coinbase.api.models.transactions.Transaction> response, Retrofit retrofit) {

@@ -1028,4 +1028,10 @@ public interface Coinbase {
     public Call getAccounts(final Callback<Accounts> callback);
     public Call getTransactions(String accountId, HashMap<String, Object> options, final Callback<Transactions> callback);
     public Call getTransaction(String accountId, String transactionId, final Callback<com.coinbase.api.models.transactions.Transaction> callback);
+    public Call completeRequest(String accountId, String transactionId, final Callback<Void> callback);
+    public Call resendRequest(String accountId, String transactionId, final Callback<Void> callback);
+    public Call cancelRequest(String accountId, String transactionId, final Callback<Void> callback);
+    public Call sendMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.api.models.transactions.Transaction> callback);
+    public Call requestMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.api.models.transactions.Transaction> callback);
+    public Call transferMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.api.models.transactions.Transaction> callback);
 }
