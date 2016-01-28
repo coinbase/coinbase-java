@@ -1,32 +1,23 @@
-apply plugin: 'com.android.library'
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
 
-android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
-    useLibrary  'org.apache.http.legacy'
+plugins {
+    id "com.jfrog.bintray" version "1.5"
+}
 
-    defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+group = 'com.coinbase'
+version = '2.0.0'
+
+allprojects {
+    repositories {
+        jcenter()
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    sourceSets {
-        main {
-            java {
-                srcDir 'src/main/java'
-            }
-            resources {
-                srcDir 'src/../lib'
-            }
-        }
-    }
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
 }
 
 task clearJar(type: Delete) {
@@ -40,10 +31,43 @@ task makeJar(type: Copy) {
     rename ('classes.jar', 'coinbase-java.jar')
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
+
+publishing {
+    publications {
+        CoinbasePublication(MavenPublication) {
+            from components.java
+            groupId 'com.coinbase'
+            artifactId 'coinbase-java'
+            version '2.0.0'
+        }
+    }
+}
+
+bintray {
+    user = project.property('bintrayUser')
+    key = project.property('bintrayKey')
+    publications = ['CoinbasePublication']
+    pkg {
+        repo = 'maven'
+        name = 'coinbase-java'
+        userOrg = 'johnny'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/coinbase/coinbase-java.git'
+        version {
+            name = '2.0.0'
+            desc = 'Coinbase Android SDK'
+            released  = new Date()
+            vcsTag = '2.0.0'
+        }
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided 'org.glassfish:javax.annotation:10.0-b28'
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta3'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'org.joda:joda-money:0.9.1'
@@ -51,6 +75,7 @@ dependencies {
     compile 'net.sf.opencsv:opencsv:2.0'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.0'
+    compile 'commons-codec:commons-codec:1.10'
     compile 'commons-io:commons-io:2.4'
     compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
     testCompile 'junit:junit:4.12'

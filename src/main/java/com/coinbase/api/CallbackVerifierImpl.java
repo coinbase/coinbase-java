@@ -1,5 +1,6 @@
 package com.coinbase.api;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class CallbackVerifierImpl implements CallbackVerifier {
             sig.initVerify(getPublicKey());
             sig.update(body.getBytes());
 //            return false;
-            return sig.verify(android.util.Base64.decode(signature, android.util.Base64.DEFAULT));
+            return sig.verify(Base64.decodeBase64(signature));
         } catch (NoSuchAlgorithmException ex) {
             // Should never happen
             throw new RuntimeException(ex);
