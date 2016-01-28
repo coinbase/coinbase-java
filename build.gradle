@@ -35,6 +35,22 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
 }
 
+// custom tasks for creating source/javadoc jars
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+// add javadoc/source jar tasks as artifacts
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
 publishing {
     publications {
         CoinbasePublication(MavenPublication) {
@@ -42,6 +58,9 @@ publishing {
             groupId 'com.coinbase'
             artifactId 'coinbase-java'
             version '2.0.0'
+
+            artifact sourcesJar
+            artifact javadocJar
         }
     }
 }
