@@ -1,15 +1,5 @@
 package com.coinbase.api;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
-
 import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.AccountChangesResponse;
 import com.coinbase.api.entity.AccountsResponse;
@@ -25,7 +15,6 @@ import com.coinbase.api.entity.OAuthCodeRequest;
 import com.coinbase.api.entity.OAuthTokensResponse;
 import com.coinbase.api.entity.Order;
 import com.coinbase.api.entity.OrdersResponse;
-import com.coinbase.api.entity.PaymentMethodResponse;
 import com.coinbase.api.entity.PaymentMethodsResponse;
 import com.coinbase.api.entity.Quote;
 import com.coinbase.api.entity.RecurringPayment;
@@ -48,9 +37,18 @@ import com.coinbase.api.exception.UnspecifiedAccount;
 import com.coinbase.api.models.account.Accounts;
 import com.coinbase.api.models.transactions.Transactions;
 
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import retrofit.Call;
 import retrofit.Callback;
-import retrofit.Retrofit;
 
 public interface Coinbase {
 

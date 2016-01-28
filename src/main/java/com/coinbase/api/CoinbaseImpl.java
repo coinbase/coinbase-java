@@ -1,47 +1,5 @@
 package com.coinbase.api;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringReader;
-import java.lang.annotation.Annotation;
-import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.client.utils.URIBuilder;
-import org.joda.money.CurrencyUnit;
-import org.joda.money.IllegalCurrencyException;
-import org.joda.money.Money;
-import org.joda.time.DateTime;
-
-import au.com.bytecode.opencsv.CSVReader;
-import okio.Buffer;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Converter;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
-
 import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.AccountChangesResponse;
 import com.coinbase.api.entity.AccountResponse;
@@ -93,17 +51,53 @@ import com.coinbase.api.exception.UnauthorizedDeviceException;
 import com.coinbase.api.exception.UnauthorizedException;
 import com.coinbase.api.exception.UnspecifiedAccount;
 import com.coinbase.api.models.account.Accounts;
-import com.coinbase.api.models.errors.Errors;
 import com.coinbase.api.models.transactions.Transactions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.ConnectionSpec;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Protocol;
-import com.squareup.okhttp.ResponseBody;
+
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.client.utils.URIBuilder;
+import org.joda.money.CurrencyUnit;
+import org.joda.money.IllegalCurrencyException;
+import org.joda.money.Money;
+import org.joda.time.DateTime;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+
+import au.com.bytecode.opencsv.CSVReader;
+import okio.Buffer;
+import retrofit.Call;
+import retrofit.Callback;
+import retrofit.GsonConverterFactory;
+import retrofit.Retrofit;
 
 class CoinbaseImpl implements Coinbase {
 
@@ -489,6 +483,25 @@ class CoinbaseImpl implements Coinbase {
     @Override
     public TransfersResponse getTransfers() throws IOException, CoinbaseException {
         return getTransfers(1);
+    }
+
+    @Override
+    public Transaction transferMoneyBetweenAccounts(String amount, String toAccountId) throws CoinbaseException, IOException {
+        URL transferMoneyURL;
+        try {
+            transferMoneyURL = new URL(_baseApiUrl, "transactions/transfer_money");
+        } catch (MalformedURLException ex) {
+            throw new AssertionError(ex);
+        }
+
+        Transaction transaction = new Transaction();
+        transaction.setTo(toAccountId);
+        transaction.setTransferBitcoinAmountString(amount);
+
+        Request request = newAccountSpecificRequest();
+        request.setTransaction(transaction);
+
+        return post(transferMoneyURL, request, TransactionResponse.class).getTransaction();
     }
 
     @Override
