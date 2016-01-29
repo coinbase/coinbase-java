@@ -1480,12 +1480,12 @@ class CoinbaseImpl implements Coinbase {
         return service;
     }
 
-    public Call getAccount(String accountId, final Callback<Account> callback) {
+    public Call getAccount(String accountId, final Callback<com.coinbase.api.models.account.Account> callback) {
         ApiInterface apiInterface = getApiService();
         Call call = apiInterface.getAccount(accountId);
-        call.enqueue(new Callback<Account>() {
+        call.enqueue(new Callback<com.coinbase.api.models.account.Account>() {
             @Override
-            public void onResponse(retrofit.Response<Account> response, Retrofit retrofit) {
+            public void onResponse(retrofit.Response<com.coinbase.api.models.account.Account> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
@@ -1521,10 +1521,13 @@ class CoinbaseImpl implements Coinbase {
         return call;
     }
 
-    public Call getTransactions(String accountId, HashMap<String, Object> options, final Callback<Transactions> callback) {
+    public Call getTransactions(String accountId,
+                                HashMap<String, Object> options,
+                                List<String> expandOptions,
+                                final Callback<Transactions> callback) {
         ApiInterface apiInterface = getApiService();
 
-        Call call = apiInterface.getTransactions(accountId, options);
+        Call call = apiInterface.getTransactions(accountId, expandOptions, options);
         call.enqueue(new Callback<Transactions>() {
             @Override
             public void onResponse(retrofit.Response<Transactions> response, Retrofit retrofit) {

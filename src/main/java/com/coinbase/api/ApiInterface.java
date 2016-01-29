@@ -27,6 +27,7 @@ public interface ApiInterface {
 
     @GET(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.TRANSACTIONS)
     Call<Transactions> getTransactions(@Path("id") String accountId,
+                                       @Query("expand[]") List<String> expandOptions,
                                        @QueryMap Map<String, Object> options);
 
     @GET(ApiConstants.ACCOUNTS + "/{account_id}/" + ApiConstants.TRANSACTIONS + "/{transaction_id}")

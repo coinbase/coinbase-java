@@ -1035,9 +1035,12 @@ public interface Coinbase {
      */
     boolean verifyCallback(String body, String signature);
 
-    public Call getAccount(String accountId, final Callback<Account> callback);
+    public Call getAccount(String accountId, final Callback<com.coinbase.api.models.account.Account> callback);
     public Call getAccounts(final Callback<Accounts> callback);
-    public Call getTransactions(String accountId, HashMap<String, Object> options, final Callback<Transactions> callback);
+    public Call getTransactions(String accountId,
+                                HashMap<String, Object> options,
+                                List<String> expandOptions,
+                                final Callback<Transactions> callback);
     public Call getTransaction(String accountId, String transactionId, final Callback<com.coinbase.api.models.transactions.Transaction> callback);
     public Call completeRequest(String accountId, String transactionId, final Callback<Void> callback);
     public Call resendRequest(String accountId, String transactionId, final Callback<Void> callback);

@@ -72,6 +72,7 @@ public class Transfer implements Serializable {
     private Money _subtotal;
     private Money _total;
     private String _description;
+    private String _account;
     
     public Type getType() {
         return _type;
@@ -162,4 +163,11 @@ public class Transfer implements Serializable {
         _description = description;
     }
 
+    public String getAccount() {
+        return _account;
+    }
+
+    public void setAccount(String account) {
+        this._account = account;
+    }
 }
