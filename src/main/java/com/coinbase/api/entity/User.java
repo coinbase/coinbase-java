@@ -1,14 +1,43 @@
 package com.coinbase.api.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 
 import com.coinbase.api.deserializer.MoneyDeserializer;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public class User implements Serializable {
+    public enum Flag {
+        INSTANT_EXCHANGE("instant_exchange"),
+        NEW_VERIFICATIONS_PAGE("new_verifications_page");
+
+        private String _value;
+
+        private Flag(String value) {
+            this._value = value;
+        }
+
+        @Override
+        @JsonValue
+        public String toString() {
+            return this._value;
+        }
+
+        @JsonCreator
+        public static Flag create(String val) {
+            for (Flag type : Flag.values()) {
+                if (type.toString().equalsIgnoreCase(val)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
 
     private static final long serialVersionUID = 7772234749971786319L;
     private String _id;
@@ -32,6 +61,14 @@ public class User implements Serializable {
     private String _location;
     private String _profile_description;
     private Boolean _accept_agreement;
+    private List<String> _allowedPaymentMethods;
+
+    private String _firstName;
+    private String _lastName;
+    private String _dob;
+    private ResidentialAddress _residentialAddress;
+    private String _countryCode;
+    private List<String> _featureFlags;
 
     public String getPassword() {
         return _password;
@@ -203,4 +240,61 @@ public class User implements Serializable {
     public void setAcceptAgreement(Boolean accept_agreement) {
         this._accept_agreement = accept_agreement;
     }
+
+    public String getCountryCode() {
+        return _countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this._countryCode = countryCode;
+    }
+
+    public ResidentialAddress getResidentialAddress() {
+        return _residentialAddress;
+    }
+
+    public void setResidentialAddress(ResidentialAddress residentialAddress) {
+        this._residentialAddress = residentialAddress;
+    }
+
+    public String getDob() {
+        return _dob;
+    }
+
+    public void setDob(String dob) {
+        this._dob = dob;
+    }
+
+    public String getLastName() {
+        return _lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this._lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return _firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this._firstName = firstName;
+    }
+
+    public List<String> getAllowedPaymentMethods() {
+        return _allowedPaymentMethods;
+    }
+
+    public void setAllowedPaymentMethods(List<String> allowedPaymentMethods) {
+        this._allowedPaymentMethods = allowedPaymentMethods;
+    }
+
+    public List<String> getFeatureFlags() {
+        return _featureFlags;
+    }
+
+    public void setFeatureFlags(List<String> featureFlags) {
+        this._featureFlags = featureFlags;
+    }
+
 }
