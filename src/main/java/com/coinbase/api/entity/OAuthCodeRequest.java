@@ -82,6 +82,7 @@ public class OAuthCodeRequest implements Serializable {
     private String clientSecret;
     private String username;
     private String password;
+    private String referrerId;
     private String token;
     private String scope;
     private String redirectUri;
@@ -118,6 +119,14 @@ public class OAuthCodeRequest implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getReferrerId() {
+        return referrerId;
+    }
+
+    public void setReferrerId(String referrerId) {
+        this.referrerId = referrerId;
     }
 
     public String getToken() {
