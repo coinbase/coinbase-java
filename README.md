@@ -12,7 +12,7 @@ Add the following dependency to your project's Maven pom.xml:
 
 ```xml
 <dependency>
-	<groupId>com.coinbase.api</groupId>
+	<groupId>com.coinbase</groupId>
 	<artifactId>coinbase-java</artifactId>
 	<version>1.10.0</version>
 </dependency>
@@ -41,8 +41,8 @@ Start by [enabling an API Key on your account](https://coinbase.com/settings/api
 Next, build an instance of the client by passing your API Key + Secret to a CoinbaseBuilder object.
 
 ```java
-import com.coinbase.api.Coinbase;
-import com.coinbase.api.CoinbaseBuilder;
+import com.coinbase.Coinbase;
+import com.coinbase.CoinbaseBuilder;
 
 Coinbase cb = new CoinbaseBuilder()
                       .withApiKey(System.getenv("COINBASE_API_KEY"), System.getenv("COINBASE_API_SECRET"))

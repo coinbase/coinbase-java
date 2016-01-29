@@ -1,0 +1,55 @@
+package com.coinbase;
+
+import com.coinbase.models.account.Account;
+import com.coinbase.models.account.Accounts;
+import com.coinbase.models.transactions.Transaction;
+import com.coinbase.models.transactions.Transactions;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import retrofit.Call;
+import retrofit.http.Body;
+import retrofit.http.DELETE;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.Path;
+import retrofit.http.Query;
+import retrofit.http.QueryMap;
+
+public interface ApiInterface {
+    @GET(com.coinbase.ApiConstants.ACCOUNTS + "/{id}")
+    Call<Account> getAccount(@Path("id") String accountId);
+
+    @GET(com.coinbase.ApiConstants.ACCOUNTS)
+    Call<Accounts> getAccounts();
+
+    @GET(com.coinbase.ApiConstants.ACCOUNTS + "/{id}/" + com.coinbase.ApiConstants.TRANSACTIONS)
+    Call<Transactions> getTransactions(@Path("id") String accountId,
+                                       @Query("expand[]") List<String> expandOptions,
+                                       @QueryMap Map<String, Object> options);
+
+    @GET(com.coinbase.ApiConstants.ACCOUNTS + "/{account_id}/" + com.coinbase.ApiConstants.TRANSACTIONS + "/{transaction_id}")
+    Call<Transaction> getTransaction(@Path("account_id") String accountId,
+                                     @Path("transaction_id") String transactionId,
+                                     @Query("expand[]") List<String> expandOptions);
+
+    @POST(com.coinbase.ApiConstants.ACCOUNTS + "/{account_id}/" + com.coinbase.ApiConstants.TRANSACTIONS + "/{transaction_id}/" + com.coinbase.ApiConstants.COMPLETE)
+    Call<Void> completeRequest(@Path("account_id") String accountId, @Path("transaction_id") String transactionId);
+
+    @POST(com.coinbase.ApiConstants.ACCOUNTS + "/{account_id}/" + com.coinbase.ApiConstants.TRANSACTIONS + "/{transaction_id}/" + com.coinbase.ApiConstants.RESEND)
+    Call<Void> resendRequest(@Path("account_id") String accountId, @Path("transaction_id") String transactionId);
+
+    @DELETE(com.coinbase.ApiConstants.ACCOUNTS + "/{account_id}/" + com.coinbase.ApiConstants.TRANSACTIONS + "/{transaction_id}")
+    Call<Void> cancelRequest(@Path("account_id") String accountId, @Path("transaction_id") String transactionId);
+
+    @POST(com.coinbase.ApiConstants.ACCOUNTS + "/{id}/" + com.coinbase.ApiConstants.TRANSACTIONS)
+    Call<Transaction> sendMoney(@Path("id") String accountId, @Body HashMap<String, Object> body);
+
+    @POST(com.coinbase.ApiConstants.ACCOUNTS + "/{id}/" + com.coinbase.ApiConstants.TRANSACTIONS)
+    Call<Transaction> requestMoney(@Path("id") String accountId, @Body HashMap<String, Object> body);
+
+    @POST(com.coinbase.ApiConstants.ACCOUNTS + "/{id}/" + com.coinbase.ApiConstants.TRANSACTIONS)
+    Call<Transaction> transferMoney(@Path("id") String accountId, @Body HashMap<String, Object> body);
+}

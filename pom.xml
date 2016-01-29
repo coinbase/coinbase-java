@@ -11,7 +11,7 @@
 
 	<!-- project coordinates, i.e. a group of values which uniquely identify 
 		this project -->
-	<groupId>com.coinbase.api</groupId>
+	<groupId>com.coinbase</groupId>
 	<artifactId>coinbase-java</artifactId>
 	<version>1.11.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
