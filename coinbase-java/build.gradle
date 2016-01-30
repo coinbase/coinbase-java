@@ -1,0 +1,106 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+plugins {
+    id "com.jfrog.bintray" version "1.5"
+}
+
+group = 'com.coinbase'
+version = '2.0.0'
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+}
+
+task clearJar(type: Delete) {
+    delete 'build/outputs/coinbase-java.jar'
+}
+
+task makeJar(type: Copy) {
+    from('build/intermediates/bundles/release/')
+    into('build/outputs/')
+    include('classes.jar')
+    rename ('classes.jar', 'coinbase-java.jar')
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
+
+// custom tasks for creating source/javadoc jars
+//task sourcesJar(type: Jar, dependsOn: classes) {
+//    classifier = 'sources'
+//    from sourceSets.main.allSource
+//}
+
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
+
+// add javadoc/source jar tasks as artifacts
+artifacts {
+//    archives sourcesJar, javadocJar
+}
+
+publishing {
+    publications {
+        CoinbasePublication(MavenPublication) {
+            from components.java
+            groupId 'com.coinbase'
+            artifactId 'coinbase-java'
+            version '2.0.0'
+
+//            artifact sourcesJar
+//            artifact javadocJar
+        }
+    }
+}
+
+bintray {
+    user = project.property('bintrayUser')
+    key = project.property('bintrayKey')
+    publications = ['CoinbasePublication']
+    pkg {
+        repo = 'maven'
+        name = 'coinbase-java'
+        userOrg = 'johnny'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/coinbase/coinbase-java.git'
+        version {
+            name = '2.0.0'
+            desc = 'Coinbase Android SDK'
+            released  = new Date()
+            vcsTag = '2.0.0'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.google.code.gson:gson:2.5'
+    compile 'org.glassfish:javax.annotation:10.0-b28'
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta3'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile 'org.joda:joda-money:0.9.1'
+    compile 'joda-time:joda-time:2.3'
+    compile 'net.sf.opencsv:opencsv:2.0'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.0'
+    compile 'commons-codec:commons-codec:1.10'
+    compile 'commons-io:commons-io:2.4'
+    compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
+    testCompile 'junit:junit:4.12'
+    testCompile "org.powermock:powermock-module-junit4:1.6.2"
+    testCompile "org.powermock:powermock-module-junit4-rule:1.6.2"
+    testCompile "org.powermock:powermock-api-mockito:1.6.2"
+    testCompile "org.powermock:powermock-classloading-xstream:1.6.2"
+}
