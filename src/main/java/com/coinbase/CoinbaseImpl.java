@@ -26,6 +26,7 @@ import com.coinbase.entity.OAuthTokensResponse;
 import com.coinbase.entity.Order;
 import com.coinbase.entity.OrderResponse;
 import com.coinbase.entity.OrdersResponse;
+import com.coinbase.entity.PaymentMethodResponse;
 import com.coinbase.entity.PaymentMethodsResponse;
 import com.coinbase.entity.Quote;
 import com.coinbase.entity.RecurringPayment;
@@ -36,6 +37,8 @@ import com.coinbase.entity.ReportResponse;
 import com.coinbase.entity.ReportsResponse;
 import com.coinbase.entity.Request;
 import com.coinbase.entity.Response;
+import com.coinbase.entity.ResponseV1;
+import com.coinbase.entity.ResponseV2;
 import com.coinbase.entity.RevokeTokenRequest;
 import com.coinbase.entity.Token;
 import com.coinbase.entity.TokenResponse;
@@ -110,6 +113,7 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
 
     private URL    _baseApiUrl;
     private URL    _baseOAuthUrl;
+    private URL    _baseV2ApiUrl;
     private String _accountId;
     private String _apiKey;
     private String _apiSecret;
@@ -135,6 +139,9 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
             }
             if (_baseOAuthUrl == null) {
                 _baseOAuthUrl = new URL("https://coinbase.com/oauth/");
+            }
+            if (_baseV2ApiUrl == null) {
+                _baseV2ApiUrl = new URL("https://api.coinbase.com/v2/");
             }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -792,12 +799,43 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
     public PaymentMethodsResponse getPaymentMethods() throws IOException, CoinbaseException {
         URL paymentMethodsUrl;
         try {
-            paymentMethodsUrl = new URL(_baseApiUrl, "payment_methods");
+            paymentMethodsUrl = new URL(_baseV2ApiUrl, "payment-methods");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
 
-        return get(paymentMethodsUrl, PaymentMethodsResponse.class);
+        HashMap<String, String> headers = getV2VersionHeaders();
+
+        return get(paymentMethodsUrl, headers, PaymentMethodsResponse.class);
+    }
+
+    @Override
+    public PaymentMethodResponse getPaymentMethod(String id) throws CoinbaseException, IOException {
+        URL paymentMethodURL;
+        try {
+            paymentMethodURL = new URL(_baseV2ApiUrl, "payment-methods/" + id);
+        } catch (MalformedURLException ex) {
+            throw new AssertionError(ex);
+        }
+
+        HashMap<String, String> headers = getV2VersionHeaders();
+
+        return get(paymentMethodURL, headers, PaymentMethodResponse.class);
+    }
+
+    @Override
+    public void deletePaymentMethod(String id) throws CoinbaseException, IOException {
+        URL deleteURL;
+
+        try {
+            deleteURL = new URL(_baseV2ApiUrl, "payment-methods/" + id);
+        } catch (MalformedURLException ex) {
+            throw new AssertionError(ex);
+        }
+
+        HashMap<String, String> headers = getV2VersionHeaders();
+
+        doHttp(deleteURL, "DELETE", null, headers);
     }
 
     @Override
@@ -1111,7 +1149,7 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         request.setClientSecret(clientSecret);
         request.setGrantType(OAuthTokensRequest.GrantType.AUTHORIZATION_CODE);
         request.setCode(authCode);
-        request.setRedirectUri(redirectUri != null? redirectUri : "2_legged");
+        request.setRedirectUri(redirectUri != null ? redirectUri : "2_legged");
 
         return post(tokenUrl, request, OAuthTokensResponse.class);
     }
@@ -1265,6 +1303,10 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
     }
 
     private String doHttp(URL url, String method, Object requestBody) throws IOException, CoinbaseException {
+        return doHttp(url, method, requestBody, null);
+    }
+
+    private String doHttp(URL url, String method, Object requestBody, HashMap<String, String> headers) throws IOException, CoinbaseException {
         URLConnection urlConnection = url.openConnection();
         if (!(urlConnection instanceof HttpsURLConnection)) {
             throw new RuntimeException(
@@ -1286,6 +1328,12 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
             doAccessTokenAuthentication(conn);
         }
 
+        if(headers != null) {
+            for(String key : headers.keySet()) {
+                conn.setRequestProperty(key, headers.get(key));
+            }
+        }
+
         if (body != null) {
             conn.setDoOutput(true);
             OutputStream outputStream = conn.getOutputStream();
@@ -1300,8 +1348,12 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         InputStream es = null;
         try {
             is = conn.getInputStream();
-            return IOUtils.toString(is, "UTF-8");
+            String str = IOUtils.toString(is, "UTF-8");
+            return str;
         } catch (IOException e) {
+            if (HttpsURLConnection.HTTP_PAYMENT_REQUIRED == conn.getResponseCode()) {
+                throw new TwoFactorRequiredException();
+            }
             es = conn.getErrorStream();
             String errorBody = null;
             if (es != null) {
@@ -1309,9 +1361,13 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
                 if (errorBody != null && conn.getContentType().toLowerCase().contains("json")) {
                     Response coinbaseResponse;
                     try {
-                        coinbaseResponse = deserialize(errorBody, Response.class);
+                        coinbaseResponse = deserialize(errorBody, ResponseV1.class);
                     } catch (Exception ex) {
-                        throw new CoinbaseException(errorBody);
+                        try {
+                            coinbaseResponse = deserialize(errorBody, ResponseV2.class);
+                        } catch (Exception ex1) {
+                            throw new CoinbaseException(errorBody);
+                        }
                     }
                     handleErrors(coinbaseResponse);
                 }
@@ -1331,6 +1387,7 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         }
     }
 
+
     private static <T> T deserialize(String json, Class<T> clazz) throws IOException {
         return objectMapper.readValue(json, clazz);
     }
@@ -1340,7 +1397,11 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
     }
 
     private <T extends Response> T get(URL url, Class<T> responseClass) throws IOException, CoinbaseException {
-        return handleErrors(deserialize(doHttp(url, "GET", null), responseClass));
+        return get(url, null, responseClass);
+    }
+
+    private <T extends Response> T get(URL url, HashMap<String, String> headers, Class<T> responseClass) throws IOException, CoinbaseException {
+        return handleErrors(deserialize(doHttp(url, "GET", null, headers), responseClass));
     }
 
     private <T extends Response> T post(URL url, Object entity, Class<T> responseClass) throws CoinbaseException, IOException {
@@ -1384,6 +1445,21 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         }
         return request;
     }
+
+    private HashMap<String, String> getV2VersionHeaders() {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("CB-Version", "2015-03-20");
+        return headers;
+    }
+
+
+
+
+
+
+
+
+
 
     private Interceptor buildOAuthInterceptor() {
         return new Interceptor() {

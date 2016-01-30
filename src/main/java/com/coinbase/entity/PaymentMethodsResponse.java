@@ -1,17 +1,18 @@
 package com.coinbase.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
-import com.coinbase.deserializer.PaymentMethodsLifter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-public class PaymentMethodsResponse extends Response {
+public class PaymentMethodsResponse extends ResponseV2 {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4752885593284986181L;
     private String _defaultBuy;
     private String _defaultSell;
+
+    @JsonProperty(value = "data")
     private List<PaymentMethod> _paymentMethods;
 
     public String getDefaultBuy() {
@@ -34,7 +35,6 @@ public class PaymentMethodsResponse extends Response {
         return _paymentMethods;
     }
 
-    @JsonDeserialize(converter=PaymentMethodsLifter.class)
     public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
         _paymentMethods = paymentMethods;
     }

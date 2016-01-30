@@ -15,6 +15,7 @@ import com.coinbase.entity.OAuthCodeRequest;
 import com.coinbase.entity.OAuthTokensResponse;
 import com.coinbase.entity.Order;
 import com.coinbase.entity.OrdersResponse;
+import com.coinbase.entity.PaymentMethodResponse;
 import com.coinbase.entity.PaymentMethodsResponse;
 import com.coinbase.entity.Quote;
 import com.coinbase.entity.RecurringPayment;
@@ -601,6 +602,24 @@ public interface Coinbase {
      * @see <a href="https://coinbase.com/api/doc/1.0/payment_methods/index.html">Online Documentation</a>
      */
     public PaymentMethodsResponse getPaymentMethods() throws IOException, CoinbaseException;
+
+    /**
+     * Authenticated resource that returns one of the user’s payment methods.
+     * @param id Payment method id
+     * @return Payment method
+     * @throws CoinbaseException
+     * @throws IOException
+     */
+    public PaymentMethodResponse getPaymentMethod(String id) throws CoinbaseException, IOException;
+
+    /**
+     * Delete the specified payment method.
+     *
+     * @param id Id of the payment method to delete
+     * @throws CoinbaseException
+     * @throws IOException
+     */
+    public void deletePaymentMethod(String id) throws CoinbaseException, IOException;
 
     /**
      * Retrieve all the recurring payments (scheduled buys, sells, and subscriptions) you've created with merchants.
