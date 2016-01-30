@@ -76,6 +76,7 @@ public interface Coinbase {
      * @throws IOException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/transactions/show.html">Online Documentation</a>
+     * @deprecated
      */
     public Transaction getTransaction(String id) throws IOException, CoinbaseException;
 
@@ -85,6 +86,7 @@ public interface Coinbase {
      * @throws IOException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/transactions/index.html">Online Documentation</a>
+     * @deprecated
      */
     public TransactionsResponse getTransactions() throws IOException, CoinbaseException;
 
@@ -96,6 +98,7 @@ public interface Coinbase {
      * @throws IOException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/transactions/index.html">Online Documentation</a>
+     * @deprecated
      */
     public TransactionsResponse getTransactions(int page) throws IOException, CoinbaseException;
 
@@ -108,6 +111,7 @@ public interface Coinbase {
      * @throws IOException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/transactions/request_money.html">Online Documentation</a>
+     * @deprecated
      */
     public Transaction requestMoney(Transaction transaction) throws CoinbaseException, IOException;
 
@@ -119,6 +123,7 @@ public interface Coinbase {
      * @throws IOException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/transactions/resend_request.html">Online Documentation</a>
+     * @deprecated
      */
     public void resendRequest(String transactionId) throws CoinbaseException, IOException;
 
@@ -130,6 +135,7 @@ public interface Coinbase {
      * @throws IOException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/transactions/cancel_request.html">Online Documentation</a>
+     * @deprecated
      */
     public void deleteRequest(String transactionId) throws CoinbaseException, IOException;
 
@@ -143,6 +149,7 @@ public interface Coinbase {
      * @throws IOException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/transactions/complete_request.html">Online Documentation</a>
+     * @deprecated
      */
     public Transaction completeRequest(String transactionId) throws CoinbaseException, IOException;
 
@@ -156,6 +163,7 @@ public interface Coinbase {
      * @throws IOException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/transactions/send_money.html">Online Documentation</a>
+     * @deprecated
      */
     public Transaction sendMoney(Transaction transaction) throws CoinbaseException, IOException;
 
@@ -238,6 +246,7 @@ public interface Coinbase {
      * @throws CoinbaseException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/accounts/index.html">Online Documentation</a>
+     * @deprecated
      */
     public AccountsResponse getAccounts() throws IOException, CoinbaseException;
 
@@ -249,6 +258,7 @@ public interface Coinbase {
      * @throws CoinbaseException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/accounts/index.html">Online Documentation</a>
+     * @deprecated
      */
     public AccountsResponse getAccounts(int page) throws IOException, CoinbaseException;
 
@@ -261,6 +271,7 @@ public interface Coinbase {
      * @throws CoinbaseException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/accounts/index.html">Online Documentation</a>
+     * @deprecated
      */
     public AccountsResponse getAccounts(int page, int limit) throws IOException, CoinbaseException;
 
@@ -274,6 +285,7 @@ public interface Coinbase {
      * @throws CoinbaseException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/accounts/index.html">Online Documentation</a>
+     * @deprecated
      */
     public AccountsResponse getAccounts(int page, int limit, boolean includeInactive) throws IOException, CoinbaseException;
 
@@ -1054,17 +1066,117 @@ public interface Coinbase {
      */
     boolean verifyCallback(String body, String signature);
 
+
+
+
+
+
+
+    /**
+     * Retrieve an account belonging to this user
+     * @param accountId account ID for the account to retrieve
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#show-an-account">Online Documentation</a>
+     */
     public Call getAccount(String accountId, final Callback<com.coinbase.models.account.Account> callback);
+
+    /**
+     * Retrieve a list of accounts belonging to this user
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#list-accounts">Online Documentation</a>
+     */
     public Call getAccounts(final Callback<Accounts> callback);
+
+    /**
+     * Retrieve details of an individual transaction.
+     * @param accountId account ID that the transaction belongs to
+     * @param transactionId the transaction id or idem field value
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#show-a-transaction">Online Documentation</a>
+     */
+    public Call getTransaction(String accountId, String transactionId, final Callback<com.coinbase.models.transactions.Transaction> callback);
+
+    /**
+     * Retrieve a list of the user's recent transactions.
+     * @param accountId account ID that the transaction belongs to
+     * @param options endpoint options
+     * @param expandOptions expand options
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#list-transactions">Online Documentation</a>
+     */
     public Call getTransactions(String accountId,
                                 HashMap<String, Object> options,
                                 List<String> expandOptions,
                                 final Callback<Transactions> callback);
-    public Call getTransaction(String accountId, String transactionId, final Callback<com.coinbase.models.transactions.Transaction> callback);
+
+    /**
+     * Complete a money request.
+     * @param accountId account ID that the transaction belongs to
+     * @param transactionId the id of the request money transaction to be completed
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#complete-request-money">Online Documentation</a>
+     */
     public Call completeRequest(String accountId, String transactionId, final Callback<Void> callback);
+
+    /**
+     * Resend emails for a money request.
+     * @param accountId account ID that the transaction belongs to
+     * @param transactionId the id of the request money transaction to be resent
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#re-send-request-money">Online Documentation</a>
+     */
     public Call resendRequest(String accountId, String transactionId, final Callback<Void> callback);
+
+    /**
+     * Cancel a money request.
+     * @param accountId account ID that the transaction belongs to
+     * @param transactionId the id of the request money transaction to be cancelled
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#cancel-request-money">Online Documentation</a>
+     */
     public Call cancelRequest(String accountId, String transactionId, final Callback<Void> callback);
+
+    /**
+     * Send money to an email address or bitcoin address
+     * @param accountId account ID that the transaction belongs to
+     * @param params endpoint parameters
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#send-money">Online Documentation</a>
+     */
     public Call sendMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.models.transactions.Transaction> callback);
+
+    /**
+     * Request money from an email address or bitcoin address
+     * @param accountId account ID that the transaction belongs to
+     * @param params endpoint parameters
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#request-money">Online Documentation</a>
+     */
     public Call requestMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.models.transactions.Transaction> callback);
+
+    /**
+     * Transfer bitcoin between two of a user’s accounts
+     * @param accountId account ID that the transaction belongs to
+     * @param params endpoint parameters
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#transfer-money-between-accounts">Online Documentation</a>
+     */
     public Call transferMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.models.transactions.Transaction> callback);
 }
