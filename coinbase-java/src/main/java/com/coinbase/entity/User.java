@@ -1,15 +1,15 @@
 package com.coinbase.entity;
 
-import java.io.Serializable;
-import java.util.List;
-
-import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
-
 import com.coinbase.deserializer.MoneyDeserializer;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
+
+import java.io.Serializable;
+import java.util.List;
 
 public class User implements Serializable {
     public enum Flag {

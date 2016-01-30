@@ -1,33 +1,5 @@
 package com.coinbase;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import org.apache.commons.io.output.NullOutputStream;
-import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
-import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import com.coinbase.CoinbaseBuilder;
 import com.coinbase.entity.Account;
 import com.coinbase.entity.AccountChange;
 import com.coinbase.entity.AccountChangesResponse;
@@ -56,6 +28,33 @@ import com.coinbase.entity.Transfer;
 import com.coinbase.entity.TransfersResponse;
 import com.coinbase.entity.User;
 import com.coinbase.exception.CoinbaseException;
+
+import org.apache.commons.io.output.NullOutputStream;
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
+import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore("javax.net.ssl.*")

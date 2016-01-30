@@ -1,17 +1,17 @@
 package com.coinbase.deserializer;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-
-import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
+
+import java.io.IOException;
+import java.math.BigDecimal;
 
 public class MoneyDeserializer extends StdDeserializer<Money> {
 

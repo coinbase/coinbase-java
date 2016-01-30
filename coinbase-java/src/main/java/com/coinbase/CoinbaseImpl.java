@@ -1,10 +1,5 @@
 package com.coinbase;
 
-import com.coinbase.ApiConstants;
-import com.coinbase.ApiInterface;
-import com.coinbase.CallbackVerifier;
-import com.coinbase.CallbackVerifierImpl;
-import com.coinbase.CoinbaseBuilder;
 import com.coinbase.entity.Account;
 import com.coinbase.entity.AccountChangesResponse;
 import com.coinbase.entity.AccountResponse;

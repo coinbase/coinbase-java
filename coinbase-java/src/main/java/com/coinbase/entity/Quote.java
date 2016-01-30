@@ -1,13 +1,13 @@
 package com.coinbase.entity;
 
-import java.io.Serializable;
-import java.util.HashMap;
+import com.coinbase.deserializer.FeesCollector;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 
-import com.coinbase.deserializer.FeesCollector;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.io.Serializable;
+import java.util.HashMap;
 
 public class Quote implements Serializable {
 

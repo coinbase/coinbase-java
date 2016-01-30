@@ -1,14 +1,14 @@
 package com.coinbase.entity;
 
-import java.io.Serializable;
-
-import org.joda.money.Money;
-import org.joda.time.DateTime;
-
 import com.coinbase.deserializer.MoneyDeserializer;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import org.joda.money.Money;
+import org.joda.time.DateTime;
+
+import java.io.Serializable;
 
 public class AccountChange implements Serializable {
 

@@ -1,14 +1,14 @@
 package com.coinbase.deserializer;
 
-import java.io.IOException;
-
-import org.joda.money.CurrencyUnit;
-import org.joda.money.IllegalCurrencyException;
-
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+
+import org.joda.money.CurrencyUnit;
+import org.joda.money.IllegalCurrencyException;
+
+import java.io.IOException;
 
 public class CurrencyUnitDeserializer extends StdDeserializer<CurrencyUnit> {
 

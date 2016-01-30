@@ -1,7 +1,5 @@
 package com.coinbase;
 
-import com.coinbase.CallbackVerifier;
-
 import java.net.URL;
 
 import javax.net.ssl.SSLContext;

@@ -1,11 +1,11 @@
 package com.coinbase.deserializer;
 
-import java.util.HashMap;
-import java.util.List;
+import com.fasterxml.jackson.databind.util.StdConverter;
 
 import org.joda.money.Money;
 
-import com.fasterxml.jackson.databind.util.StdConverter;
+import java.util.HashMap;
+import java.util.List;
 
 public class FeesCollector extends StdConverter<List<HashMap<String, Money>>, HashMap<String, Money>> {
 

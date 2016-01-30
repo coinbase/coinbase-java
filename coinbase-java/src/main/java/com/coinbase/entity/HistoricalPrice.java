@@ -1,9 +1,9 @@
 package com.coinbase.entity;
 
-import java.io.Serializable;
-
 import org.joda.money.Money;
 import org.joda.time.DateTime;
+
+import java.io.Serializable;
 
 public class HistoricalPrice implements Serializable {
     /**

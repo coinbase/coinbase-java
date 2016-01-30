@@ -1,11 +1,11 @@
 package com.coinbase.deserializer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.coinbase.entity.PaymentMethod;
 import com.coinbase.entity.PaymentMethodNode;
 import com.fasterxml.jackson.databind.util.StdConverter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PaymentMethodsLifter extends StdConverter<List<PaymentMethodNode>, List<PaymentMethod>> {
 

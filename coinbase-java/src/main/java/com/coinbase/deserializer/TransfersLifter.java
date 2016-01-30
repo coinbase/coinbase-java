@@ -1,11 +1,11 @@
 package com.coinbase.deserializer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.coinbase.entity.Transfer;
 import com.coinbase.entity.TransferNode;
 import com.fasterxml.jackson.databind.util.StdConverter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TransfersLifter extends StdConverter<List<TransferNode>, List<Transfer>> {
 

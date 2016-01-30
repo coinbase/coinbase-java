@@ -1,11 +1,11 @@
 package com.coinbase.deserializer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.coinbase.entity.Order;
 import com.coinbase.entity.OrderNode;
 import com.fasterxml.jackson.databind.util.StdConverter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrdersLifter extends StdConverter<List<OrderNode>, List<Order>> {
 

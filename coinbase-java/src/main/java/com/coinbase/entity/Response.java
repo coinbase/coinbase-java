@@ -1,9 +1,9 @@
 package com.coinbase.entity;
 
-import java.io.Serializable;
-
 import com.coinbase.deserializer.ErrorsCollector;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import java.io.Serializable;
 
 public class Response implements Serializable {
 

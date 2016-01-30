@@ -1,11 +1,11 @@
 package com.coinbase.entity;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import org.joda.money.Money;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import java.io.Serializable;
 
 public class OAuthCodeRequest implements Serializable {
     private static final long serialVersionUID = 3716938132337502204L;

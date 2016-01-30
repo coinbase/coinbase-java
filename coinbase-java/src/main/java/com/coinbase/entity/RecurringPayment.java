@@ -1,12 +1,12 @@
 package com.coinbase.entity;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
+import java.io.Serializable;
 
 public class RecurringPayment implements Serializable {
 

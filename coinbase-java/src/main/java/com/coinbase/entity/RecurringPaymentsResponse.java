@@ -1,9 +1,9 @@
 package com.coinbase.entity;
 
-import java.util.List;
-
 import com.coinbase.deserializer.RecurringPaymentsLifter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import java.util.List;
 
 public class RecurringPaymentsResponse extends Response {
 

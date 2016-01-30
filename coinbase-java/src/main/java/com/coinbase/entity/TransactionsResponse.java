@@ -1,11 +1,11 @@
 package com.coinbase.entity;
 
-import java.util.List;
+import com.coinbase.deserializer.TransactionsLifter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import org.joda.money.Money;
 
-import com.coinbase.deserializer.TransactionsLifter;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.List;
 
 public class TransactionsResponse extends Response {
     /**

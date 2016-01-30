@@ -1,14 +1,14 @@
 package com.coinbase.entity;
 
-import java.io.Serializable;
-import java.util.HashMap;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.io.Serializable;
+import java.util.HashMap;
 
 public class Transfer implements Serializable {
 

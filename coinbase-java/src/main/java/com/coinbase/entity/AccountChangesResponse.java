@@ -1,8 +1,8 @@
 package com.coinbase.entity;
 
-import java.util.List;
-
 import org.joda.money.Money;
+
+import java.util.List;
 
 public class AccountChangesResponse extends Response {
     private User currentUser;

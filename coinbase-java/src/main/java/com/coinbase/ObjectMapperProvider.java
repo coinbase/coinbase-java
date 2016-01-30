@@ -1,8 +1,5 @@
 package com.coinbase;
 
-import org.joda.money.CurrencyUnit;
-import org.joda.money.Money;
-
 import com.coinbase.deserializer.CurrencyUnitDeserializer;
 import com.coinbase.deserializer.MoneyDeserializer;
 import com.coinbase.serializer.CurrencyUnitSerializer;
@@ -13,6 +10,9 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+
+import org.joda.money.CurrencyUnit;
+import org.joda.money.Money;
 
 public class ObjectMapperProvider {
 
