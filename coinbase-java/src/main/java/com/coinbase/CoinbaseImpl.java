@@ -1504,14 +1504,6 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
                         .addHeader("CB-ACCESS-TIMESTAMP", timestamp)
                         .build();
 
-//                com.squareup.okhttp.Response response = chain.proceed(newRequest);
-//
-//                int tryCount = 0;
-//                while (!response.isSuccessful() && tryCount < 3) {
-//                    tryCount++;
-//                    response = chain.proceed(newRequest);
-//                }
-
                 return chain.proceed(newRequest);
             }
         };
