@@ -604,7 +604,7 @@ public interface Coinbase {
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/transfers/index.html">Online Documentation</a>
      */
-    public Transfer commitTransfer(String transferId) throws CoinbaseException, IOException;
+    public Transfer commitTransfer(String accountId, String transactionId) throws CoinbaseException, IOException;
 
     /**
      * Get the user's payment methods

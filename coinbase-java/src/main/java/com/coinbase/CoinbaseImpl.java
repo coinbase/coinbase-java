@@ -568,7 +568,7 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
     }
 
     @Override
-    public Transfer commitTransfer(String transactionId) throws CoinbaseException, IOException {
+    public Transfer commitTransfer(String accountId, String transactionId) throws CoinbaseException, IOException {
         URL commitUrl;
         try {
             commitUrl = new URL(_baseApiUrl, "transfers/" + transactionId + "/commit");
@@ -576,7 +576,10 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
             throw new CoinbaseException("Invalid transaction id");
         }
 
-        return post(commitUrl, null, TransferResponse.class).getTransfer();
+        Request request = new Request();
+        request.setAccountId(accountId);
+
+        return post(commitUrl, request, TransferResponse.class).getTransfer();
     }
 
     @Override
