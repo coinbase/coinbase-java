@@ -1,9 +1,9 @@
 package com.coinbase;
 
-import com.coinbase.models.account.Account;
-import com.coinbase.models.account.Accounts;
-import com.coinbase.models.transactions.Transaction;
-import com.coinbase.models.transactions.Transactions;
+import com.coinbase.v2.models.account.Account;
+import com.coinbase.v2.models.account.Accounts;
+import com.coinbase.v2.models.transactions.Transaction;
+import com.coinbase.v2.models.transactions.Transactions;
 
 import java.util.HashMap;
 import java.util.List;

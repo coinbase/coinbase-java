@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 import com.coinbase.Coinbase;
 import com.coinbase.CoinbaseBuilder;
-import com.coinbase.models.account.Accounts;
-import com.coinbase.models.account.Data;
-import com.coinbase.models.errors.Errors;
-import com.coinbase.models.transactions.Transactions;
+import com.coinbase.v2.models.account.Accounts;
+import com.coinbase.v2.models.account.Data;
+import com.coinbase.v2.models.errors.Errors;
+import com.coinbase.v2.models.transactions.Transactions;
 import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
