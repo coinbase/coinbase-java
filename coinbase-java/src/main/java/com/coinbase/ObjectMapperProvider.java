@@ -1,8 +1,8 @@
 package com.coinbase;
 
-import com.coinbase.deserializer.CurrencyUnitDeserializer;
-import com.coinbase.deserializer.MoneyDeserializer;
-import com.coinbase.serializer.CurrencyUnitSerializer;
+import com.coinbase.v1.deserializer.CurrencyUnitDeserializer;
+import com.coinbase.v1.deserializer.MoneyDeserializer;
+import com.coinbase.v1.serializer.CurrencyUnitSerializer;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

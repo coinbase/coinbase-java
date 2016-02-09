@@ -1,33 +1,33 @@
 package com.coinbase;
 
-import com.coinbase.entity.Account;
-import com.coinbase.entity.AccountChange;
-import com.coinbase.entity.AccountChangesResponse;
-import com.coinbase.entity.AccountsResponse;
-import com.coinbase.entity.Address;
-import com.coinbase.entity.AddressResponse;
-import com.coinbase.entity.AddressesResponse;
-import com.coinbase.entity.Application;
-import com.coinbase.entity.Button;
-import com.coinbase.entity.Contact;
-import com.coinbase.entity.ContactsResponse;
-import com.coinbase.entity.HistoricalPrice;
-import com.coinbase.entity.Merchant;
-import com.coinbase.entity.Order;
-import com.coinbase.entity.OrdersResponse;
-import com.coinbase.entity.PaymentMethod;
-import com.coinbase.entity.PaymentMethodsResponse;
-import com.coinbase.entity.Quote;
-import com.coinbase.entity.RecurringPayment;
-import com.coinbase.entity.RecurringPaymentsResponse;
-import com.coinbase.entity.Report;
-import com.coinbase.entity.Token;
-import com.coinbase.entity.Transaction;
-import com.coinbase.entity.TransactionsResponse;
-import com.coinbase.entity.Transfer;
-import com.coinbase.entity.TransfersResponse;
-import com.coinbase.entity.User;
-import com.coinbase.exception.CoinbaseException;
+import com.coinbase.v1.entity.Account;
+import com.coinbase.v1.entity.AccountChange;
+import com.coinbase.v1.entity.AccountChangesResponse;
+import com.coinbase.v1.entity.AccountsResponse;
+import com.coinbase.v1.entity.Address;
+import com.coinbase.v1.entity.AddressResponse;
+import com.coinbase.v1.entity.AddressesResponse;
+import com.coinbase.v1.entity.Application;
+import com.coinbase.v1.entity.Button;
+import com.coinbase.v1.entity.Contact;
+import com.coinbase.v1.entity.ContactsResponse;
+import com.coinbase.v1.entity.HistoricalPrice;
+import com.coinbase.v1.entity.Merchant;
+import com.coinbase.v1.entity.Order;
+import com.coinbase.v1.entity.OrdersResponse;
+import com.coinbase.v1.entity.PaymentMethod;
+import com.coinbase.v1.entity.PaymentMethodsResponse;
+import com.coinbase.v1.entity.Quote;
+import com.coinbase.v1.entity.RecurringPayment;
+import com.coinbase.v1.entity.RecurringPaymentsResponse;
+import com.coinbase.v1.entity.Report;
+import com.coinbase.v1.entity.Token;
+import com.coinbase.v1.entity.Transaction;
+import com.coinbase.v1.entity.TransactionsResponse;
+import com.coinbase.v1.entity.Transfer;
+import com.coinbase.v1.entity.TransfersResponse;
+import com.coinbase.v1.entity.User;
+import com.coinbase.v1.exception.CoinbaseException;
 
 import org.apache.commons.io.output.NullOutputStream;
 import org.joda.money.CurrencyUnit;
@@ -79,7 +79,7 @@ public class CoinbaseTest {
 
     @Test(expected = CoinbaseException.class)
     public void errorResponse() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/error.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/error.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         cb.createAccount(new Account());
@@ -87,7 +87,7 @@ public class CoinbaseTest {
 
     @Test(expected = CoinbaseException.class)
     public void errorsResponse() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/errors.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/errors.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         cb.createAccount(new Account());
@@ -95,7 +95,7 @@ public class CoinbaseTest {
 
     @Test(expected = CoinbaseException.class)
     public void falseSuccessResponse() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/false_success.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/false_success.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         cb.createAccount(new Account());
@@ -103,7 +103,7 @@ public class CoinbaseTest {
 
     @Test
     public void accounts() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/accounts.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/accounts.json");
 
         when(mockConnection.getInputStream()).thenReturn(in);
 
@@ -132,7 +132,7 @@ public class CoinbaseTest {
 
     @Test
     public void users() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/users.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/users.json");
 
         when(mockConnection.getInputStream()).thenReturn(in);
 
@@ -156,7 +156,7 @@ public class CoinbaseTest {
 
     @Test
     public void transaction() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/transaction.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/transaction.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         Transaction t = cb.getTransaction("5018f833f8182b129c00002f");
@@ -182,7 +182,7 @@ public class CoinbaseTest {
 
     @Test
     public void transactions() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/transactions.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/transactions.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         TransactionsResponse r = cb.getTransactions();
@@ -210,7 +210,7 @@ public class CoinbaseTest {
 
     @Test
     public void transfers() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/transfers.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/transfers.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         TransfersResponse r = cb.getTransfers();
@@ -237,7 +237,7 @@ public class CoinbaseTest {
 
     @Test
     public void quote() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/quote.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/quote.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         Quote q = cb.getBuyQuote(Money.parse("BTC 1"));
@@ -252,7 +252,7 @@ public class CoinbaseTest {
 
     @Test
     public void addresses() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/addresses.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/addresses.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         AddressesResponse r = cb.getAddresses();
@@ -277,7 +277,7 @@ public class CoinbaseTest {
 
     @Test
     public void button() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/button.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/button.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         Button buttonParams = new Button();
@@ -297,7 +297,7 @@ public class CoinbaseTest {
 
     @Test
     public void contacts() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/contacts.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/contacts.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         ContactsResponse r = cb.getContacts();
@@ -311,7 +311,7 @@ public class CoinbaseTest {
 
     @Test
     public void sell() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/new_sell.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/new_sell.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         Transfer t = cb.sell(Money.parse("BTC 1.00"));
@@ -328,7 +328,7 @@ public class CoinbaseTest {
 
     @Test
     public void buy() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/new_buy.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/new_buy.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         Transfer t = cb.buy(Money.parse("BTC 1.00"));
@@ -345,7 +345,7 @@ public class CoinbaseTest {
 
     @Test
     public void orders() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/orders.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/orders.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         OrdersResponse r = cb.getOrders();
@@ -373,7 +373,7 @@ public class CoinbaseTest {
 
     @Test
     public void createOrder() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/new_order.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/new_order.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         Button buttonParams = new Button();
@@ -390,7 +390,7 @@ public class CoinbaseTest {
 
     @Test
     public void getPaymentMethods() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/payment_methods.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/payment_methods.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         PaymentMethodsResponse r = cb.getPaymentMethods();
@@ -411,7 +411,7 @@ public class CoinbaseTest {
 
     @Test
     public void getSubscribers() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/subscribers.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/subscribers.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         RecurringPaymentsResponse r = cb.getSubscribers();
@@ -435,7 +435,7 @@ public class CoinbaseTest {
 
     @Test
     public void getRecurringPayments() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/recurring_payments.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/recurring_payments.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         RecurringPaymentsResponse r = cb.getRecurringPayments();
@@ -456,7 +456,7 @@ public class CoinbaseTest {
 
     @Test
     public void getExchangeRates() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/rates_response.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/rates_response.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         Map<String, BigDecimal> rates = cb.getExchangeRates();
@@ -467,7 +467,7 @@ public class CoinbaseTest {
 
     @Test
     public void getSupportedCurrencies() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/currencies_response.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/currencies_response.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         List<CurrencyUnit> currencies = cb.getSupportedCurrencies();
@@ -477,7 +477,7 @@ public class CoinbaseTest {
 
     @Test
     public void createToken() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/token_response.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/token_response.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         Token token = cb.createToken();
@@ -488,7 +488,7 @@ public class CoinbaseTest {
 
     @Test
     public void generateReceiveAddress() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/address_response.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/address_response.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         AddressResponse address = cb.generateReceiveAddress();
@@ -500,7 +500,7 @@ public class CoinbaseTest {
 
     @Test
     public void createApplication() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/application_response.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/application_response.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         Application app = cb.createApplication(new Application());
@@ -516,7 +516,7 @@ public class CoinbaseTest {
 
     @Test
     public void getHistoricalPrices() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/historical_prices.csv");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/historical_prices.csv");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         List<HistoricalPrice> prices = cb.getHistoricalPrices();
@@ -527,7 +527,7 @@ public class CoinbaseTest {
 
     @Test
     public void createReport() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/report.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/report.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         Report reportParams = new Report();
@@ -558,7 +558,7 @@ public class CoinbaseTest {
 
     @Test
     public void getAccountChanges() throws Exception {
-        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/entity/account_changes_response.json");
+        final InputStream in = com.coinbase.CoinbaseSSL.class.getResourceAsStream("/com/coinbase/v1/entity/account_changes_response.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
         AccountChangesResponse response = cb.getAccountChanges();

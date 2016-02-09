@@ -1,42 +1,42 @@
 package com.coinbase;
 
-import com.coinbase.entity.Account;
-import com.coinbase.entity.AccountChangesResponse;
-import com.coinbase.entity.AccountsResponse;
-import com.coinbase.entity.Address;
-import com.coinbase.entity.AddressResponse;
-import com.coinbase.entity.AddressesResponse;
-import com.coinbase.entity.Application;
-import com.coinbase.entity.ApplicationsResponse;
-import com.coinbase.entity.Button;
-import com.coinbase.entity.ContactsResponse;
-import com.coinbase.entity.HistoricalPrice;
-import com.coinbase.entity.OAuthCodeRequest;
-import com.coinbase.entity.OAuthTokensResponse;
-import com.coinbase.entity.Order;
-import com.coinbase.entity.OrdersResponse;
-import com.coinbase.entity.PaymentMethodResponse;
-import com.coinbase.entity.PaymentMethodsResponse;
-import com.coinbase.entity.Quote;
-import com.coinbase.entity.RecurringPayment;
-import com.coinbase.entity.RecurringPaymentsResponse;
-import com.coinbase.entity.Report;
-import com.coinbase.entity.ReportsResponse;
-import com.coinbase.entity.Token;
-import com.coinbase.entity.Transaction;
-import com.coinbase.entity.TransactionsResponse;
-import com.coinbase.entity.Transfer;
-import com.coinbase.entity.TransfersResponse;
-import com.coinbase.entity.User;
-import com.coinbase.entity.UserResponse;
-import com.coinbase.exception.CoinbaseException;
-import com.coinbase.exception.CredentialsIncorrectException;
-import com.coinbase.exception.TwoFactorIncorrectException;
-import com.coinbase.exception.TwoFactorRequiredException;
-import com.coinbase.exception.UnauthorizedDeviceException;
-import com.coinbase.exception.UnspecifiedAccount;
-import com.coinbase.models.account.Accounts;
-import com.coinbase.models.transactions.Transactions;
+import com.coinbase.v1.entity.Account;
+import com.coinbase.v1.entity.AccountChangesResponse;
+import com.coinbase.v1.entity.AccountsResponse;
+import com.coinbase.v1.entity.Address;
+import com.coinbase.v1.entity.AddressResponse;
+import com.coinbase.v1.entity.AddressesResponse;
+import com.coinbase.v1.entity.Application;
+import com.coinbase.v1.entity.ApplicationsResponse;
+import com.coinbase.v1.entity.Button;
+import com.coinbase.v1.entity.ContactsResponse;
+import com.coinbase.v1.entity.HistoricalPrice;
+import com.coinbase.v1.entity.OAuthCodeRequest;
+import com.coinbase.v1.entity.OAuthTokensResponse;
+import com.coinbase.v1.entity.Order;
+import com.coinbase.v1.entity.OrdersResponse;
+import com.coinbase.v1.entity.PaymentMethodResponse;
+import com.coinbase.v1.entity.PaymentMethodsResponse;
+import com.coinbase.v1.entity.Quote;
+import com.coinbase.v1.entity.RecurringPayment;
+import com.coinbase.v1.entity.RecurringPaymentsResponse;
+import com.coinbase.v1.entity.Report;
+import com.coinbase.v1.entity.ReportsResponse;
+import com.coinbase.v1.entity.Token;
+import com.coinbase.v1.entity.Transaction;
+import com.coinbase.v1.entity.TransactionsResponse;
+import com.coinbase.v1.entity.Transfer;
+import com.coinbase.v1.entity.TransfersResponse;
+import com.coinbase.v1.entity.User;
+import com.coinbase.v1.entity.UserResponse;
+import com.coinbase.v1.exception.CoinbaseException;
+import com.coinbase.v1.exception.CredentialsIncorrectException;
+import com.coinbase.v1.exception.TwoFactorIncorrectException;
+import com.coinbase.v1.exception.TwoFactorRequiredException;
+import com.coinbase.v1.exception.UnauthorizedDeviceException;
+import com.coinbase.v1.exception.UnspecifiedAccount;
+import com.coinbase.v2.models.account.Accounts;
+import com.coinbase.v2.models.transactions.Transactions;
 
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
@@ -1080,7 +1080,7 @@ public interface Coinbase {
      *
      * @see <a href="https://developers.coinbase.com/api/v2#show-an-account">Online Documentation</a>
      */
-    public Call getAccount(String accountId, final Callback<com.coinbase.models.account.Account> callback);
+    public Call getAccount(String accountId, final Callback<com.coinbase.v2.models.account.Account> callback);
 
     /**
      * Retrieve a list of accounts belonging to this user
@@ -1100,7 +1100,7 @@ public interface Coinbase {
      *
      * @see <a href="https://developers.coinbase.com/api/v2#show-a-transaction">Online Documentation</a>
      */
-    public Call getTransaction(String accountId, String transactionId, final Callback<com.coinbase.models.transactions.Transaction> callback);
+    public Call getTransaction(String accountId, String transactionId, final Callback<com.coinbase.v2.models.transactions.Transaction> callback);
 
     /**
      * Retrieve a list of the user's recent transactions.
@@ -1158,7 +1158,7 @@ public interface Coinbase {
      *
      * @see <a href="https://developers.coinbase.com/api/v2#send-money">Online Documentation</a>
      */
-    public Call sendMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.models.transactions.Transaction> callback);
+    public Call sendMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transactions.Transaction> callback);
 
     /**
      * Request money from an email address or bitcoin address
@@ -1168,7 +1168,7 @@ public interface Coinbase {
      *
      * @see <a href="https://developers.coinbase.com/api/v2#request-money">Online Documentation</a>
      */
-    public Call requestMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.models.transactions.Transaction> callback);
+    public Call requestMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transactions.Transaction> callback);
 
     /**
      * Transfer bitcoin between two of a user’s accounts
@@ -1178,5 +1178,5 @@ public interface Coinbase {
      *
      * @see <a href="https://developers.coinbase.com/api/v2#transfer-money-between-accounts">Online Documentation</a>
      */
-    public Call transferMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.models.transactions.Transaction> callback);
+    public Call transferMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transactions.Transaction> callback);
 }
