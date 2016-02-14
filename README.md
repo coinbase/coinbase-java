@@ -2,7 +2,7 @@
 
 An easy way to buy, sell, send, and accept [bitcoin](http://en.wikipedia.org/wiki/Bitcoin) through the [Coinbase API](https://coinbase.com/docs/api/overview).
 
-This library is a wrapper around the [Coinbase JSON API](https://coinbase.com/api/doc). It supports both the the [api key + secret authentication method](https://coinbase.com/docs/api/authentication) as well as OAuth 2.0 for performing actions on other people's account.
+This library is a wrapper around the [Coinbase JSON API](https://coinbase.com/api/doc). It supports both the [api key + secret authentication method](https://coinbase.com/docs/api/authentication) as well as OAuth 2.0 for performing actions on other people's account.
 
 ## Installation
 
@@ -140,7 +140,7 @@ txs.get(0).getId();
 TransactionsResponse page_2 = cb.getTransactions(2);
 ```
 
-Transactions will always have an `id` attribute which is the primary way to identity them through the Coinbase api.  They will also have a `hsh` (bitcoin hash) attribute once they've been broadcast to the network (usually within a few seconds).
+Transactions will always have an `id` attribute which is the primary way to identify them through the Coinbase api.  They will also have a `hsh` (bitcoin hash) attribute once they've been broadcast to the network (usually within a few seconds).
 
 ### Get transaction details
 
