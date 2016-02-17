@@ -268,6 +268,8 @@ newUser.getEmail(); // "newuser@example.com"
 
 ### Verifying merchant callbacks
 
+Note: Only production callbacks can be verified. Callbacks issued by the sandbox will always return false below.
+
 ```java
 String raw_http_post_body = ...;
 String signature_header   = ...;
