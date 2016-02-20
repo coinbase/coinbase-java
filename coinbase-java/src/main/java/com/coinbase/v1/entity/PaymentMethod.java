@@ -10,6 +10,7 @@ public class PaymentMethod implements Serializable {
     public enum Type {
         ACH_BANK_ACCOUNT("ach_bank_account"),
         CREDIT_CARD("credit_card"),
+        DEBIT_CARD("debit_card"),
         SEPA_BANK_ACCOUNT("sepa_bank_account"),
         FIAT_ACCOUNT("fiat_account"),
         BANK_WIRE("bank_wire"),
