@@ -315,3 +315,21 @@ mvn clean test
 2. Add a test if applicable and run the existing tests with `mvn clean test` to make sure they pass
 3. Commit your changes and push to your fork `git push origin master`
 4. Create a new pull request and submit it back to us!
+
+### Coinbase v2 - Upgrade guide from 1.x
+
+##Packages paths have been adjusted to separate between the v1 and v2 models. 
+#1.x
+```
+com.coinbase.api.entity
+com.coinbase.api.serializer
+com.coinbase.api.deserializer
+com.coinbase.api.exception
+```
+# 2.x
+```
+com.coinbase.v1.entity
+com.coinbase.v1.serializer
+com.coinbase.v1.deserializer
+com.coinbase.v2.exception
+```
