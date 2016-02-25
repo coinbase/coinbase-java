@@ -4,6 +4,7 @@ import com.coinbase.v2.models.account.Account;
 import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.transactions.Transaction;
 import com.coinbase.v2.models.transactions.Transactions;
+import com.coinbase.v2.models.user.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,10 @@ import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 public interface ApiInterface {
-    @GET(com.coinbase.ApiConstants.ACCOUNTS + "/{id}")
+    @GET(ApiConstants.USER)
+    Call<User> getUser();
+
+    @GET(ApiConstants.ACCOUNTS + "/{id}")
     Call<Account> getAccount(@Path("id") String accountId);
 
     @GET(com.coinbase.ApiConstants.ACCOUNTS)

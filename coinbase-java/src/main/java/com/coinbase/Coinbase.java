@@ -63,6 +63,7 @@ public interface Coinbase {
      * @throws CoinbaseException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/users/index.html">Online Documentation</a>
+     * @deprecated
      */
     public User getUser() throws IOException, CoinbaseException;
 
@@ -1070,7 +1071,16 @@ public interface Coinbase {
 
 
 
-
+    /**
+     * Retrieve the current user and their settings.
+     *
+     *
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://coinbase.com/api/doc/1.0/users/index.html">Online Documentation</a>
+     */
+    public Call getUser(final Callback<com.coinbase.v2.models.user.User> callback);
 
     /**
      * Retrieve an account belonging to this user

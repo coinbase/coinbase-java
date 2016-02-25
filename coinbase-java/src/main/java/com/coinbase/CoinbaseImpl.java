@@ -1551,6 +1551,26 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         return service;
     }
 
+    public Call getUser(final Callback<com.coinbase.v2.models.user.User> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.getUser();
+        call.enqueue(new Callback<com.coinbase.v2.models.user.User>() {
+            @Override
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.user.User> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
     public Call getAccount(String accountId, final Callback<com.coinbase.v2.models.account.Account> callback) {
         com.coinbase.ApiInterface apiInterface = getApiService();
         Call call = apiInterface.getAccount(accountId);

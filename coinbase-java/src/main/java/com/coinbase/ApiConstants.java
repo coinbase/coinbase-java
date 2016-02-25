@@ -7,6 +7,7 @@ public class ApiConstants {
     public static String VERSION = "2015-03-20";
 
     // Endpoints
+    public static final String USER = "user";
     public static final String TRANSACTIONS = "transactions";
     public static final String ACCOUNTS = "accounts";
     public static final String COMPLETE = "complete";
