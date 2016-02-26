@@ -37,12 +37,6 @@ public class Data {
     @SerializedName("email")
     @Expose
     private String email;
-    @SerializedName("state_verification_required")
-    @Expose
-    private Boolean stateVerificationRequired;
-    @SerializedName("restricted_state")
-    @Expose
-    private Boolean restrictedState;
 
     /**
      *
@@ -223,41 +217,4 @@ public class Data {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    /**
-     *
-     * @return
-     * The stateVerificationRequired
-     */
-    public Boolean getStateVerificationRequired() {
-        return stateVerificationRequired;
-    }
-
-    /**
-     *
-     * @param stateVerificationRequired
-     * The state_verification_required
-     */
-    public void setStateVerificationRequired(Boolean stateVerificationRequired) {
-        this.stateVerificationRequired = stateVerificationRequired;
-    }
-
-    /**
-     *
-     * @return
-     * The restrictedState
-     */
-    public Boolean getRestrictedState() {
-        return restrictedState;
-    }
-
-    /**
-     *
-     * @param restrictedState
-     * The restricted_state
-     */
-    public void setRestrictedState(Boolean restrictedState) {
-        this.restrictedState = restrictedState;
-    }
-
 }

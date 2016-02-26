@@ -69,6 +69,8 @@ public class User implements Serializable {
     private ResidentialAddress _residentialAddress;
     private String _countryCode;
     private List<String> _featureFlags;
+    private Boolean _stateVerificationRequired;
+    private Boolean _stateUnsupported;
 
     public String getPassword() {
         return _password;
@@ -297,4 +299,19 @@ public class User implements Serializable {
         this._featureFlags = featureFlags;
     }
 
+    public Boolean getStateVerificationRequired() {
+        return _stateVerificationRequired;
+    }
+
+    public void setStateVerificationRequired(Boolean stateVerificationRequired) {
+        this._stateVerificationRequired = stateVerificationRequired;
+    }
+
+    public Boolean getStateUnsupported() {
+        return _stateUnsupported;
+    }
+
+    public void setStateUnsupported(Boolean stateUnsupported) {
+        this._stateUnsupported = stateUnsupported;
+    }
 }
