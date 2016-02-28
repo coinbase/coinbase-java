@@ -133,7 +133,7 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
                 _baseApiUrl = new URL("https://coinbase.com/api/v1/");
             }
             if (_baseOAuthUrl == null) {
-                _baseOAuthUrl = new URL("https://coinbase.com/oauth/");
+                _baseOAuthUrl = new URL("https://www.coinbase.com/oauth/");
             }
             if (_baseV2ApiUrl == null) {
                 _baseV2ApiUrl = new URL("https://api.coinbase.com/v2/");
