@@ -87,6 +87,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.crypto.Mac;
@@ -106,9 +107,9 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
 
     private static final ObjectMapper objectMapper = ObjectMapperProvider.createDefaultMapper();
 
-    private URL    _baseApiUrl;
-    private URL    _baseOAuthUrl;
-    private URL    _baseV2ApiUrl;
+    private URL _baseApiUrl;
+    private URL _baseOAuthUrl;
+    private URL _baseV2ApiUrl;
     private String _accountId;
     private String _apiKey;
     private String _apiSecret;
@@ -145,7 +146,8 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         // Register BTC as a currency since Android won't let joda read from classpath resources
         try {
             CurrencyUnit.registerCurrency("BTC", -1, 8, new ArrayList<String>());
-        } catch (IllegalArgumentException ex) {}
+        } catch (IllegalArgumentException ex) {
+        }
 
         if (_sslContext != null) {
             _socketFactory = _sslContext.getSocketFactory();
@@ -320,10 +322,9 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
     @Override
     public Quote getBuyQuote(Money amount, String paymentMethodId) throws IOException, CoinbaseException {
         String qtyParam;
-        if(amount.getCurrencyUnit().getCode().equals("BTC")) {
+        if (amount.getCurrencyUnit().getCode().equals("BTC")) {
             qtyParam = "qty";
-        }
-        else {
+        } else {
             qtyParam = "native_qty";
         }
 
@@ -331,7 +332,7 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         try {
             buyPriceUrl = new URL(
                     _baseApiUrl,
-                    "prices/buy?" + qtyParam +"=" + URLEncoder.encode(amount.getAmount().toPlainString(), "UTF-8") +
+                    "prices/buy?" + qtyParam + "=" + URLEncoder.encode(amount.getAmount().toPlainString(), "UTF-8") +
                             (_accountId != null ? "&account_id=" + _accountId : "") +
                             (paymentMethodId != null ? "&payment_method_id=" + paymentMethodId : "")
             );
@@ -349,10 +350,9 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
     @Override
     public Quote getSellQuote(Money amount, String paymentMethodId) throws IOException, CoinbaseException {
         String qtyParam;
-        if(amount.getCurrencyUnit().getCode().equals("BTC")) {
+        if (amount.getCurrencyUnit().getCode().equals("BTC")) {
             qtyParam = "qty";
-        }
-        else {
+        } else {
             qtyParam = "native_qty";
         }
 
@@ -703,7 +703,8 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         for (List<String> currency : rawResponse) {
             try {
                 result.add(CurrencyUnit.getInstance(currency.get(1)));
-            } catch (IllegalCurrencyException ex) {}
+            } catch (IllegalCurrencyException ex) {
+            }
         }
 
         return result;
@@ -740,7 +741,8 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         } finally {
             try {
                 reader.close();
-            } catch (IOException e) {}
+            } catch (IOException e) {
+            }
         }
 
         return result;
@@ -1157,7 +1159,7 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
 
         if (_accessToken == null) {
             throw new CoinbaseException(
-                "This client must have been initialized with an access token in order to call revokeToken()"
+                    "This client must have been initialized with an access token in order to call revokeToken()"
             );
         }
 
@@ -1276,7 +1278,7 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         return _callbackVerifier.verifyCallback(body, signature);
     }
 
-    private void doHmacAuthentication (URL url, String body, HttpsURLConnection conn) throws IOException {
+    private void doHmacAuthentication(URL url, String body, HttpsURLConnection conn) throws IOException {
         String nonce = String.valueOf(System.currentTimeMillis());
 
         String message = nonce + url.toString() + (body != null ? body : "");
@@ -1326,8 +1328,8 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
             doAccessTokenAuthentication(conn);
         }
 
-        if(headers != null) {
-            for(String key : headers.keySet()) {
+        if (headers != null) {
+            for (String key : headers.keySet()) {
                 conn.setRequestProperty(key, headers.get(key));
             }
         }
@@ -1451,14 +1453,6 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
     }
 
 
-
-
-
-
-
-
-
-
     private Interceptor buildOAuthInterceptor() {
         return new Interceptor() {
             @Override
@@ -1516,12 +1510,29 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         return new Interceptor() {
             @Override
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                com.squareup.okhttp.Request newRequest = chain.request().newBuilder().addHeader("CB-VERSION", com.coinbase.ApiConstants.VERSION).build();
+                com.squareup.okhttp.Request newRequest = chain
+                        .request()
+                        .newBuilder()
+                        .addHeader("CB-VERSION", com.coinbase.ApiConstants.VERSION)
+                        .build();
                 return chain.proceed(newRequest);
             }
         };
     }
 
+    protected Interceptor languageInterceptor() {
+        return new Interceptor() {
+            @Override
+            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                com.squareup.okhttp.Request newRequest = chain
+                        .request()
+                        .newBuilder()
+                        .addHeader("Accept-Language", Locale.getDefault().getLanguage())
+                        .build();
+                return chain.proceed(newRequest);
+            }
+        };
+    }
 
     private com.coinbase.ApiInterface getApiService() {
         OkHttpClient client = new OkHttpClient();
@@ -1538,6 +1549,8 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
             client.interceptors().add(buildHmacAuthInterceptor());
 
         client.interceptors().add(buildVersionInterceptor());
+
+        client.interceptors().add(languageInterceptor());
 
         String url = com.coinbase.ApiConstants.BASE_URL_PRODUCTION + "/" + com.coinbase.ApiConstants.SERVER_VERSION + "/";
         Retrofit retrofit = new Retrofit.Builder()
