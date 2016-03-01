@@ -71,6 +71,7 @@ public class User implements Serializable {
     private List<String> _featureFlags;
     private Boolean _stateVerificationRequired;
     private Boolean _stateUnsupported;
+    private Boolean _regionalAgreementRequired;
 
     public String getPassword() {
         return _password;
@@ -313,5 +314,13 @@ public class User implements Serializable {
 
     public void setStateUnsupported(Boolean stateUnsupported) {
         this._stateUnsupported = stateUnsupported;
+    }
+
+    public Boolean getRegionalAgreementRequired() {
+        return _regionalAgreementRequired;
+    }
+
+    public void setRegionalAgreementRequired(Boolean regionalAgreementRequired) {
+        this._regionalAgreementRequired = regionalAgreementRequired;
     }
 }
