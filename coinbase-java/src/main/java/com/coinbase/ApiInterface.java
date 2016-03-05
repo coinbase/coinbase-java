@@ -2,6 +2,7 @@ package com.coinbase;
 
 import com.coinbase.v2.models.account.Account;
 import com.coinbase.v2.models.account.Accounts;
+import com.coinbase.v2.models.spotPrice.SpotPrice;
 import com.coinbase.v2.models.transactions.Transaction;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.coinbase.v2.models.user.User;
@@ -58,5 +59,5 @@ public interface ApiInterface {
     Call<Transaction> transferMoney(@Path("id") String accountId, @Body HashMap<String, Object> body);
 
     @GET(com.coinbase.ApiConstants.PRICES_SPOT)
-    Call<Accounts> getSpotPrice(@Query("currency") String currency);
+    Call<SpotPrice> getSpotPrice(@Query("currency") String currency);
 }
