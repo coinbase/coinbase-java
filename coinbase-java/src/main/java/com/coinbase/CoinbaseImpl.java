@@ -54,6 +54,7 @@ import com.coinbase.v1.exception.UnauthorizedDeviceException;
 import com.coinbase.v1.exception.UnauthorizedException;
 import com.coinbase.v1.exception.UnspecifiedAccount;
 import com.coinbase.v2.models.account.Accounts;
+import com.coinbase.v2.models.spotPrice.SpotPrice;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -1780,6 +1781,26 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
         call.enqueue(new Callback<com.coinbase.v2.models.transactions.Transaction>() {
             @Override
             public void onResponse(retrofit.Response<com.coinbase.v2.models.transactions.Transaction> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    public Call getSpotPrice(String currency, final Callback<SpotPrice> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.getSpotPrice(currency);
+        call.enqueue(new Callback<SpotPrice>() {
+            @Override
+            public void onResponse(retrofit.Response<SpotPrice> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }

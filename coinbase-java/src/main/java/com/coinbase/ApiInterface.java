@@ -56,4 +56,7 @@ public interface ApiInterface {
 
     @POST(com.coinbase.ApiConstants.ACCOUNTS + "/{id}/" + com.coinbase.ApiConstants.TRANSACTIONS)
     Call<Transaction> transferMoney(@Path("id") String accountId, @Body HashMap<String, Object> body);
+
+    @GET(com.coinbase.ApiConstants.PRICES_SPOT)
+    Call<Accounts> getSpotPrice(@Query("currency") String currency);
 }

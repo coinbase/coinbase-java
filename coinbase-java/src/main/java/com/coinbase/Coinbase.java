@@ -36,6 +36,7 @@ import com.coinbase.v1.exception.TwoFactorRequiredException;
 import com.coinbase.v1.exception.UnauthorizedDeviceException;
 import com.coinbase.v1.exception.UnspecifiedAccount;
 import com.coinbase.v2.models.account.Accounts;
+import com.coinbase.v2.models.spotPrice.SpotPrice;
 import com.coinbase.v2.models.transactions.Transactions;
 
 import org.joda.money.CurrencyUnit;
@@ -440,6 +441,7 @@ public interface Coinbase {
      * @throws CoinbaseException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/prices/spot_rate.html">Online Documentation</a>
+     * @deprecated
      */
     public Money getSpotPrice(CurrencyUnit currency) throws IOException, CoinbaseException;
 
@@ -1189,4 +1191,14 @@ public interface Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#transfer-money-between-accounts">Online Documentation</a>
      */
     public Call transferMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transactions.Transaction> callback);
+
+    /**
+     * Retrieve the current spot price of 1 BTC
+     *
+     * @param currency the currency in which to retrieve the price
+     * @return the spot price of 1 BTC in the specified currency
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
+     */
+    public Call getSpotPrice(String currency, final Callback<SpotPrice> callback);
 }
