@@ -88,7 +88,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.code.gson:gson:2.5'
     compile 'org.glassfish:javax.annotation:10.0-b28'
-    compile 'com.squareup.retrofit:retrofit:2.0.0-beta3'
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
     compile 'org.joda:joda-money:0.9.1'
     compile 'joda-time:joda-time:2.3'
