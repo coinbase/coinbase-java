@@ -16,50 +16,55 @@ import java.math.BigDecimal;
 public class MoneyDeserializer extends StdDeserializer<Money> {
 
     public MoneyDeserializer() {
-	super(Money.class);
+        super(Money.class);
     }
 
     @Override
     public Money deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
-	    throws IOException {
+            throws IOException {
 
-	Money result = null;
+        Money result = null;
 
-	ObjectCodec oc = jsonParser.getCodec();
-	JsonNode node = oc.readTree(jsonParser);
+        ObjectCodec oc = jsonParser.getCodec();
+        JsonNode node = oc.readTree(jsonParser);
 
-	String currency = null;
-	String amount = null;
-	Long cents = null;
+        String currency = null;
+        String amount = null;
+        Long cents = null;
 
-	if (node.has("currency")) {
-	    currency = node.get("currency").textValue();
-	} else if (node.has("currency_iso")) {
-	    currency = node.get("currency_iso").textValue();
-	}
+        if (node.has("currency")) {
+            currency = node.get("currency").textValue();
+        } else if (node.has("currency_iso")) {
+            currency = node.get("currency_iso").textValue();
+        }
 
-	if (node.has("amount")) {
-	    amount = node.get("amount").textValue();
-	} else if (node.has("cents")) {
-	    cents = node.get("cents").longValue();
-	}
+        if (node.has("amount")) {
+            amount = node.get("amount").textValue();
+        } else if (node.has("cents")) {
+            cents = node.get("cents").longValue();
+        }
 
-	if (currency == null || (amount == null && cents == null)) {
-	    throw new JsonParseException("Wrong format for Money", jsonParser.getCurrentLocation());
-	}
+        if (currency == null || (amount == null && cents == null)) {
+            throw new JsonParseException("Wrong format for Money", jsonParser.getCurrentLocation());
+        }
 
-	try {
-	    if (amount != null) {
-		result = Money.of(CurrencyUnit.of(currency), new BigDecimal(amount));
-	    } else {
-		result = Money.ofMinor(CurrencyUnit.of(currency), cents);
-	    }
-	} catch (Exception ex) {
-	    throw new JsonParseException("Could not construct Money from arguments",
-		    jsonParser.getCurrentLocation(), ex);
-	}
+        if (amount != null) {
+            try {
+                result = Money.of(CurrencyUnit.of(currency),
+                        Double.valueOf(amount));
+            } catch (ArithmeticException e) {
 
-	return result;
+                Double doubleValue = Double.valueOf(amount);
+                Long longValue = doubleValue.longValue();
+
+                result = Money.of(CurrencyUnit.of(currency),
+                        BigDecimal.valueOf(longValue));
+            }
+        } else {
+            result = Money.ofMinor(CurrencyUnit.of(currency), cents);
+        }
+
+        return result;
 
     }
 }
