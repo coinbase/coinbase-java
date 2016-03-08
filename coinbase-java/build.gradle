@@ -85,7 +85,6 @@ bintray {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.code.gson:gson:2.5'
     compile 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
