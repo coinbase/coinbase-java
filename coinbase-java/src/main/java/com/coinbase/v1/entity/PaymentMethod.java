@@ -2,6 +2,7 @@ package com.coinbase.v1.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.Serializable;
 
@@ -136,6 +137,8 @@ public class PaymentMethod implements Serializable {
     private String _name;
     private Boolean _allowBuy;
     private Boolean _allowSell;
+    private Boolean _allowDeposit;
+    private Boolean _allowWithdraw;
     private Boolean _primaryBuy;
     private Boolean _primarySell;
     private Account _account;
@@ -181,6 +184,22 @@ public class PaymentMethod implements Serializable {
 
     public void setAllowSell(Boolean allowSell) {
         _allowSell = allowSell;
+    }
+
+    public Boolean allowDeposit() {
+        return _allowDeposit;
+    }
+
+    public void setAllowDeposit(Boolean allowDeposit) {
+        _allowDeposit = allowDeposit;
+    }
+
+    public Boolean allowWithdraw() {
+        return _allowWithdraw;
+    }
+
+    public void setAllowWithdraw(Boolean allowWithdraw) {
+        _allowWithdraw = allowWithdraw;
     }
 
     public Account getAccount() {
