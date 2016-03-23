@@ -41,27 +41,51 @@ public class Data {
     @SerializedName("network")
     @Expose
     private Network network;
-    @SerializedName("to")
-    @Expose
-    private com.coinbase.v2.models.transactions.Entity to;
-    @SerializedName("from")
-    @Expose
-    private com.coinbase.v2.models.transactions.Entity from;
-    @SerializedName("instant_exchange")
-    @Expose
-    private Boolean instantExchange;
     @SerializedName("idem")
     @Expose
     private String idem;
+    @SerializedName("to")
+    @Expose
+    private Entity to;
+    @SerializedName("from")
+    @Expose
+    private Entity from;
     @SerializedName("buy")
     @Expose
     private Trade buy;
     @SerializedName("sell")
     @Expose
     private Trade sell;
+    @SerializedName("request")
+    @Expose
+    private Trade request;
+    @SerializedName("transfer")
+    @Expose
+    private Trade transfer;
+    @SerializedName("send")
+    @Expose
+    private Trade send;
+    @SerializedName("fiat_deposit")
+    @Expose
+    private Trade fiatDeposit;
+    @SerializedName("fiat_withdrawal")
+    @Expose
+    private Trade fiatWithdrawal;
+    @SerializedName("exchange_deposit")
+    @Expose
+    private Trade exchangeDeposit;
+    @SerializedName("exchange_withdrawal")
+    @Expose
+    private Trade exchangeWithdrawal;
+    @SerializedName("vault_withdrawal")
+    @Expose
+    private Trade vaultWithdrawal;
+    @SerializedName("instant_exchange")
+    @Expose
+    private Boolean instantExchange;
     @SerializedName("delayed")
     @Expose
-    private boolean delayed;
+    private Boolean delayed;
     @SerializedName("details")
     @Expose
     private Details details;
@@ -267,60 +291,6 @@ public class Data {
     /**
      *
      * @return
-     * The to
-     */
-    public com.coinbase.v2.models.transactions.Entity getTo() {
-        return to;
-    }
-
-    /**
-     *
-     * @param to
-     * The to
-     */
-    public void setTo(com.coinbase.v2.models.transactions.Entity to) {
-        this.to = to;
-    }
-
-    /**
-     *
-     * @return
-     * The from
-     */
-    public com.coinbase.v2.models.transactions.Entity getFrom() {
-        return from;
-    }
-
-    /**
-     *
-     * @param from
-     * The from
-     */
-    public void setFrom(com.coinbase.v2.models.transactions.Entity from) {
-        this.from = from;
-    }
-
-    /**
-     *
-     * @return
-     * The instantExchange
-     */
-    public Boolean getInstantExchange() {
-        return instantExchange;
-    }
-
-    /**
-     *
-     * @param instantExchange
-     * The instant_exchange
-     */
-    public void setInstantExchange(Boolean instantExchange) {
-        this.instantExchange = instantExchange;
-    }
-
-    /**
-     *
-     * @return
      * The idem
      */
     public String getIdem() {
@@ -334,6 +304,42 @@ public class Data {
      */
     public void setIdem(String idem) {
         this.idem = idem;
+    }
+
+    /**
+     *
+     * @return
+     * The to
+     */
+    public Entity getTo() {
+        return to;
+    }
+
+    /**
+     *
+     * @param to
+     * The to
+     */
+    public void setTo(Entity to) {
+        this.to = to;
+    }
+
+    /**
+     *
+     * @return
+     * The from
+     */
+    public Entity getFrom() {
+        return from;
+    }
+
+    /**
+     *
+     * @param from
+     * The from
+     */
+    public void setFrom(Entity from) {
+        this.from = from;
     }
 
     /**
@@ -375,21 +381,182 @@ public class Data {
     /**
      *
      * @return
+     * The request
+     */
+    public Trade getRequest() {
+        return request;
+    }
+
+    /**
+     *
+     * @param request
+     * The request
+     */
+    public void setRequest(Trade request) {
+        this.request = request;
+    }
+
+    /**
+     *
+     * @return
+     * The transfer
+     */
+    public Trade getTransfer() {
+        return transfer;
+    }
+
+    /**
+     *
+     * @param transfer
+     * The transfer
+     */
+    public void setTransfer(Trade transfer) {
+        this.transfer = transfer;
+    }
+
+    /**
+     *
+     * @return
+     * The send
+     */
+    public Trade getSend() {
+        return send;
+    }
+
+    /**
+     *
+     * @param send
+     * The send
+     */
+    public void setSend(Trade send) {
+        this.send = send;
+    }
+
+    /**
+     *
+     * @return
+     * The fiatWithdrawal
+     */
+    public Trade getFiatWithdrawal() {
+        return fiatWithdrawal;
+    }
+
+    /**
+     *
+     * @param fiatWithdrawal
+     * The fiat_withdrawal
+     */
+    public void setFiatWithdrawal(Trade fiatWithdrawal) {
+        this.fiatWithdrawal = fiatWithdrawal;
+    }
+
+    /**
+     *
+     * @return
+     * The fiatDeposit
+     */
+    public Trade getFiatDeposit() {
+        return fiatDeposit;
+    }
+
+    /**
+     *
+     * @param fiatDeposit
+     * The fiat_deposit
+     */
+    public void setFiatDeposit(Trade fiatDeposit) {
+        this.fiatDeposit = fiatDeposit;
+    }
+
+    /**
+     *
+     * @return
+     * The exchangeDeposit
+     */
+    public Trade getExchangeDeposit() {
+        return exchangeDeposit;
+    }
+
+    /**
+     *
+     * @param exchangeDeposit
+     * The exchange_deposit
+     */
+    public void setExchangeDeposit(Trade exchangeDeposit) {
+        this.exchangeDeposit = exchangeDeposit;
+    }
+
+    /**
+     *
+     * @return
+     * The exchangeWithdrawal
+     */
+    public Trade getExchangeWithdrawal() {
+        return exchangeWithdrawal;
+    }
+
+    /**
+     *
+     * @param exchangeWithdrawal
+     * The exchange_withdrawal
+     */
+    public void setExchangeWithdrawal(Trade exchangeWithdrawal) {
+        this.exchangeWithdrawal = exchangeWithdrawal;
+    }
+
+    /**
+     *
+     * @return
+     * The vaultWithdrawal
+     */
+    public Trade getVaultWithdrawal() {
+        return vaultWithdrawal;
+    }
+
+    /**
+     *
+     * @param vaultWithdrawal
+     * The vault_withdrawal
+     */
+    public void setVaultWithdrawal(Trade vaultWithdrawal) {
+        this.vaultWithdrawal = vaultWithdrawal;
+    }
+
+    /**
+     *
+     * @return
      * The delayed
      */
-    public boolean getDelayed() {
+    public Boolean getDelayed() {
         return delayed;
     }
 
     /**
      *
-     * @param sell
-     * The sell
+     * @param delayed
+     * The delayed
      */
-    public void setDelayed(boolean delayed) {
+    public void setDelayed(Boolean delayed) {
         this.delayed = delayed;
     }
 
+    /**
+     *
+     * @return
+     * The instantExchange
+     */
+    public Boolean getInstantExchange() {
+        return instantExchange;
+    }
+
+    /**
+     *
+     * @param instantExchange
+     * The instant_exchange
+     */
+    public void setInstantExchange(Boolean instantExchange) {
+        this.instantExchange = instantExchange;
+    }
 
     /**
      *
