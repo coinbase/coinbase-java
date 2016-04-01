@@ -16,6 +16,7 @@ import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.http.QueryMap;
@@ -23,6 +24,9 @@ import retrofit.http.QueryMap;
 public interface ApiInterface {
     @GET(ApiConstants.USER)
     Call<User> getUser();
+
+    @PUT(ApiConstants.USER)
+    Call<User> updateUser(@Body HashMap<String, Object> body);
 
     @GET(ApiConstants.ACCOUNTS + "/{id}")
     Call<Account> getAccount(@Path("id") String accountId);

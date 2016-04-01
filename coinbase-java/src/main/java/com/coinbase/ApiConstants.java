@@ -38,4 +38,7 @@ public class ApiConstants {
     public static final String FEE = "fee";
     public static final String DESCRIPTION = "description";
     public static final String INSTANT_EXCHANGE_QUOTE = "instant_exchange_quote";
+    public static final String NAME = "name";
+    public static final String TIME_ZONE = "time_zone";
+    public static final String NATIVE_CURRENCY = "native_currency";
 }

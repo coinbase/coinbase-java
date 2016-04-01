@@ -1814,4 +1814,29 @@ class CoinbaseImpl implements com.coinbase.Coinbase {
 
         return call;
     }
+
+    public Call updateUser(String name, String timeZone, String nativeCurrency, final Callback<com.coinbase.v2.models.user.User> callback) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(ApiConstants.NAME, name);
+        params.put(ApiConstants.TIME_ZONE, timeZone);
+        params.put(ApiConstants.NATIVE_CURRENCY, nativeCurrency);
+
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.updateUser(params);
+        call.enqueue(new Callback<com.coinbase.v2.models.user.User>() {
+            @Override
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.user.User> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
 }

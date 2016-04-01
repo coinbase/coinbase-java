@@ -763,7 +763,7 @@ public interface Coinbase {
      * @throws IOException
      *
      * @see <a href="https://coinbase.com/api/doc/1.0/users/update.html">Online Documentation</a>
-     *
+     * @deprecated
      */
     public User updateUser(String userId, User userParams) throws CoinbaseException, IOException;
 
@@ -1080,9 +1080,24 @@ public interface Coinbase {
      * @param callback callback interface
      * @return call object
      *
-     * @see <a href="https://coinbase.com/api/doc/1.0/users/index.html">Online Documentation</a>
+     * @see <a href="https://developers.coinbase.com/api/v2#show-a-user">Online Documentation</a>
      */
     public Call getUser(final Callback<com.coinbase.v2.models.user.User> callback);
+
+    /**
+     * Modify current user and their preferences
+     *
+     * @param name User's public name
+     * @param timeZone Time zone
+     * @param nativeCurrency Local currency used to display amounts converted from BTC
+     * @param callback callback interface
+     *
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#update-current-user">Online Documentation</a>
+     *
+     */
+    public Call updateUser(String name, String timeZone, String nativeCurrency, final Callback<com.coinbase.v2.models.user.User> callback);
 
     /**
      * Retrieve an account belonging to this user
