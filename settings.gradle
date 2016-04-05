@@ -1,1 +1,2 @@
 include ':app', ':coinbase-java'
+project(':coinbase-java').projectDir = new File(settingsDir, './coinbase-java')
