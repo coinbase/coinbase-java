@@ -20,8 +20,8 @@ public class CoinbaseBuilder {
      *
      * @return a new Coinbase client object
      */
-    public com.coinbase.Coinbase build() {
-        return new CoinbaseImpl(this);
+    public Coinbase build() {
+        return new Coinbase(this);
     }
 
     /**

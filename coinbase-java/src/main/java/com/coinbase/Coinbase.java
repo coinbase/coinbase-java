@@ -1608,6 +1608,8 @@ public class Coinbase {
      */
     public Call getAuthCode(String email, String password, final Callback<OAuth> callback) {
         HashMap<String, Object> params = new HashMap<>();
+        params.put(ApiConstants.CLIENT_ID, _apiKey);
+        params.put(ApiConstants.CLIENT_SECRET, _apiSecret);
         params.put(ApiConstants.EMAIL, email);
         params.put(ApiConstants.PASSWORD, password);
 
@@ -1616,6 +1618,9 @@ public class Coinbase {
         call.enqueue(new Callback<OAuth>() {
 
             public void onResponse(retrofit.Response<OAuth> response, Retrofit retrofit) {
+                if (response.isSuccess())
+                    _accessToken = response.body().getCode();
+
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
