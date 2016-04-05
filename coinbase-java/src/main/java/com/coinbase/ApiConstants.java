@@ -16,6 +16,8 @@ public class ApiConstants {
     public static final String PRICES_SPOT = "prices/spot";
 
     // Params
+    public static final String EMAIL = "email";
+    public static final String PASSWORD = "password";
     public static final String STARTING_AFTER = "starting_after";
     public static final String LOCALE = "locale";
     public static final String TZ_OFFSET = "tz_offset";

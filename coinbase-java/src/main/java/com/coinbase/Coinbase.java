@@ -1600,9 +1600,19 @@ public class Coinbase {
         return service;
     }
 
+    /**
+     * Obtain OAuth Authorization Code
+     *
+     * @param email The user's email
+     * @param password the user's password
+     */
     public Call getAuthCode(String email, String password, final Callback<OAuth> callback) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(ApiConstants.EMAIL, email);
+        params.put(ApiConstants.PASSWORD, password);
+
         com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.getUser();
+        Call call = apiInterface.getAuthCode(params);
         call.enqueue(new Callback<OAuth>() {
 
             public void onResponse(retrofit.Response<OAuth> response, Retrofit retrofit) {
