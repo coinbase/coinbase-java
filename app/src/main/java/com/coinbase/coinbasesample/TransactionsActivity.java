@@ -25,7 +25,7 @@ public class TransactionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transactions);
 
-        accountsTextView = (TextView) findViewById(R.id.accounts_textview);
+        accountsTextView = (TextView) findViewById(R.id.accounts_tv);
 
         final ProgressDialog dialog = ProgressDialog.show(this, "Loading Accounts", null);
         Coinbase.getInstance().getAccounts(new Callback<Accounts>() {
