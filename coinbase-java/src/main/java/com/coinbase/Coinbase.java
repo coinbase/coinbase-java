@@ -53,6 +53,7 @@ import com.coinbase.v1.exception.TwoFactorRequiredException;
 import com.coinbase.v1.exception.UnauthorizedDeviceException;
 import com.coinbase.v1.exception.UnauthorizedException;
 import com.coinbase.v1.exception.UnspecifiedAccount;
+import com.coinbase.v2.models.OAuth;
 import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.spotPrice.SpotPrice;
 import com.coinbase.v2.models.transactions.Transactions;
@@ -1597,6 +1598,26 @@ public class Coinbase {
         com.coinbase.ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
 
         return service;
+    }
+
+    public Call getAuthCode(String email, String password, final Callback<OAuth> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.getUser();
+        call.enqueue(new Callback<OAuth>() {
+
+            public void onResponse(retrofit.Response<OAuth> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
     }
 
     /**
