@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         passwordField = (EditText) findViewById(R.id.password_et);
         userTextView = (TextView) findViewById(R.id.user_tv);
 
+        enableButtons(false);
+
         Coinbase.init("34183b03a3e1f0b74ee6aa8a6150e90125de2d6c1ee4ff7880c2b7e6e98b11f5",
                 "2c481f46f9dc046b4b9a67e630041b9906c023d139fbc77a47053328b9d3122d");
 
@@ -48,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
                                 if (response.isSuccess())
                                     getUser();
                                 else
-                                    handleLoginError();
+                                    handleLoginError(Utils.getErrorMessage(response, retrofit));
                             }
 
                             @Override
                             public void onFailure(Throwable t) {
-                                handleLoginError();
+                                handleLoginError(null);
                             }
                         });
             }
@@ -71,25 +73,30 @@ public class MainActivity extends AppCompatActivity {
         Coinbase.getInstance().getUser(new Callback<User>() {
             @Override
             public void onResponse(Response<User> response, Retrofit retrofit) {
-                if (response.isSuccess())
+                if (response.isSuccess()) {
                     userTextView.setText(response.body().getData().getUsername());
+                    enableButtons(true);
+                }
                 else
-                    handleLoginError();
+                    handleLoginError(Utils.getErrorMessage(response, retrofit));
             }
 
             @Override
             public void onFailure(Throwable t) {
-                handleLoginError();
+                handleLoginError(null);
             }
         });
     }
 
     private void enableButtons(boolean enabled) {
-        loginButton.setEnabled(enabled);
         transactionsButton.setEnabled(enabled);
     }
 
-    private void handleLoginError() {
-        userTextView.setText("Login failed");
+    private void handleLoginError(String message) {
+        if (message == null)
+            message = "Login error occurred";
+
+        userTextView.setText(message);
+        enableButtons(false);
     }
 }

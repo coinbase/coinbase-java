@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/email_et"
         android:layout_centerHorizontal="true"
-        android:hint="email" />
+        android:hint="email"
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:layout_width="match_parent"
@@ -22,7 +23,8 @@
         android:id="@+id/password_et"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/email_et"
-        android:hint="password" />
+        android:hint="password"
+        android:inputType="textPassword" />
 
     <TextView
         android:layout_width="wrap_content"

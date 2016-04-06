@@ -23,7 +23,7 @@ public class Utils {
 
         try {
             errors = converter.convert(response.errorBody());
-            if (errors.getErrors().size() > 0)
+            if (errors.getErrors() != null && errors.getErrors().size() > 0)
                 message = errors.getErrors().get(0).getMessage();
         } catch (IOException e) {
 
