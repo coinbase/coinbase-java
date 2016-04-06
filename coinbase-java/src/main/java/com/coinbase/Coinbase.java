@@ -91,6 +91,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -119,6 +120,7 @@ public class Coinbase {
     private SSLContext _sslContext;
     private SSLSocketFactory _socketFactory;
     private CallbackVerifier _callbackVerifier;
+    private OkHttpClient _client;
     private static Coinbase _instance = null;
 
     private Coinbase() {
@@ -133,6 +135,18 @@ public class Coinbase {
         _sslContext = CoinbaseSSL.getSSLContext();
         _socketFactory = _sslContext.getSocketFactory();
         _callbackVerifier = new CallbackVerifierImpl();
+
+        if (_client == null) {
+            _client = new OkHttpClient();
+
+            _client.setSslSocketFactory(_sslContext.getSocketFactory());
+
+            // Disable SPDY, causes issues on some Android versions
+            _client.setProtocols(Collections.singletonList(Protocol.HTTP_1_1));
+
+            _client.setReadTimeout(30, TimeUnit.SECONDS);
+            _client.setConnectTimeout(30, TimeUnit.SECONDS);
+        }
     }
 
     public static void init(String apiKey, String apiSecret) {
@@ -1571,31 +1585,36 @@ public class Coinbase {
     }
 
     private com.coinbase.ApiInterface getApiService() {
-        OkHttpClient client = new OkHttpClient();
-
-        client.setSslSocketFactory(_sslContext.getSocketFactory());
-        client.setConnectionSpecs(Collections.singletonList(ConnectionSpec.MODERN_TLS));
-
-        // Disable SPDY, causes issues on some Android versions
-        client.setProtocols(Collections.singletonList(Protocol.HTTP_1_1));
+        _client.interceptors().clear();
 
         if (_accessToken != null)
-            client.interceptors().add(buildOAuthInterceptor());
-        if (_apiKey != null && _apiSecret != null)
-            client.interceptors().add(buildHmacAuthInterceptor());
+            _client.interceptors().add(buildOAuthInterceptor());
 
-        client.interceptors().add(buildVersionInterceptor());
-
-        client.interceptors().add(languageInterceptor());
+        _client.interceptors().add(buildVersionInterceptor());
 
         String url = com.coinbase.ApiConstants.BASE_URL_PRODUCTION + "/" + com.coinbase.ApiConstants.SERVER_VERSION + "/";
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
-                .client(client)
+                .client(_client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         com.coinbase.ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
+
+        return service;
+    }
+
+    protected ApiInterface getAuthApiService() {
+        _client.interceptors().clear();
+
+        String url = com.coinbase.ApiConstants.BASE_URL_PRODUCTION + "/";
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .client(_client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ApiInterface service = retrofit.create(ApiInterface.class);
 
         return service;
     }
@@ -1610,10 +1629,10 @@ public class Coinbase {
         HashMap<String, Object> params = new HashMap<>();
         params.put(ApiConstants.CLIENT_ID, _apiKey);
         params.put(ApiConstants.CLIENT_SECRET, _apiSecret);
-        params.put(ApiConstants.EMAIL, email);
+        params.put(ApiConstants.USERNAME, email);
         params.put(ApiConstants.PASSWORD, password);
 
-        com.coinbase.ApiInterface apiInterface = getApiService();
+        com.coinbase.ApiInterface apiInterface = getAuthApiService();
         Call call = apiInterface.getAuthCode(params);
         call.enqueue(new Callback<OAuth>() {
 
