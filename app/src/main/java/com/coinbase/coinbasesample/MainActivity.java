@@ -18,8 +18,10 @@ import retrofit.Response;
 import retrofit.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String API_KEY = "YOUR_API_KEY";
-    private static final String API_SECRET = "YOUR_API_SECRET";
+    // NOTE: Go to https://www.coinbase.com/oauth/applications/new
+    // to create an application and generate your own keys
+    private static final String API_KEY = "f89d5f52d5bf6678b6449e0b6feb5100bf8e0ed3dc45f5f2be51fcea1232111c";
+    private static final String API_SECRET = "9fbb237f4bc9c977f5e88895882b5677c4de395fe0996a6eedf912d4fee2b415";
 
     Button transactionsButton;
     Button authButton;
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Response<User> response, Retrofit retrofit) {
                 if (response.isSuccess()) {
-                    userTextView.setText(response.body().getData().getUsername());
+                    userTextView.setText("User: " + response.body().getData().getName());
                     enableButtons(true);
                 } else
                     handleLoginError(Utils.getErrorMessage(response, retrofit));
@@ -118,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPostExecute(OAuthTokensResponse tokens) {
             Coinbase.init(tokens.getAccessToken());
+            getUser();
         }
     }
 
