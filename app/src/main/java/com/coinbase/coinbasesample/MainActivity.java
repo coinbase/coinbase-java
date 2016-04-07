@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     OAuth.beginAuthorization(MainActivity.this,
                             API_KEY,
-                            "wallet:user:read",
+                            "wallet:user:read,wallet:accounts:read",
                             "coinbase-sample-app://coinbase-oauth",
                             null);
                 } catch (Exception e) {
