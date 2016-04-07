@@ -41,6 +41,7 @@ public class TransactionsActivity extends AppCompatActivity {
                 dialog.dismiss();
                 account = response.body().getData().get(0);
                 accountsTextView.setText("Loaded account: " + account.getName());
+                getTransactions();
             }
 
             @Override
@@ -48,7 +49,9 @@ public class TransactionsActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+    }
 
+    private void getTransactions() {
         Coinbase.getInstance().getTransactions(account.getId(), null, null, new Callback<Transactions>() {
             @Override
             public void onResponse(Response<Transactions> response, Retrofit retrofit) {
