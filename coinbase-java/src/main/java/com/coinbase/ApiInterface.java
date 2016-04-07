@@ -1,6 +1,5 @@
 package com.coinbase;
 
-import com.coinbase.v2.models.OAuth;
 import com.coinbase.v2.models.account.Account;
 import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.spotPrice.SpotPrice;
@@ -23,9 +22,6 @@ import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 public interface ApiInterface {
-    @POST(ApiConstants.OAUTH)
-    Call<OAuth> getAuthCode(@Body HashMap<String, Object> body);
-
     @GET(ApiConstants.USER)
     Call<User> getUser();
 

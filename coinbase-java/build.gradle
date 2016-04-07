@@ -15,9 +15,18 @@ allprojects {
     repositories {
         jcenter()
     }
-    apply plugin: 'java'
+    apply plugin: 'android-library'
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '23.0.2'
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 23
+    }
 }
 
 task clearJar(type: Delete) {
@@ -54,7 +63,7 @@ artifacts {
 publishing {
     publications {
         CoinbasePublication(MavenPublication) {
-            from components.java
+//            from components.'android-library'
             groupId 'com.coinbase'
             artifactId 'coinbase-java'
             version '2.0.0'

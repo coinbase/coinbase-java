@@ -53,13 +53,11 @@ import com.coinbase.v1.exception.TwoFactorRequiredException;
 import com.coinbase.v1.exception.UnauthorizedDeviceException;
 import com.coinbase.v1.exception.UnauthorizedException;
 import com.coinbase.v1.exception.UnspecifiedAccount;
-import com.coinbase.v2.models.OAuth;
 import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.spotPrice.SpotPrice;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.okhttp.ConnectionSpec;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Protocol;
@@ -152,6 +150,10 @@ public class Coinbase {
     public static void init(String apiKey, String apiSecret) {
         getInstance()._apiKey = apiKey;
         getInstance()._apiSecret = apiSecret;
+    }
+
+    public static void init(String accessToken) {
+        getInstance()._accessToken = accessToken;
     }
 
     /**
@@ -1602,56 +1604,6 @@ public class Coinbase {
         com.coinbase.ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
 
         return service;
-    }
-
-    protected ApiInterface getAuthApiService() {
-        _client.interceptors().clear();
-
-        String url = com.coinbase.ApiConstants.BASE_URL_PRODUCTION + "/";
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
-                .client(_client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        ApiInterface service = retrofit.create(ApiInterface.class);
-
-        return service;
-    }
-
-    /**
-     * Obtain OAuth Authorization Code
-     *
-     * @param email The user's email
-     * @param password the user's password
-     */
-    public Call getAuthCode(String email, String password, final Callback<OAuth> callback) {
-        HashMap<String, Object> params = new HashMap<>();
-        params.put(ApiConstants.CLIENT_ID, _apiKey);
-        params.put(ApiConstants.CLIENT_SECRET, _apiSecret);
-        params.put(ApiConstants.USERNAME, email);
-        params.put(ApiConstants.PASSWORD, password);
-
-        com.coinbase.ApiInterface apiInterface = getAuthApiService();
-        Call call = apiInterface.getAuthCode(params);
-        call.enqueue(new Callback<OAuth>() {
-
-            public void onResponse(retrofit.Response<OAuth> response, Retrofit retrofit) {
-                if (response.isSuccess())
-                    _accessToken = response.body().getCode();
-
-                if (callback != null)
-                    callback.onResponse(response, retrofit);
-            }
-
-
-            public void onFailure(Throwable t) {
-                if (callback != null)
-                    callback.onFailure(t);
-            }
-        });
-
-        return call;
     }
 
     /**

@@ -2,7 +2,6 @@ package com.coinbase.v1.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.Serializable;
 

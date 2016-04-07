@@ -7,7 +7,8 @@ public class ApiConstants {
     public static String VERSION = "2015-03-20";
 
     // Endpoints
-    public static final String OAUTH = "oauth/authorize/with-credentials";
+    public static final String AUTH_CODE = "oauth/authorize/with-credentials";
+    public static final String ACCESS_TOKEN = "oauth/token";
     public static final String USER = "user";
     public static final String TRANSACTIONS = "transactions";
     public static final String ACCOUNTS = "accounts";
@@ -16,10 +17,6 @@ public class ApiConstants {
     public static final String PRICES_SPOT = "prices/spot";
 
     // Params
-    public static final String CLIENT_ID = "client_id";
-    public static final String CLIENT_SECRET = "client_secret";
-    public static final String USERNAME = "username";
-    public static final String PASSWORD = "password";
     public static final String STARTING_AFTER = "starting_after";
     public static final String LOCALE = "locale";
     public static final String TZ_OFFSET = "tz_offset";
