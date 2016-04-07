@@ -23,15 +23,13 @@ public class OAuth {
                                           String scope, String redirectUri, OAuthCodeRequest.Meta meta)
             throws CoinbaseException {
 
-        Coinbase coinbase = new CoinbaseBuilder().build();
-
         OAuthCodeRequest request = new OAuthCodeRequest();
         request.setClientId(clientId);
         request.setScope(scope);
         request.setRedirectUri(redirectUri);
         request.setMeta(meta);
 
-        URI authorizationUri = coinbase.getAuthorizationUri(request);
+        URI authorizationUri = Coinbase.getInstance().getAuthorizationUri(request);
 
         Intent i = new Intent(Intent.ACTION_VIEW);
         Uri androidUri = Uri.parse(authorizationUri.toString());
@@ -53,9 +51,8 @@ public class OAuth {
             throw new UnauthorizedException(errorDescription);
         } else {
             try {
-                Coinbase coinbase = new CoinbaseBuilder().build();
                 Uri redirectUriWithoutQuery = redirectUri.buildUpon().clearQuery().build();
-                return coinbase.getTokens(clientId, clientSecret, authCode, redirectUriWithoutQuery.toString());
+                return Coinbase.getInstance().getTokens(clientId, clientSecret, authCode, redirectUriWithoutQuery.toString());
             } catch (CoinbaseException ex) {
                 throw new UnauthorizedException(ex.getMessage());
             }
