@@ -23,6 +23,10 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/NOTICE'
     }
+
+    lintOptions {
+        warning 'InvalidPackage'
+    }
 }
 
 dependencies {

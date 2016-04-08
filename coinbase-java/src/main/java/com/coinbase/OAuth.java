@@ -11,7 +11,6 @@ import com.coinbase.v1.exception.CoinbaseException;
 import com.coinbase.v1.exception.UnauthorizedException;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Random;
 
 public class OAuth {
@@ -29,7 +28,7 @@ public class OAuth {
         request.setRedirectUri(redirectUri);
         request.setMeta(meta);
 
-        URI authorizationUri = Coinbase.getInstance().getAuthorizationUri(request);
+        Uri authorizationUri = Coinbase.getInstance().getAuthorizationUri(request);
 
         Intent i = new Intent(Intent.ACTION_VIEW);
         Uri androidUri = Uri.parse(authorizationUri.toString());

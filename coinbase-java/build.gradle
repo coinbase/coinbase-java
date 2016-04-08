@@ -2,23 +2,25 @@ buildscript {
     repositories {
         jcenter()
     }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.5.0'
+        classpath 'com.github.dcendents:android-maven-plugin:1.2'
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.5"
+    }
 }
 
-plugins {
-    id "com.jfrog.bintray" version "1.5"
+repositories {
+    jcenter()
 }
 
 group = 'com.coinbase'
 version = '2.0.0'
 
-allprojects {
-    repositories {
-        jcenter()
-    }
-    apply plugin: 'android-library'
-    apply plugin: 'maven'
-    apply plugin: 'maven-publish'
-}
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+//apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 
 android {
     compileSdkVersion 23
@@ -26,6 +28,15 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    lintOptions {
+        warning 'InvalidPackage'
     }
 }
 
@@ -37,7 +48,7 @@ task makeJar(type: Copy) {
     from('build/intermediates/bundles/release/')
     into('build/outputs/')
     include('classes.jar')
-    rename ('classes.jar', 'coinbase-java.jar')
+    rename('classes.jar', 'coinbase-java.jar')
 }
 
 task wrapper(type: Wrapper) {
@@ -45,9 +56,14 @@ task wrapper(type: Wrapper) {
 }
 
 // custom tasks for creating source/javadoc jars
-//task sourcesJar(type: Jar, dependsOn: classes) {
-//    classifier = 'sources'
-//    from sourceSets.main.allSource
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+//task javadoc(type: Jar, dependsOn: javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
 //}
 
 //task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -57,17 +73,18 @@ task wrapper(type: Wrapper) {
 
 // add javadoc/source jar tasks as artifacts
 artifacts {
-//    archives sourcesJar, javadocJar
+    archives sourcesJar
+//    archives javadocJar
 }
 
 publishing {
     publications {
         CoinbasePublication(MavenPublication) {
-//            from components.'android-library'
             groupId 'com.coinbase'
             artifactId 'coinbase-java'
             version '2.0.0'
 
+            artifact 'build/outputs/aar/coinbase-java-release.aar'
 //            artifact sourcesJar
 //            artifact javadocJar
         }
@@ -81,13 +98,13 @@ bintray {
     pkg {
         repo = 'maven'
         name = 'coinbase-java'
-        userOrg = 'johnny'
+        userOrg = user
         licenses = ['MIT']
         vcsUrl = 'https://github.com/coinbase/coinbase-java.git'
         version {
             name = '2.0.0'
             desc = 'Coinbase Android SDK'
-            released  = new Date()
+            released = new Date()
             vcsTag = '2.0.0'
         }
     }
@@ -103,9 +120,8 @@ dependencies {
     compile 'net.sf.opencsv:opencsv:2.0'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.0'
-    compile 'commons-codec:commons-codec:1.10'
     compile 'commons-io:commons-io:2.4'
-    compile group: 'org.apache.httpcomponents' , name: 'httpclient-android' , version: '4.3.5.1'
+    compile 'commons-codec:commons-codec:1.10'
     testCompile 'junit:junit:4.12'
     testCompile "org.powermock:powermock-module-junit4:1.6.2"
     testCompile "org.powermock:powermock-module-junit4-rule:1.6.2"

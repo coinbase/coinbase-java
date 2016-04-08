@@ -1,5 +1,7 @@
 package com.coinbase;
 
+import android.net.Uri;
+
 import com.coinbase.v1.entity.Account;
 import com.coinbase.v1.entity.AccountChangesResponse;
 import com.coinbase.v1.entity.AccountResponse;
@@ -64,7 +66,6 @@ import com.squareup.okhttp.Protocol;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.client.utils.URIBuilder;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.IllegalCurrencyException;
 import org.joda.money.Money;
@@ -76,7 +77,6 @@ import java.io.OutputStream;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -106,22 +106,22 @@ import retrofit.Retrofit;
 
 public class Coinbase {
 
-    private static final ObjectMapper objectMapper = ObjectMapperProvider.createDefaultMapper();
+    protected static final ObjectMapper objectMapper = ObjectMapperProvider.createDefaultMapper();
 
-    private URL _baseApiUrl;
-    private URL _baseOAuthUrl;
-    private URL _baseV2ApiUrl;
-    private String _accountId;
-    private String _apiKey;
-    private String _apiSecret;
-    private String _accessToken;
-    private SSLContext _sslContext;
-    private SSLSocketFactory _socketFactory;
-    private CallbackVerifier _callbackVerifier;
-    private OkHttpClient _client;
-    private static Coinbase _instance = null;
+    protected URL _baseApiUrl;
+    protected URL _baseOAuthUrl;
+    protected URL _baseV2ApiUrl;
+    protected String _accountId;
+    protected String _apiKey;
+    protected String _apiSecret;
+    protected String _accessToken;
+    protected SSLContext _sslContext;
+    protected SSLSocketFactory _socketFactory;
+    protected CallbackVerifier _callbackVerifier;
+    protected OkHttpClient _client;
+    protected static Coinbase _instance = null;
 
-    private Coinbase() {
+    public Coinbase() {
         try {
             _baseApiUrl = new URL("https://coinbase.com/api/v1/");
             _baseOAuthUrl = new URL("https://www.coinbase.com/oauth/");
@@ -1269,35 +1269,37 @@ public class Coinbase {
     }
 
     
-    public URI getAuthorizationUri(OAuthCodeRequest params) throws CoinbaseException {
+    public Uri getAuthorizationUri(OAuthCodeRequest params) throws CoinbaseException {
         URL authorizeURL;
-        URIBuilder uriBuilder;
+        Uri builtUri;
+        Uri.Builder uriBuilder;
 
         try {
             authorizeURL = new URL(_baseOAuthUrl, "authorize");
-            uriBuilder = new URIBuilder(authorizeURL.toURI());
+            builtUri = Uri.parse(authorizeURL.toURI().toString());
+            uriBuilder = builtUri.buildUpon();
         } catch (URISyntaxException ex) {
             throw new AssertionError(ex);
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
 
-        uriBuilder.addParameter("response_type", "code");
+        uriBuilder.appendQueryParameter("response_type", "code");
 
         if (params.getClientId() != null) {
-            uriBuilder.addParameter("client_id", params.getClientId());
+            uriBuilder.appendQueryParameter("client_id", params.getClientId());
         } else {
             throw new CoinbaseException("client_id is required");
         }
 
         if (params.getRedirectUri() != null) {
-            uriBuilder.addParameter("redirect_uri", params.getRedirectUri());
+            uriBuilder.appendQueryParameter("redirect_uri", params.getRedirectUri());
         } else {
             throw new CoinbaseException("redirect_uri is required");
         }
 
         if (params.getScope() != null) {
-            uriBuilder.addParameter("scope", params.getScope());
+            uriBuilder.appendQueryParameter("scope", params.getScope());
         } else {
             throw new CoinbaseException("scope is required");
         }
@@ -1306,23 +1308,19 @@ public class Coinbase {
             OAuthCodeRequest.Meta meta = params.getMeta();
 
             if (meta.getName() != null) {
-                uriBuilder.addParameter("meta[name]", meta.getName());
+                uriBuilder.appendQueryParameter("meta[name]", meta.getName());
             }
             if (meta.getSendLimitAmount() != null) {
                 Money sendLimit = meta.getSendLimitAmount();
-                uriBuilder.addParameter("meta[send_limit_amount]", sendLimit.getAmount().toPlainString());
-                uriBuilder.addParameter("meta[send_limit_currency]", sendLimit.getCurrencyUnit().getCurrencyCode());
+                uriBuilder.appendQueryParameter("meta[send_limit_amount]", sendLimit.getAmount().toPlainString());
+                uriBuilder.appendQueryParameter("meta[send_limit_currency]", sendLimit.getCurrencyUnit().getCurrencyCode());
                 if (meta.getSendLimitPeriod() != null) {
-                    uriBuilder.addParameter("meta[send_limit_period]", meta.getSendLimitPeriod().toString());
+                    uriBuilder.appendQueryParameter("meta[send_limit_period]", meta.getSendLimitPeriod().toString());
                 }
             }
         }
 
-        try {
-            return uriBuilder.build();
-        } catch (URISyntaxException e) {
-            throw new AssertionError(e);
-        }
+        return uriBuilder.build();
     }
 
     

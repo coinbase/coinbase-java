@@ -22,7 +22,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:pathPrefix="coinbase-oauth"
+                    android:host="coinbase-oauth"
                     android:scheme="coinbase-sample-app" />
             </intent-filter>
         </activity>
