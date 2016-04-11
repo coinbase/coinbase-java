@@ -1647,9 +1647,15 @@ public class Coinbase {
      */
     public Call updateUser(String name, String timeZone, String nativeCurrency, final Callback<com.coinbase.v2.models.user.User> callback) {
         HashMap<String, Object> params = new HashMap<>();
-        params.put(ApiConstants.NAME, name);
-        params.put(ApiConstants.TIME_ZONE, timeZone);
-        params.put(ApiConstants.NATIVE_CURRENCY, nativeCurrency);
+
+        if (name != null)
+            params.put(ApiConstants.NAME, name);
+
+        if (timeZone != null)
+            params.put(ApiConstants.TIME_ZONE, timeZone);
+
+        if (nativeCurrency != null)
+            params.put(ApiConstants.NATIVE_CURRENCY, nativeCurrency);
 
         com.coinbase.ApiInterface apiInterface = getApiService();
         Call call = apiInterface.updateUser(params);
