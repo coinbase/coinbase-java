@@ -1328,7 +1328,7 @@ public class Coinbase {
         return _callbackVerifier.verifyCallback(body, signature);
     }
 
-    private void doHmacAuthentication(URL url, String body, HttpsURLConnection conn) throws IOException {
+    protected void doHmacAuthentication(URL url, String body, HttpsURLConnection conn) throws IOException {
         String nonce = String.valueOf(System.currentTimeMillis());
 
         String message = nonce + url.toString() + (body != null ? body : "");
@@ -1348,15 +1348,15 @@ public class Coinbase {
         conn.setRequestProperty("ACCESS_NONCE", nonce);
     }
 
-    private void doAccessTokenAuthentication(HttpsURLConnection conn) {
+    protected void doAccessTokenAuthentication(HttpsURLConnection conn) {
         conn.setRequestProperty("Authorization", "Bearer " + _accessToken);
     }
 
-    private String doHttp(URL url, String method, Object requestBody) throws IOException, CoinbaseException {
+    protected String doHttp(URL url, String method, Object requestBody) throws IOException, CoinbaseException {
         return doHttp(url, method, requestBody, null);
     }
 
-    private String doHttp(URL url, String method, Object requestBody, HashMap<String, String> headers) throws IOException, CoinbaseException {
+    protected String doHttp(URL url, String method, Object requestBody, HashMap<String, String> headers) throws IOException, CoinbaseException {
         URLConnection urlConnection = url.openConnection();
         if (!(urlConnection instanceof HttpsURLConnection)) {
             throw new RuntimeException(
@@ -1372,10 +1372,10 @@ public class Coinbase {
             conn.setRequestProperty("Content-Type", "application/json");
         }
 
-        if (_apiKey != null && _apiSecret != null) {
-            doHmacAuthentication(url, body, conn);
-        } else if (_accessToken != null) {
+        if (_accessToken != null) {
             doAccessTokenAuthentication(conn);
+        } else if (_apiKey != null && _apiSecret != null) {
+            doHmacAuthentication(url, body, conn);
         }
 
         if (headers != null) {
@@ -1438,35 +1438,35 @@ public class Coinbase {
     }
 
 
-    private static <T> T deserialize(String json, Class<T> clazz) throws IOException {
+    protected static <T> T deserialize(String json, Class<T> clazz) throws IOException {
         return objectMapper.readValue(json, clazz);
     }
 
-    private static <T> T deserialize(String json, TypeReference<T> typeReference) throws IOException {
+    protected static <T> T deserialize(String json, TypeReference<T> typeReference) throws IOException {
         return objectMapper.readValue(json, typeReference);
     }
 
-    private <T extends Response> T get(URL url, Class<T> responseClass) throws IOException, CoinbaseException {
+    protected <T extends Response> T get(URL url, Class<T> responseClass) throws IOException, CoinbaseException {
         return get(url, null, responseClass);
     }
 
-    private <T extends Response> T get(URL url, HashMap<String, String> headers, Class<T> responseClass) throws IOException, CoinbaseException {
+    protected <T extends Response> T get(URL url, HashMap<String, String> headers, Class<T> responseClass) throws IOException, CoinbaseException {
         return handleErrors(deserialize(doHttp(url, "GET", null, headers), responseClass));
     }
 
-    private <T extends Response> T post(URL url, Object entity, Class<T> responseClass) throws CoinbaseException, IOException {
+    protected <T extends Response> T post(URL url, Object entity, Class<T> responseClass) throws CoinbaseException, IOException {
         return handleErrors(deserialize(doHttp(url, "POST", entity), responseClass));
     }
 
-    private <T extends Response> T put(URL url, Object entity, Class<T> responseClass) throws CoinbaseException, IOException {
+    protected <T extends Response> T put(URL url, Object entity, Class<T> responseClass) throws CoinbaseException, IOException {
         return handleErrors(deserialize(doHttp(url, "PUT", entity), responseClass));
     }
 
-    private <T extends Response> T delete(URL url, Class<T> responseClass) throws CoinbaseException, IOException {
+    protected <T extends Response> T delete(URL url, Class<T> responseClass) throws CoinbaseException, IOException {
         return handleErrors(deserialize(doHttp(url, "DELETE", null), responseClass));
     }
 
-    private static <T extends Response> T handleErrors(T response) throws CoinbaseException {
+    protected static <T extends Response> T handleErrors(T response) throws CoinbaseException {
         String errors = response.getErrors();
         if (errors != null) {
             if (errors.contains("device_confirmation_required")) {
@@ -1488,7 +1488,7 @@ public class Coinbase {
         return response;
     }
 
-    private Request newAccountSpecificRequest() {
+    protected Request newAccountSpecificRequest() {
         Request request = new Request();
         if (_accountId != null) {
             request.setAccountId(_accountId);
@@ -1496,14 +1496,14 @@ public class Coinbase {
         return request;
     }
 
-    private HashMap<String, String> getV2VersionHeaders() {
+    protected HashMap<String, String> getV2VersionHeaders() {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("CB-Version", "2015-03-20");
         return headers;
     }
 
 
-    private Interceptor buildOAuthInterceptor() {
+    protected Interceptor buildOAuthInterceptor() {
         return new Interceptor() {
             
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
@@ -1517,7 +1517,7 @@ public class Coinbase {
         };
     }
 
-    private Interceptor buildHmacAuthInterceptor() {
+    protected Interceptor buildHmacAuthInterceptor() {
         return new Interceptor() {
             
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
@@ -1584,7 +1584,7 @@ public class Coinbase {
         };
     }
 
-    private com.coinbase.ApiInterface getApiService() {
+    protected com.coinbase.ApiInterface getApiService() {
         _client.interceptors().clear();
 
         if (_accessToken != null)
