@@ -1,10 +1,11 @@
 buildscript {
     repositories {
+        mavenCentral()
+        mavenLocal()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
-        classpath 'com.github.dcendents:android-maven-plugin:1.2'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.5"
     }
 }
@@ -18,7 +19,6 @@ version = '2.0.0'
 
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
-//apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
 
@@ -30,25 +30,16 @@ android {
         targetSdkVersion 23
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
-    }
-
     lintOptions {
         warning 'InvalidPackage'
     }
-}
 
-task clearJar(type: Delete) {
-    delete 'build/outputs/coinbase-java.jar'
-}
-
-task makeJar(type: Copy) {
-    from('build/intermediates/bundles/release/')
-    into('build/outputs/')
-    include('classes.jar')
-    rename('classes.jar', 'coinbase-java.jar')
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
 }
 
 task wrapper(type: Wrapper) {
@@ -61,40 +52,28 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-//task javadoc(type: Jar, dependsOn: javadoc) {
-//    source = android.sourceSets.main.java.srcDirs
-//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//}
+task javadoc(type: Javadoc) {
+    exclude { "com/coinbase/v1/localServerFiles/**" }
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
 
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-//    classifier = 'javadoc'
-//    from javadoc.destinationDir
-//}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
 
 // add javadoc/source jar tasks as artifacts
 artifacts {
     archives sourcesJar
-//    archives javadocJar
-}
-
-publishing {
-    publications {
-        CoinbasePublication(MavenPublication) {
-            groupId 'com.coinbase'
-            artifactId 'coinbase-java'
-            version '2.0.0'
-
-            artifact 'build/outputs/aar/coinbase-java-release.aar'
-//            artifact sourcesJar
-//            artifact javadocJar
-        }
-    }
+    archives javadocJar
 }
 
 bintray {
     user = project.property('bintrayUser')
     key = project.property('bintrayKey')
-    publications = ['CoinbasePublication']
+
+    configurations = ['archives']
     pkg {
         repo = 'maven'
         name = 'coinbase-java'
