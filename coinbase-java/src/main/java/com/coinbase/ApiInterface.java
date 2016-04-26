@@ -5,6 +5,7 @@ import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.spotPrice.SpotPrice;
 import com.coinbase.v2.models.transactions.Transaction;
 import com.coinbase.v2.models.transactions.Transactions;
+import com.coinbase.v2.models.transfers.Transfer;
 import com.coinbase.v2.models.user.User;
 
 import java.util.HashMap;
@@ -64,4 +65,7 @@ public interface ApiInterface {
 
     @GET(com.coinbase.ApiConstants.PRICES_SPOT)
     Call<SpotPrice> getSpotPrice(@Query("currency") String currency);
+
+    @POST(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.BUYS)
+    Call<Transfer> buyBitcoin(@Path("id") String accountId, @Body HashMap<String, Object> body);
 }

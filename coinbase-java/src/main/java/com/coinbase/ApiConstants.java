@@ -32,6 +32,8 @@ public class ApiConstants {
     public static final String TRANSFER = "transfer";
     public static final String BUY = "buy";
     public static final String SELL = "sell";
+    public static final String BUYS = "buys";
+    public static final String SELLS = "sells";
     public static final String TO = "to";
     public static final String FROM = "from";
     public static final String AMOUNT = "amount";

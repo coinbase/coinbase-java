@@ -1971,10 +1971,40 @@ public class Coinbase {
     }
 
     /**
-     * Retrieve the current spot price of 1 BTC
+     * Buys user-defined amount of bitcoin.
+     *
+     * @param accountId account ID that the buy belongs to
+     * @param params hashmap of params as indicated in api docs
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#buy-bitcoin">Online Documentation</a>
+     */
+    public Call buyBitcoin(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.buyBitcoin(accountId, params);
+        call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
+            
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+
+    /**
+     *  Retrieve the current spot price of 1 BTC
      *
      * @param currency the currency in which to retrieve the price
-     * @return the spot price of 1 BTC in the specified currency
+     * @return call object
      *
      * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
      */
@@ -1982,13 +2012,13 @@ public class Coinbase {
         com.coinbase.ApiInterface apiInterface = getApiService();
         Call call = apiInterface.getSpotPrice(currency);
         call.enqueue(new Callback<SpotPrice>() {
-            
+
             public void onResponse(retrofit.Response<SpotPrice> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
