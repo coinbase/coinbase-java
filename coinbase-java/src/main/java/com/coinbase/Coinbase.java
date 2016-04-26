@@ -1999,6 +1999,35 @@ public class Coinbase {
         return call;
     }
 
+    /**
+     * Sells user-defined amount of bitcoin.
+     *
+     * @param accountId account ID that the sell belongs to
+     * @param params hashmap of params as indicated in api docs
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#sell-bitcoin">Online Documentation</a>
+     */
+    public Call sellBitcoin(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.sellBitcoin(accountId, params);
+        call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
+
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
 
     /**
      *  Retrieve the current spot price of 1 BTC

@@ -68,4 +68,7 @@ public interface ApiInterface {
 
     @POST(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.BUYS)
     Call<Transfer> buyBitcoin(@Path("id") String accountId, @Body HashMap<String, Object> body);
+
+    @POST(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.SELLS)
+    Call<Transfer> sellBitcoin(@Path("id") String accountId, @Body HashMap<String, Object> body);
 }

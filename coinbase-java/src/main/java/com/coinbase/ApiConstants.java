@@ -38,6 +38,8 @@ public class ApiConstants {
     public static final String FROM = "from";
     public static final String AMOUNT = "amount";
     public static final String CURRENCY = "currency";
+    public static final String QUOTE = "quote";
+    public static final String COMMIT = "commit";
     public static final String IDEM = "idem";
     public static final String FEE = "fee";
     public static final String DESCRIPTION = "description";
