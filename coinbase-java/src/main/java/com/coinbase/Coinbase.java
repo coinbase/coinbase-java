@@ -2000,6 +2000,37 @@ public class Coinbase {
     }
 
     /**
+     * Commits a buy that is created in commit: false state.
+     *
+     * @param accountId account ID that the buy belongs to
+     * @param buyId buy ID that the buy belongs to
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#commit-a-buy">Online Documentation</a>
+     */
+
+    public Call commitBuyBitcoin(String accountId, String buyId, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.commitBuyBitcoin(accountId, buyId);
+
+        call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
+
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
      * Sells user-defined amount of bitcoin.
      *
      * @param accountId account ID that the sell belongs to
@@ -2028,6 +2059,36 @@ public class Coinbase {
         return call;
     }
 
+    /**
+     * Commits a sell that is created in commit: false state.
+     *
+     * @param accountId account ID that the sell belongs to
+     * @param sellId sell ID that the sell belongs to
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#commit-a-sell">Online Documentation</a>
+     */
+
+    public Call commitSellBitcoin(String accountId, String sellId, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.commitSellBitcoin(accountId, sellId);
+
+        call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
+
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
 
     /**
      *  Retrieve the current spot price of 1 BTC

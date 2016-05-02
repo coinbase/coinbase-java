@@ -69,6 +69,12 @@ public interface ApiInterface {
     @POST(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.BUYS)
     Call<Transfer> buyBitcoin(@Path("id") String accountId, @Body HashMap<String, Object> body);
 
+    @POST(ApiConstants.ACCOUNTS + "/{account_id}/" + ApiConstants.BUYS + "/{buy_id}/" + ApiConstants.COMMIT)
+    Call<Transfer> commitBuyBitcoin(@Path("account_id") String accountId, @Path("buy_id") String buyId);
+
     @POST(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.SELLS)
     Call<Transfer> sellBitcoin(@Path("id") String accountId, @Body HashMap<String, Object> body);
+
+    @POST(ApiConstants.ACCOUNTS + "/{account_id}/" + ApiConstants.SELLS + "/{sell_id}/" + ApiConstants.COMMIT)
+    Call<Transfer> commitSellBitcoin(@Path("account_id") String accountId, @Path("sell_id") String sellId);
 }

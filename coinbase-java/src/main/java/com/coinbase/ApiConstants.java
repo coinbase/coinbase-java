@@ -41,6 +41,7 @@ public class ApiConstants {
     public static final String COMMIT = "commit";
     public static final String IDEM = "idem";
     public static final String FEE = "fee";
+    public static final String PAYMENT_METHOD ="payment_method";
     public static final String DESCRIPTION = "description";
     public static final String INSTANT_EXCHANGE_QUOTE = "instant_exchange_quote";
     public static final String NAME = "name";
