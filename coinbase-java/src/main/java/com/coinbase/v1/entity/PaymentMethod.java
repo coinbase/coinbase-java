@@ -153,6 +153,17 @@ public class PaymentMethod implements Serializable {
     private IAVStatus _iavStatus;
     private IAVField[] _iavFields;
 
+    private String _uuid;
+
+    public String getUuid() {
+        return _uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this._uuid = uuid;
+    }
+
+
     public String getId() {
         return _id;
     }

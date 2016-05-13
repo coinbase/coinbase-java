@@ -72,6 +72,7 @@ public class User implements Serializable {
     private Boolean _stateVerificationRequired;
     private Boolean _stateUnsupported;
     private Boolean _regionalAgreementRequired;
+    private Boolean _needsToReacceptUserAgreement;
 
     public String getPassword() {
         return _password;
@@ -322,5 +323,13 @@ public class User implements Serializable {
 
     public void setRegionalAgreementRequired(Boolean regionalAgreementRequired) {
         this._regionalAgreementRequired = regionalAgreementRequired;
+    }
+
+    public Boolean getNeedsToReAcceptUserAgreement() {
+        return _needsToReacceptUserAgreement;
+    }
+
+    public void setNeedsToReacceptUserAgreement(Boolean needsToReacceptUserAgreement) {
+        this._needsToReacceptUserAgreement = needsToReacceptUserAgreement;
     }
 }
