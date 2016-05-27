@@ -1563,8 +1563,12 @@ public class Coinbase {
     }
 
     private String getPackageVersionName() {
-        String packagename = _context.getPackageName();
+        String packageName = "";
         String versionName = "";
+
+        if (_context != null) {
+            packageName = _context.getPackageName();
+        }
 
         try {
             versionName = _context.getPackageManager().getPackageInfo(_context.getPackageName(), 0).versionName;
@@ -1572,7 +1576,7 @@ public class Coinbase {
 
         }
 
-        return packagename + "/" + versionName;
+        return packageName + "/" + versionName;
     }
 
     protected Interceptor buildVersionInterceptor() {
