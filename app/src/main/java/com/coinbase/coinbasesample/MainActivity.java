@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPostExecute(OAuthTokensResponse tokens) {
-            Coinbase.init(tokens.getAccessToken());
+            Coinbase.init(MainActivity.this, tokens.getAccessToken());
             getUser();
         }
     }
