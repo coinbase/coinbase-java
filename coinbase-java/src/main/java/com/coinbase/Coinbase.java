@@ -1,5 +1,6 @@
 package com.coinbase;
 
+import android.content.Context;
 import android.net.Uri;
 
 import com.coinbase.v1.entity.Account;
@@ -120,6 +121,7 @@ public class Coinbase {
     protected CallbackVerifier _callbackVerifier;
     protected OkHttpClient _client;
     protected static Coinbase _instance = null;
+    protected Context _context;
 
     public Coinbase() {
         try {
@@ -147,13 +149,16 @@ public class Coinbase {
         }
     }
 
-    public static void init(String apiKey, String apiSecret) {
+    public static void init(Context context, String apiKey, String apiSecret) {
         getInstance()._apiKey = apiKey;
         getInstance()._apiSecret = apiSecret;
+        getInstance()._context = context;
     }
 
-    public static void init(String accessToken) {
+
+    public static void init(Context context, String accessToken) {
         getInstance()._accessToken = accessToken;
+        getInstance()._context = context;
     }
 
     /**
@@ -1498,7 +1503,8 @@ public class Coinbase {
 
     protected HashMap<String, String> getV2VersionHeaders() {
         HashMap<String, String> headers = new HashMap<>();
-        headers.put("CB-Version", "2015-03-20");
+        headers.put("CB-VERSION", "2015-03-20");
+        headers.put("USER-AGENT", getPackageVersionName());
         return headers;
     }
 
@@ -1556,7 +1562,21 @@ public class Coinbase {
         };
     }
 
+    private String getPackageVersionName() {
+        String packagename = _context.getPackageName();
+        String versionName = "";
+
+        try {
+            versionName = _context.getPackageManager().getPackageInfo(_context.getPackageName(), 0).versionName;
+        } catch (Throwable t) {
+
+        }
+
+        return packagename + "/" + versionName;
+    }
+
     protected Interceptor buildVersionInterceptor() {
+
         return new Interceptor() {
             
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
@@ -1564,6 +1584,7 @@ public class Coinbase {
                         .request()
                         .newBuilder()
                         .addHeader("CB-VERSION", com.coinbase.ApiConstants.VERSION)
+                        .addHeader("USER-AGENT", getPackageVersionName())
                         .build();
                 return chain.proceed(newRequest);
             }
