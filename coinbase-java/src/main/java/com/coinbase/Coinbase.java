@@ -127,7 +127,7 @@ public class Coinbase {
         try {
             _baseApiUrl = new URL("https://coinbase.com/api/v1/");
             _baseOAuthUrl = new URL("https://www.coinbase.com/oauth/");
-            _baseV2ApiUrl = new URL("https://api.coinbase.com/v2/");
+            _baseV2ApiUrl = new URL(ApiConstants.BASE_URL_PRODUCTION + "/" + ApiConstants.SERVER_VERSION + "/");
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
