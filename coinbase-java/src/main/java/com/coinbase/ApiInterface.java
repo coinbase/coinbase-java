@@ -2,6 +2,7 @@ package com.coinbase;
 
 import com.coinbase.v2.models.account.Account;
 import com.coinbase.v2.models.account.Accounts;
+import com.coinbase.v2.models.address.Address;
 import com.coinbase.v2.models.spotPrice.SpotPrice;
 import com.coinbase.v2.models.transactions.Transaction;
 import com.coinbase.v2.models.transactions.Transactions;
@@ -77,4 +78,7 @@ public interface ApiInterface {
 
     @POST(ApiConstants.ACCOUNTS + "/{account_id}/" + ApiConstants.SELLS + "/{sell_id}/" + ApiConstants.COMMIT)
     Call<Transfer> commitSellBitcoin(@Path("account_id") String accountId, @Path("sell_id") String sellId);
+
+    @POST(ApiConstants.ACCOUNTS + "/{account_id}/" + ApiConstants.ADDRESSES)
+    Call<Address> generateAddress(@Path("account_id") String accoundId);
 }

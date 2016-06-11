@@ -2142,4 +2142,32 @@ public class Coinbase {
 
         return call;
     }
+
+    /**
+     *  Generate new address for an account
+     *
+     * @param accountId the accountId of the account
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#create-address">Online Documentation</a>
+     */
+
+    public Call generateAddress(String accountId, final Callback<com.coinbase.v2.models.address.Address> callback) {
+        ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.generateAddress(accountId);
+        call.enqueue(new Callback<com.coinbase.v2.models.address.Address>() {
+
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.address.Address> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
 }
