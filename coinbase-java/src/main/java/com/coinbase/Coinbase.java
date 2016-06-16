@@ -1731,15 +1731,16 @@ public class Coinbase {
 
     /**
      * Retrieve a list of accounts belonging to this user
+     * @param options endpoint options
      * @param callback callback interface
      * @return call object
      *
      * @see <a href="https://developers.coinbase.com/api/v2#list-accounts">Online Documentation</a>
      */
-    public Call getAccounts(final Callback<Accounts> callback) {
+    public Call getAccounts(HashMap<String, Object> options, final Callback<Accounts> callback) {
         com.coinbase.ApiInterface apiInterface = getApiService();
 
-        Call call = apiInterface.getAccounts();
+        Call call = apiInterface.getAccounts(options);
         call.enqueue(new Callback<Accounts>() {
             
             public void onResponse(retrofit.Response<Accounts> response, Retrofit retrofit) {

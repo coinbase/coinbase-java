@@ -41,6 +41,9 @@ public class Data {
     @SerializedName("resource_path")
     @Expose
     private String resourcePath;
+    @SerializedName("ready")
+    @Expose
+    private String ready;
 
     /**
      *
@@ -238,6 +241,24 @@ public class Data {
      */
     public void setResourcePath(String resourcePath) {
         this.resourcePath = resourcePath;
+    }
+
+    /**
+     *
+     * @return
+     * The ready
+     */
+    public String getReady() {
+        return ready;
+    }
+
+    /**
+     *
+     * @param ready
+     * The ready
+     */
+    public void setReady(String ready) {
+        this.ready = ready;
     }
 
 }

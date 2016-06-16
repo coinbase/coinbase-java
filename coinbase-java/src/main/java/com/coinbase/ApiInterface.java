@@ -34,7 +34,7 @@ public interface ApiInterface {
     Call<Account> getAccount(@Path("id") String accountId);
 
     @GET(com.coinbase.ApiConstants.ACCOUNTS)
-    Call<Accounts> getAccounts();
+    Call<Accounts> getAccounts(@QueryMap Map<String, Object> options);
 
     @GET(com.coinbase.ApiConstants.ACCOUNTS + "/{id}/" + com.coinbase.ApiConstants.TRANSACTIONS)
     Call<Transactions> getTransactions(@Path("id") String accountId,
