@@ -43,7 +43,7 @@ public class Data {
     private String resourcePath;
     @SerializedName("ready")
     @Expose
-    private String ready;
+    private Boolean ready;
 
     /**
      *
@@ -248,7 +248,7 @@ public class Data {
      * @return
      * The ready
      */
-    public String getReady() {
+    public Boolean getReady() {
         return ready;
     }
 
@@ -257,7 +257,7 @@ public class Data {
      * @param ready
      * The ready
      */
-    public void setReady(String ready) {
+    public void setReady(Boolean ready) {
         this.ready = ready;
     }
 
