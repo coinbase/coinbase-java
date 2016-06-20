@@ -1759,6 +1759,116 @@ public class Coinbase {
     }
 
     /**
+     * Create a new account for user
+     * @param options endpoint options
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#create-account">Online Documentation</a>
+     */
+    public Call createAccount(HashMap<String, Object> options, final Callback<com.coinbase.v2.models.account.Account> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.createAccount(options);
+        call.enqueue(new Callback<com.coinbase.v2.models.account.Account>() {
+
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.account.Account> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Promote an account as primary account
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#set-account-as-primary">Online Documentation</a>
+     */
+    public Call setAccountPrimary(String accountId, final Callback<Void> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.setAccountPrimary(accountId);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(retrofit.Response response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Modifies user's account
+     * @param options endpoint options
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#update-account">Online Documentation</a>
+     */
+    public Call updateAccount(String accountId, HashMap<String, Object> options, final Callback<com.coinbase.v2.models.account.Account> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.updateAccount(accountId, options);
+        call.enqueue(new Callback<com.coinbase.v2.models.account.Account>() {
+
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.account.Account> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Removes user's account. See documentation for restrictions
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#delete-account">Online Documentation</a>
+     */
+    public Call deleteAccount(String accountId, final Callback<Void> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.deleteAccount(accountId);
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(retrofit.Response response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
      * Retrieve a list of the user's recent transactions.
      * @param accountId account ID that the transaction belongs to
      * @param options endpoint options

@@ -1,5 +1,7 @@
 package com.coinbase.v2.models.account;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,6 +9,36 @@ import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Data {
+
+    public enum Type {
+        WALLET("wallet"),
+        VAULT("vault"),
+        MULTISIG_VAULT("multisig_vault"),
+        MULTISIG("multisig"),
+        FIAT("fiat");
+
+        private String _value;
+
+        private Type(String value) {
+            this._value = value;
+        }
+
+        @Override
+        @JsonValue
+        public String toString() {
+            return this._value;
+        }
+
+        @JsonCreator
+        public static Type create(String val) {
+            for (Type type : Type.values()) {
+                if (type.toString().equalsIgnoreCase(val)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
 
     @SerializedName("id")
     @Expose

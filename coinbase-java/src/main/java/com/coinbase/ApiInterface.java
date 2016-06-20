@@ -36,6 +36,18 @@ public interface ApiInterface {
     @GET(com.coinbase.ApiConstants.ACCOUNTS)
     Call<Accounts> getAccounts(@QueryMap Map<String, Object> options);
 
+    @POST(ApiConstants.ACCOUNTS)
+    Call<Account> createAccount(@Body HashMap<String, Object> body);
+
+    @POST(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.PRIMARY)
+    Call<Void> setAccountPrimary(@Path("id") String accountId);
+
+    @POST(ApiConstants.ACCOUNTS + "/{id}")
+    Call<Account> updateAccount(@Path("id") String acountId, @Body HashMap<String, Object> body);
+
+    @DELETE(ApiConstants.ACCOUNTS + "/{id}")
+    Call<Void> deleteAccount(@Path("id") String accountId);
+
     @GET(com.coinbase.ApiConstants.ACCOUNTS + "/{id}/" + com.coinbase.ApiConstants.TRANSACTIONS)
     Call<Transactions> getTransactions(@Path("id") String accountId,
                                        @Query("expand[]") List<String> expandOptions,
