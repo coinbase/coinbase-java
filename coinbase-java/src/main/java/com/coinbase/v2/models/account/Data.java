@@ -76,6 +76,9 @@ public class Data {
     @SerializedName("ready")
     @Expose
     private Boolean ready;
+    @SerializedName("active")
+    @Expose
+    private Boolean active;
 
     /**
      *
@@ -281,7 +284,7 @@ public class Data {
      * The ready
      */
     public Boolean getReady() {
-        return ready;
+        return active;
     }
 
     /**
@@ -291,6 +294,25 @@ public class Data {
      */
     public void setReady(Boolean ready) {
         this.ready = ready;
+    }
+
+
+    /**
+     *
+     * @return
+     * The active
+     */
+    public Boolean getActive() {
+        return active;
+    }
+
+    /**
+     *
+     * @param active
+     * The active
+     */
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
 }

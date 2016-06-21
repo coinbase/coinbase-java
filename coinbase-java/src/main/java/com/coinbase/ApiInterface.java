@@ -42,7 +42,7 @@ public interface ApiInterface {
     @POST(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.PRIMARY)
     Call<Void> setAccountPrimary(@Path("id") String accountId);
 
-    @POST(ApiConstants.ACCOUNTS + "/{id}")
+    @PUT(ApiConstants.ACCOUNTS + "/{id}")
     Call<Account> updateAccount(@Path("id") String acountId, @Body HashMap<String, Object> body);
 
     @DELETE(ApiConstants.ACCOUNTS + "/{id}")
