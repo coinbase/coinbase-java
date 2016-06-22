@@ -2281,4 +2281,124 @@ public class Coinbase {
 
         return call;
     }
+
+    /**
+     * Deposits user-defined amount of funds to a fiat account.
+     *
+     * @param accountId account ID that the deposit belongs to
+     * @param params hashmap of params as indicated in api docs
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#deposit-funds">Online Documentation</a>
+     */
+    public Call depositFunds(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.depositFunds(accountId, params);
+        call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
+
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Commits a deposit that is created in commit: false state.
+     *
+     * @param accountId account ID that the deposit belongs to
+     * @param depositId deposit ID that the deposit belongs to
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#commit-a-deposit">Online Documentation</a>
+     */
+
+    public Call commitDeposit(String accountId, String depositId, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.commitDeposit(accountId, depositId);
+
+        call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
+
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Withdraws user-defined amount of funds from a fiat account.
+     *
+     * @param accountId account ID that the withdrawal belongs to
+     * @param params hashmap of params as indicated in api docs
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#withdraw-funds">Online Documentation</a>
+     */
+    public Call withdrawFunds(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.withdrawFunds(accountId, params);
+        call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
+
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Commits a withdrawal that is created in commit: false state.
+     *
+     * @param accountId account ID that the withdrawal belongs to
+     * @param withdrawId deposit ID that the withdrawal belongs to
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#commit-a-deposit">Online Documentation</a>
+     */
+
+    public Call commitWithdraw(String accountId, String withdrawId, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.commitWithdraw(accountId, withdrawId);
+
+        call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
+
+            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
 }

@@ -93,4 +93,17 @@ public interface ApiInterface {
 
     @POST(ApiConstants.ACCOUNTS + "/{account_id}/" + ApiConstants.ADDRESSES)
     Call<Address> generateAddress(@Path("account_id") String accoundId);
+
+    @POST(ApiConstants.ACCOUNTS + "/{account_id}/" + ApiConstants.DEPOSITS)
+    Call<Transfer> depositFunds(@Path("account_id") String accountId, @Body HashMap<String, Object> body);
+
+    @POST(ApiConstants.ACCOUNTS + "/{account_id}/" + ApiConstants.DEPOSITS + "/{deposit_id}/" + ApiConstants.COMMIT)
+    Call<Transfer> commitDeposit(@Path("account_id") String accountId, @Path("deposit_id") String depositId);
+
+    @POST(ApiConstants.ACCOUNTS + "/{account_id}/" + ApiConstants.WITHDRAWALS)
+    Call<Transfer> withdrawFunds(@Path("account_id") String accountId, @Body HashMap<String, Object> body);
+
+    @POST(ApiConstants.ACCOUNTS + "/{account_id}/" + ApiConstants.WITHDRAWALS + "/{withdrawal_id}/" + ApiConstants.COMMIT)
+    Call<Transfer> commitWithdraw(@Path("account_id") String accountId, @Path("withdrawal_id") String depositId);
+
 }
