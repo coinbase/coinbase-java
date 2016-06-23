@@ -76,8 +76,10 @@ public interface ApiInterface {
     @POST(com.coinbase.ApiConstants.ACCOUNTS + "/{id}/" + com.coinbase.ApiConstants.TRANSACTIONS)
     Call<Transaction> transferMoney(@Path("id") String accountId, @Body HashMap<String, Object> body);
 
-    @GET(com.coinbase.ApiConstants.PRICES_SPOT)
-    Call<SpotPrice> getSpotPrice(@Query("currency") String currency);
+    @GET(com.coinbase.ApiConstants.PRICES + "/{base_currency}-" + "{fiat_currency}/" + ApiConstants.SPOT)
+    Call<SpotPrice> getSpotPrice(@Path("base_currency") String baseCurrency,
+                                 @Path("fiat_currency") String fiatCurrency,
+                                 @QueryMap HashMap<String, Object> body);
 
     @POST(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.BUYS)
     Call<Transfer> buyBitcoin(@Path("id") String accountId, @Body HashMap<String, Object> body);

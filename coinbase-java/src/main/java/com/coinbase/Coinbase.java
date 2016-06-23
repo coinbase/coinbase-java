@@ -2229,14 +2229,17 @@ public class Coinbase {
     /**
      *  Retrieve the current spot price of 1 BTC
      *
-     * @param currency the currency in which to retrieve the price
+     * @param baseCurrency the digital currency in which to retrieve the price against
+     * @param fiatCurrency the currency in which to retrieve the price
+     * @param params hashmap of params as indicated in api docs
      * @return call object
      *
      * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
      */
-    public Call getSpotPrice(String currency, final Callback<SpotPrice> callback) {
+    public Call getSpotPrice(String baseCurrency, String fiatCurrency,
+                             HashMap<String, Object> params, final Callback<SpotPrice> callback) {
         com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.getSpotPrice(currency);
+        Call call = apiInterface.getSpotPrice(baseCurrency, fiatCurrency, params);
         call.enqueue(new Callback<SpotPrice>() {
 
             public void onResponse(retrofit.Response<SpotPrice> response, Retrofit retrofit) {
@@ -2401,4 +2404,5 @@ public class Coinbase {
 
         return call;
     }
+
 }

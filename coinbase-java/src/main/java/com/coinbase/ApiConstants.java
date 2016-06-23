@@ -14,7 +14,8 @@ public class ApiConstants {
     public static final String ACCOUNTS = "accounts";
     public static final String COMPLETE = "complete";
     public static final String RESEND = "resend";
-    public static final String PRICES_SPOT = "prices/spot";
+    public static final String PRICES = "prices";
+    public static final String SPOT = "spot";
     public static final String ADDRESSES = "addresses";
     public static final String PRIMARY = "primary";
     public static final String DEPOSITS = "deposits";
