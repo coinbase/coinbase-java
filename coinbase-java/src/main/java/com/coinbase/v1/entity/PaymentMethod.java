@@ -18,7 +18,8 @@ public class PaymentMethod implements Serializable {
         COINBASE_ACCOUNT("coinbase_account"),
         COINBASE_FIAT_ACCOUNT("coinbase_fiat_account"),
         FUTURE_MERCHANT_PAYOUT("future_merchant_payout"),
-        SEPA_PAYMENT_METHOD("sepa_payment_method");
+        SEPA_PAYMENT_METHOD("sepa_payment_method"),
+        PAYPAL_ACCOUNT("paypal_account");
 
         private String _value;
 
