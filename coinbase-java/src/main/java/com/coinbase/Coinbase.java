@@ -57,6 +57,8 @@ import com.coinbase.v1.exception.UnauthorizedDeviceException;
 import com.coinbase.v1.exception.UnauthorizedException;
 import com.coinbase.v1.exception.UnspecifiedAccount;
 import com.coinbase.v2.models.account.Accounts;
+import com.coinbase.v2.models.paymentMethods.PaymentMethod;
+import com.coinbase.v2.models.paymentMethods.PaymentMethods;
 import com.coinbase.v2.models.spotPrice.SpotPrice;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -2391,6 +2393,63 @@ public class Coinbase {
         call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
 
             public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Show current user’s payment method.
+     * @param paymentMethodId paymentMethod ID for the account to retrieve
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#show-a-payment-method">Online Documentation</a>
+     */
+    public Call getPaymentMethod(String paymentMethodId, final Callback<PaymentMethod> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.getPaymentMethod(paymentMethodId);
+        call.enqueue(new Callback<PaymentMethod>() {
+
+            public void onResponse(retrofit.Response<PaymentMethod> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Lists current user’s payment methods.
+     * @param options endpoint options
+     * @param callback callback interface
+     * @return call object
+     *
+     * @see <a href="https://developers.coinbase.com/api/v2#list-payment-methods">Online Documentation</a>
+     */
+    public Call getPaymentMethods(HashMap<String, Object> options, final Callback<PaymentMethods> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+
+        Call call = apiInterface.getPaymentMethods(options);
+        call.enqueue(new Callback<PaymentMethods>() {
+
+            public void onResponse(retrofit.Response<PaymentMethods> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }

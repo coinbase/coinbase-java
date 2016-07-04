@@ -20,6 +20,7 @@ public class ApiConstants {
     public static final String PRIMARY = "primary";
     public static final String DEPOSITS = "deposits";
     public static final String WITHDRAWALS = "withdrawals";
+    public static final String PAYMENT_METHODS = "payment-methods";
 
 
     // Params
