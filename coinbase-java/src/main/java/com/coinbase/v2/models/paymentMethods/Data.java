@@ -1,6 +1,8 @@
 
 package com.coinbase.v2.models.paymentMethods;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +13,128 @@ import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Data {
+
+    public enum Type {
+        ACH_BANK_ACCOUNT("ach_bank_account"),
+        CREDIT_CARD("credit_card"),
+        DEBIT_CARD("debit_card"),
+        SEPA_BANK_ACCOUNT("sepa_bank_account"),
+        FIAT_ACCOUNT("fiat_account"),
+        BANK_WIRE("bank_wire"),
+        BANK_ACCOUNT("bank_account"),
+        COINBASE_ACCOUNT("coinbase_account"),
+        COINBASE_FIAT_ACCOUNT("coinbase_fiat_account"),
+        FUTURE_MERCHANT_PAYOUT("future_merchant_payout"),
+        SEPA_PAYMENT_METHOD("sepa_payment_method"),
+        PAYPAL_ACCOUNT("paypal_account");
+
+        private String _value;
+
+        private Type(String value) {
+            this._value = value;
+        }
+
+        @Override
+        @JsonValue
+        public String toString() {
+            return this._value;
+        }
+
+        @JsonCreator
+        public static Type create(String val) {
+            for (Type type : Type.values()) {
+                if (type.toString().equalsIgnoreCase(val)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
+
+    public enum VerificationMethod {
+        CDV("cdv"),
+        IAV("iav"),
+        ACH_SETUP_SESSION("ach_setup_session");
+
+        private String _value;
+
+        private VerificationMethod(String value) {
+            this._value = value;
+        }
+
+        @Override
+        @JsonValue
+        public String toString() {
+            return this._value;
+        }
+
+        @JsonCreator
+        public static Type create(String val) {
+            for (Type type : Type.values()) {
+                if (type.toString().equalsIgnoreCase(val)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
+
+    public enum CDVStatus {
+        READY("ready"),
+        IN_PROGRESS("in_progress");
+
+        private String _value;
+
+        private CDVStatus(String value) {
+            this._value = value;
+        }
+
+        @Override
+        @JsonValue
+        public String toString() {
+            return this._value;
+        }
+
+        @JsonCreator
+        public static Type create(String val) {
+            for (Type type : Type.values()) {
+                if (type.toString().equalsIgnoreCase(val)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
+
+    public enum IAVStatus {
+        READY("ready"),
+        UNAVAILABLE("unavailable"),
+        MFA_REQUIRED("mfa_required"),
+        IN_PROGRESS("in_progress"),
+        FAILED("failed");
+
+        private String _value;
+
+        private IAVStatus(String value) {
+            this._value = value;
+        }
+
+        @Override
+        @JsonValue
+        public String toString() {
+            return this._value;
+        }
+
+        @JsonCreator
+        public static Type create(String val) {
+            for (Type type : Type.values()) {
+                if (type.toString().equalsIgnoreCase(val)) {
+                    return type;
+                }
+            }
+            return null;
+        }
+    }
 
     @SerializedName("id")
     @Expose
