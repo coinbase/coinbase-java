@@ -53,7 +53,6 @@ public class Data {
 
     public enum VerificationMethod {
         CDV("cdv"),
-        IAV("iav"),
         ACH_SETUP_SESSION("ach_setup_session");
 
         private String _value;
@@ -69,8 +68,8 @@ public class Data {
         }
 
         @JsonCreator
-        public static Type create(String val) {
-            for (Type type : Type.values()) {
+        public static VerificationMethod create(String val) {
+            for (VerificationMethod type : VerificationMethod.values()) {
                 if (type.toString().equalsIgnoreCase(val)) {
                     return type;
                 }
@@ -96,38 +95,8 @@ public class Data {
         }
 
         @JsonCreator
-        public static Type create(String val) {
-            for (Type type : Type.values()) {
-                if (type.toString().equalsIgnoreCase(val)) {
-                    return type;
-                }
-            }
-            return null;
-        }
-    }
-
-    public enum IAVStatus {
-        READY("ready"),
-        UNAVAILABLE("unavailable"),
-        MFA_REQUIRED("mfa_required"),
-        IN_PROGRESS("in_progress"),
-        FAILED("failed");
-
-        private String _value;
-
-        private IAVStatus(String value) {
-            this._value = value;
-        }
-
-        @Override
-        @JsonValue
-        public String toString() {
-            return this._value;
-        }
-
-        @JsonCreator
-        public static Type create(String val) {
-            for (Type type : Type.values()) {
+        public static CDVStatus create(String val) {
+            for (CDVStatus type : CDVStatus.values()) {
                 if (type.toString().equalsIgnoreCase(val)) {
                     return type;
                 }
@@ -187,12 +156,6 @@ public class Data {
     @SerializedName("cdv_status")
     @Expose
     private String cdvStatus;
-    @SerializedName("iav_status")
-    @Expose
-    private String iavStatus;
-    @SerializedName("iav_fields")
-    @Expose
-    private List<IavField> iavFields = new ArrayList<IavField>();
 
     /**
      * 
@@ -498,42 +461,6 @@ public class Data {
      */
     public void setCdvStatus(String cdvStatus) {
         this.cdvStatus = cdvStatus;
-    }
-
-    /**
-     * 
-     * @return
-     *     The iavStatus
-     */
-    public String getIavStatus() {
-        return iavStatus;
-    }
-
-    /**
-     * 
-     * @param iavStatus
-     *     The iav_status
-     */
-    public void setIavStatus(String iavStatus) {
-        this.iavStatus = iavStatus;
-    }
-
-    /**
-     * 
-     * @return
-     *     The iavFields
-     */
-    public List<IavField> getIavFields() {
-        return iavFields;
-    }
-
-    /**
-     * 
-     * @param iavFields
-     *     The iav_fields
-     */
-    public void setIavFields(List<IavField> iavFields) {
-        this.iavFields = iavFields;
     }
 
 }
