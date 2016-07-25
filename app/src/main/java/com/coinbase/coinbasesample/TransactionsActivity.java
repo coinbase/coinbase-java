@@ -28,7 +28,7 @@ public class TransactionsActivity extends AppCompatActivity {
         accountsTextView = (TextView) findViewById(R.id.accounts_tv);
 
         final ProgressDialog dialog = ProgressDialog.show(this, "Loading Accounts", null);
-        Coinbase.getInstance().getAccounts(new Callback<Accounts>() {
+        Coinbase.getInstance().getAccounts(null, new Callback<Accounts>() {
             @Override
             public void onResponse(Response<Accounts> response, Retrofit retrofit) {
                 if (!response.isSuccess()) {
