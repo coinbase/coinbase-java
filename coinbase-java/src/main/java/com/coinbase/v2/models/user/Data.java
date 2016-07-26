@@ -1,8 +1,12 @@
 package com.coinbase.v2.models.user;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Data {
@@ -37,6 +41,42 @@ public class Data {
     @SerializedName("email")
     @Expose
     private String email;
+    @SerializedName("time_zone")
+    @Expose
+    private String timeZone;
+    @SerializedName("native_currency")
+    @Expose
+    private String nativeCurrency;
+    @SerializedName("bitcoin_unit")
+    @Expose
+    private String bitcoinUnit;
+    @SerializedName("country")
+    @Expose
+    private Country country;
+    @SerializedName("created_at")
+    @Expose
+    private String createdAt;
+    @SerializedName("restrictions")
+    @Expose
+    private List<String> restrictions = new ArrayList<String>();
+    @SerializedName("feature_flags")
+    @Expose
+    private List<String> featureFlags = new ArrayList<String>();
+    @SerializedName("personal_details")
+    @Expose
+    private PersonalDetails personalDetails;
+    @SerializedName("merchant")
+    @Expose
+    private Object merchant;
+    @SerializedName("oauth")
+    @Expose
+    private Oauth oauth;
+    @SerializedName("email_verified")
+    @Expose
+    private Boolean emailVerified;
+    @SerializedName("referral_id")
+    @Expose
+    private Object referralId;
 
     /**
      *
@@ -216,5 +256,221 @@ public class Data {
      */
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    /**
+     *
+     * @return
+     *     The timeZone
+     */
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    /**
+     *
+     * @param timeZone
+     *     The time_zone
+     */
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    /**
+     *
+     * @return
+     *     The nativeCurrency
+     */
+    public String getNativeCurrency() {
+        return nativeCurrency;
+    }
+
+    /**
+     *
+     * @param nativeCurrency
+     *     The native_currency
+     */
+    public void setNativeCurrency(String nativeCurrency) {
+        this.nativeCurrency = nativeCurrency;
+    }
+
+    /**
+     *
+     * @return
+     *     The bitcoinUnit
+     */
+    public String getBitcoinUnit() {
+        return bitcoinUnit;
+    }
+
+    /**
+     *
+     * @param bitcoinUnit
+     *     The bitcoin_unit
+     */
+    public void setBitcoinUnit(String bitcoinUnit) {
+        this.bitcoinUnit = bitcoinUnit;
+    }
+
+    /**
+     *
+     * @return
+     *     The country
+     */
+    public Country getCountry() {
+        return country;
+    }
+
+    /**
+     *
+     * @param country
+     *     The country
+     */
+    public void setCountry(Country country) {
+        this.country = country;
+    }
+
+    /**
+     *
+     * @return
+     *     The createdAt
+     */
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     *
+     * @param createdAt
+     *     The created_at
+     */
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    /**
+     *
+     * @return
+     *     The restrictions
+     */
+    public List<String> getRestrictions() {
+        return restrictions;
+    }
+
+    /**
+     *
+     * @param restrictions
+     *     The restrictions
+     */
+    public void setRestrictions(List<String> restrictions) {
+        this.restrictions = restrictions;
+    }
+
+    /**
+     *
+     * @return
+     *     The featureFlags
+     */
+    public List<String> getFeatureFlags() {
+        return featureFlags;
+    }
+
+    /**
+     *
+     * @param featureFlags
+     *     The feature_flags
+     */
+    public void setFeatureFlags(List<String> featureFlags) {
+        this.featureFlags = featureFlags;
+    }
+
+    /**
+     *
+     * @return
+     *     The personalDetails
+     */
+    public PersonalDetails getPersonalDetails() {
+        return personalDetails;
+    }
+
+    /**
+     *
+     * @param personalDetails
+     *     The personal_details
+     */
+    public void setPersonalDetails(PersonalDetails personalDetails) {
+        this.personalDetails = personalDetails;
+    }
+
+    /**
+     *
+     * @return
+     *     The merchant
+     */
+    public Object getMerchant() {
+        return merchant;
+    }
+
+    /**
+     *
+     * @param merchant
+     *     The merchant
+     */
+    public void setMerchant(Object merchant) {
+        this.merchant = merchant;
+    }
+
+    /**
+     *
+     * @return
+     * The oauth
+     */
+    public Oauth getOauth() {
+        return oauth;
+    }
+
+    /**
+     *
+     * @param oauth
+     * The oauth
+     */
+    public void setOauth(Oauth oauth) {
+        this.oauth = oauth;
+    }
+
+    /**
+     *
+     * @return
+     * The emailVerified
+     */
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    /**
+     *
+     * @param emailVerified
+     * The email_verified
+     */
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    /**
+     *
+     * @return
+     * The referralId
+     */
+    public Object getReferralId() {
+        return referralId;
+    }
+
+    /**
+     *
+     * @param referralId
+     * The referral_id
+     */
+    public void setReferralId(Object referralId) {
+        this.referralId = referralId;
     }
 }
