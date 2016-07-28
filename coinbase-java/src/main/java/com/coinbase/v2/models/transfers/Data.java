@@ -57,6 +57,12 @@ public class Data {
     @SerializedName("payout_at")
     @Expose
     private String payoutAt;
+    @SerializedName("requires_completion_step")
+    @Expose
+    private Boolean requiresCompletionStep;
+    @SerializedName("secure3d_verification")
+    @Expose
+    private Secure3dVerification secure3dVerification;
 
     /**
      * 
@@ -326,6 +332,42 @@ public class Data {
      */
     public void setPayoutAt(String payoutAt) {
         this.payoutAt = payoutAt;
+    }
+
+    /**
+     *
+     * @return
+     *     The requiresCompletionStep
+     */
+    public Boolean getRequiresCompletionStep() {
+        return requiresCompletionStep;
+    }
+
+    /**
+     *
+     * @param requiresCompletionStep
+     *     The requires_completion_step
+     */
+    public void setRequiresCompletionStep(Boolean requiresCompletionStep) {
+        this.requiresCompletionStep = requiresCompletionStep;
+    }
+
+    /**
+     *
+     * @return
+     *     The secure3dVerification
+     */
+    public Secure3dVerification getSecure3dVerification() {
+        return secure3dVerification;
+    }
+
+    /**
+     *
+     * @param secure3dVerification
+     *     The secure3d_verification
+     */
+    public void setSecure3dVerification(Secure3dVerification secure3dVerification) {
+        this.secure3dVerification = secure3dVerification;
     }
 
 }

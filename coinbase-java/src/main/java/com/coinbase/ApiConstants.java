@@ -54,5 +54,4 @@ public class ApiConstants {
     public static final String NAME = "name";
     public static final String TIME_ZONE = "time_zone";
     public static final String NATIVE_CURRENCY = "native_currency";
-    public static final String BITCOIN_UNITS = "bitcoin_units";
 }
