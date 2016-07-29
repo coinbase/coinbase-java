@@ -59,7 +59,7 @@ import com.coinbase.v1.exception.UnspecifiedAccount;
 import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.paymentMethods.PaymentMethod;
 import com.coinbase.v2.models.paymentMethods.PaymentMethods;
-import com.coinbase.v2.models.spotPrice.SpotPrice;
+import com.coinbase.v2.models.spotPrice.Price;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -167,7 +167,6 @@ public class Coinbase {
      * Retrieve the coinbase singleton object.
      *
      * @return Coinbase object
-     *
      */
     public static Coinbase getInstance() {
         if (_instance == null) {
@@ -220,7 +219,7 @@ public class Coinbase {
         }
     }
 
-    
+
     public User getUser() throws IOException, CoinbaseException {
         URL usersUrl;
         try {
@@ -231,22 +230,22 @@ public class Coinbase {
         return get(usersUrl, UsersResponse.class).getUsers().get(0).getUser();
     }
 
-    
+
     public AccountsResponse getAccounts() throws IOException, CoinbaseException {
         return getAccounts(1, 25, false);
     }
 
-    
+
     public AccountsResponse getAccounts(int page) throws IOException, CoinbaseException {
         return getAccounts(page, 25, false);
     }
 
-    
+
     public AccountsResponse getAccounts(int page, int limit) throws IOException, CoinbaseException {
         return getAccounts(page, limit, false);
     }
 
-    
+
     public AccountsResponse getAccounts(int page, int limit, boolean includeInactive) throws IOException, CoinbaseException {
         URL accountsUrl;
         try {
@@ -264,7 +263,7 @@ public class Coinbase {
         return get(accountsUrl, AccountsResponse.class);
     }
 
-    
+
     public Money getBalance() throws IOException, CoinbaseException {
         if (_accountId != null) {
             return getBalance(_accountId);
@@ -273,7 +272,7 @@ public class Coinbase {
         }
     }
 
-    
+
     public Money getBalance(String accountId) throws IOException, CoinbaseException {
         URL accountBalanceUrl;
         try {
@@ -284,7 +283,7 @@ public class Coinbase {
         return deserialize(doHttp(accountBalanceUrl, "GET", null), Money.class);
     }
 
-    
+
     public void setPrimaryAccount(String accountId) throws CoinbaseException, IOException {
         URL setPrimaryUrl;
         try {
@@ -295,7 +294,7 @@ public class Coinbase {
         post(setPrimaryUrl, new Request(), Response.class);
     }
 
-    
+
     public void deleteAccount(String accountId) throws CoinbaseException, IOException {
         URL accountUrl;
         try {
@@ -306,7 +305,7 @@ public class Coinbase {
         delete(accountUrl, Response.class);
     }
 
-    
+
     public void setPrimaryAccount() throws CoinbaseException, IOException {
         if (_accountId != null) {
             setPrimaryAccount(_accountId);
@@ -315,7 +314,7 @@ public class Coinbase {
         }
     }
 
-    
+
     public void deleteAccount() throws CoinbaseException, IOException {
         if (_accountId != null) {
             deleteAccount(_accountId);
@@ -324,7 +323,7 @@ public class Coinbase {
         }
     }
 
-    
+
     public void updateAccount(Account account) throws CoinbaseException, IOException, UnspecifiedAccount {
         if (_accountId != null) {
             updateAccount(_accountId, account);
@@ -333,7 +332,7 @@ public class Coinbase {
         }
     }
 
-    
+
     public Account createAccount(Account account) throws CoinbaseException, IOException {
         URL accountsUrl;
         try {
@@ -348,7 +347,7 @@ public class Coinbase {
         return post(accountsUrl, request, AccountResponse.class).getAccount();
     }
 
-    
+
     public void updateAccount(String accountId, Account account) throws CoinbaseException, IOException {
         URL accountUrl;
         try {
@@ -362,7 +361,7 @@ public class Coinbase {
         put(accountUrl, request, Response.class);
     }
 
-    
+
     public Money getSpotPrice(CurrencyUnit currency) throws IOException, CoinbaseException {
         URL spotPriceUrl;
         try {
@@ -373,12 +372,12 @@ public class Coinbase {
         return deserialize(doHttp(spotPriceUrl, "GET", null), Money.class);
     }
 
-    
+
     public Quote getBuyQuote(Money amount) throws IOException, CoinbaseException {
         return getBuyQuote(amount, null);
     }
 
-    
+
     public Quote getBuyQuote(Money amount, String paymentMethodId) throws IOException, CoinbaseException {
         String qtyParam;
         if (amount.getCurrencyUnit().getCode().equals("BTC")) {
@@ -401,12 +400,12 @@ public class Coinbase {
         return deserialize(doHttp(buyPriceUrl, "GET", null), Quote.class);
     }
 
-    
+
     public Quote getSellQuote(Money amount) throws IOException, CoinbaseException {
         return getSellQuote(amount, null);
     }
 
-    
+
     public Quote getSellQuote(Money amount, String paymentMethodId) throws IOException, CoinbaseException {
         String qtyParam;
         if (amount.getCurrencyUnit().getCode().equals("BTC")) {
@@ -429,7 +428,7 @@ public class Coinbase {
         return deserialize(doHttp(sellPriceUrl, "GET", null), Quote.class);
     }
 
-    
+
     public TransactionsResponse getTransactions(int page) throws IOException, CoinbaseException {
         URL transactionsUrl;
         try {
@@ -444,12 +443,12 @@ public class Coinbase {
         return get(transactionsUrl, TransactionsResponse.class);
     }
 
-    
+
     public TransactionsResponse getTransactions() throws IOException, CoinbaseException {
         return getTransactions(1);
     }
 
-    
+
     public Transaction getTransaction(String id) throws IOException, CoinbaseException {
         URL transactionUrl;
         try {
@@ -460,7 +459,7 @@ public class Coinbase {
         return get(transactionUrl, TransactionResponse.class).getTransaction();
     }
 
-    
+
     public Transaction requestMoney(Transaction transaction) throws CoinbaseException, IOException {
         URL requestMoneyUrl;
         try {
@@ -479,7 +478,7 @@ public class Coinbase {
         return post(requestMoneyUrl, request, TransactionResponse.class).getTransaction();
     }
 
-    
+
     public void resendRequest(String id) throws CoinbaseException, IOException {
         URL resendRequestUrl;
         try {
@@ -490,7 +489,7 @@ public class Coinbase {
         put(resendRequestUrl, newAccountSpecificRequest(), Response.class);
     }
 
-    
+
     public void deleteRequest(String id) throws CoinbaseException, IOException {
         URL cancelRequestUrl;
         try {
@@ -501,7 +500,7 @@ public class Coinbase {
         delete(cancelRequestUrl, Response.class);
     }
 
-    
+
     public Transaction completeRequest(String id) throws CoinbaseException, IOException {
         URL completeRequestUrl;
         try {
@@ -512,7 +511,7 @@ public class Coinbase {
         return put(completeRequestUrl, newAccountSpecificRequest(), TransactionResponse.class).getTransaction();
     }
 
-    
+
     public Transaction sendMoney(Transaction transaction) throws CoinbaseException, IOException {
         URL sendMoneyUrl;
         try {
@@ -531,7 +530,7 @@ public class Coinbase {
         return post(sendMoneyUrl, request, TransactionResponse.class).getTransaction();
     }
 
-    
+
     public TransfersResponse getTransfers(int page) throws IOException, CoinbaseException {
         URL transfersUrl;
         try {
@@ -546,12 +545,12 @@ public class Coinbase {
         return get(transfersUrl, TransfersResponse.class);
     }
 
-    
+
     public TransfersResponse getTransfers() throws IOException, CoinbaseException {
         return getTransfers(1);
     }
 
-    
+
     public Transaction transferMoneyBetweenAccounts(String amount, String toAccountId) throws CoinbaseException, IOException {
         URL transferMoneyURL;
         try {
@@ -570,17 +569,17 @@ public class Coinbase {
         return post(transferMoneyURL, request, TransactionResponse.class).getTransaction();
     }
 
-    
+
     public Transfer sell(Money amount) throws CoinbaseException, IOException {
         return sell(amount, null);
     }
 
-    
+
     public Transfer sell(Money amount, String paymentMethodId) throws CoinbaseException, IOException {
         return sell(amount, paymentMethodId, null);
     }
 
-    
+
     public Transfer sell(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException {
         URL sellsUrl;
         try {
@@ -598,17 +597,17 @@ public class Coinbase {
         return post(sellsUrl, request, TransferResponse.class).getTransfer();
     }
 
-    
+
     public Transfer buy(Money amount) throws CoinbaseException, IOException {
         return buy(amount, null);
     }
 
-    
+
     public Transfer buy(Money amount, String paymentMethodId) throws CoinbaseException, IOException {
         return buy(amount, paymentMethodId, null);
     }
 
-    
+
     public Transfer buy(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException {
         URL buysUrl;
         try {
@@ -626,7 +625,7 @@ public class Coinbase {
         return post(buysUrl, request, TransferResponse.class).getTransfer();
     }
 
-    
+
     public Transfer commitTransfer(String accountId, String transactionId) throws CoinbaseException, IOException {
         URL commitUrl;
         try {
@@ -641,7 +640,7 @@ public class Coinbase {
         return post(commitUrl, request, TransferResponse.class).getTransfer();
     }
 
-    
+
     public Order getOrder(String idOrCustom) throws IOException, CoinbaseException {
         URL orderUrl;
         try {
@@ -652,7 +651,7 @@ public class Coinbase {
         return get(orderUrl, OrderResponse.class).getOrder();
     }
 
-    
+
     public OrdersResponse getOrders(int page) throws IOException, CoinbaseException {
         URL ordersUrl;
         try {
@@ -667,12 +666,12 @@ public class Coinbase {
         return get(ordersUrl, OrdersResponse.class);
     }
 
-    
+
     public OrdersResponse getOrders() throws IOException, CoinbaseException {
         return getOrders(1);
     }
 
-    
+
     public AddressesResponse getAddresses(int page) throws IOException, CoinbaseException {
         URL addressesUrl;
         try {
@@ -687,12 +686,12 @@ public class Coinbase {
         return get(addressesUrl, AddressesResponse.class);
     }
 
-    
+
     public AddressesResponse getAddresses() throws IOException, CoinbaseException {
         return getAddresses(1);
     }
 
-    
+
     public ContactsResponse getContacts(int page) throws IOException, CoinbaseException {
         URL contactsUrl;
         try {
@@ -707,12 +706,12 @@ public class Coinbase {
         return get(contactsUrl, ContactsResponse.class);
     }
 
-    
+
     public ContactsResponse getContacts() throws IOException, CoinbaseException {
         return getContacts(1);
     }
 
-    
+
     public ContactsResponse getContacts(String query, int page) throws IOException, CoinbaseException {
         URL contactsUrl;
         try {
@@ -728,12 +727,12 @@ public class Coinbase {
         return get(contactsUrl, ContactsResponse.class);
     }
 
-    
+
     public ContactsResponse getContacts(String query) throws IOException, CoinbaseException {
         return getContacts(query, 1);
     }
 
-    
+
     public Map<String, BigDecimal> getExchangeRates() throws IOException, CoinbaseException {
         URL ratesUrl;
         try {
@@ -745,7 +744,7 @@ public class Coinbase {
         });
     }
 
-    
+
     public List<CurrencyUnit> getSupportedCurrencies() throws IOException, CoinbaseException {
         URL currenciesUrl;
         try {
@@ -769,7 +768,7 @@ public class Coinbase {
         return result;
     }
 
-    
+
     public List<HistoricalPrice> getHistoricalPrices(int page) throws CoinbaseException, IOException {
         URL historicalPricesUrl;
         try {
@@ -807,12 +806,12 @@ public class Coinbase {
         return result;
     }
 
-    
+
     public List<HistoricalPrice> getHistoricalPrices() throws CoinbaseException, IOException {
         return getHistoricalPrices(1);
     }
 
-    
+
     public Button createButton(Button button) throws CoinbaseException, IOException {
         URL buttonsUrl;
         try {
@@ -827,7 +826,7 @@ public class Coinbase {
         return post(buttonsUrl, request, ButtonResponse.class).getButton();
     }
 
-    
+
     public Order createOrder(Button button) throws CoinbaseException, IOException {
         URL ordersUrl;
         try {
@@ -842,7 +841,7 @@ public class Coinbase {
         return post(ordersUrl, request, OrderResponse.class).getOrder();
     }
 
-    
+
     public Order createOrderForButton(String buttonCode) throws CoinbaseException, IOException {
         URL createOrderForButtonUrl;
         try {
@@ -854,7 +853,7 @@ public class Coinbase {
         return post(createOrderForButtonUrl, new Request(), OrderResponse.class).getOrder();
     }
 
-    
+
     public PaymentMethodsResponse getPaymentMethods() throws IOException, CoinbaseException {
         URL paymentMethodsUrl;
         try {
@@ -868,7 +867,7 @@ public class Coinbase {
         return get(paymentMethodsUrl, headers, PaymentMethodsResponse.class);
     }
 
-    
+
     public PaymentMethodResponse getPaymentMethod(String id) throws CoinbaseException, IOException {
         URL paymentMethodURL;
         try {
@@ -882,7 +881,7 @@ public class Coinbase {
         return get(paymentMethodURL, headers, PaymentMethodResponse.class);
     }
 
-    
+
     public void deletePaymentMethod(String id) throws CoinbaseException, IOException {
         URL deleteURL;
 
@@ -897,7 +896,7 @@ public class Coinbase {
         doHttp(deleteURL, "DELETE", null, headers);
     }
 
-    
+
     public RecurringPaymentsResponse getSubscribers(int page) throws IOException, CoinbaseException {
         URL subscribersUrl;
         try {
@@ -912,12 +911,12 @@ public class Coinbase {
         return get(subscribersUrl, RecurringPaymentsResponse.class);
     }
 
-    
+
     public RecurringPaymentsResponse getSubscribers() throws IOException, CoinbaseException {
         return getSubscribers(1);
     }
 
-    
+
     public RecurringPaymentsResponse getRecurringPayments(int page) throws IOException, CoinbaseException {
         URL recurringPaymentsUrl;
         try {
@@ -931,12 +930,12 @@ public class Coinbase {
         return get(recurringPaymentsUrl, RecurringPaymentsResponse.class);
     }
 
-    
+
     public RecurringPaymentsResponse getRecurringPayments() throws IOException, CoinbaseException {
         return getRecurringPayments(1);
     }
 
-    
+
     public RecurringPayment getRecurringPayment(String id) throws CoinbaseException, IOException {
         URL recurringPaymentUrl;
         try {
@@ -948,7 +947,7 @@ public class Coinbase {
         return get(recurringPaymentUrl, RecurringPaymentResponse.class).getRecurringPayment();
     }
 
-    
+
     public RecurringPayment getSubscriber(String id) throws CoinbaseException, IOException {
         URL subscriberUrl;
         try {
@@ -960,7 +959,7 @@ public class Coinbase {
         return get(subscriberUrl, RecurringPaymentResponse.class).getRecurringPayment();
     }
 
-    
+
     public AddressResponse generateReceiveAddress(Address addressParams) throws CoinbaseException, IOException {
         URL generateAddressUrl;
         try {
@@ -975,12 +974,12 @@ public class Coinbase {
         return post(generateAddressUrl, request, AddressResponse.class);
     }
 
-    
+
     public AddressResponse generateReceiveAddress() throws CoinbaseException, IOException {
         return generateReceiveAddress(null);
     }
 
-    
+
     public User createUser(User userParams) throws CoinbaseException, IOException {
         URL usersUrl;
         try {
@@ -995,7 +994,7 @@ public class Coinbase {
         return post(usersUrl, request, UserResponse.class).getUser();
     }
 
-    
+
     public User createUser(User userParams, String clientId, String scope) throws CoinbaseException, IOException {
         URL usersUrl;
         try {
@@ -1012,7 +1011,7 @@ public class Coinbase {
         return post(usersUrl, request, UserResponse.class).getUser();
     }
 
-    
+
     public UserResponse createUserWithOAuth(User userParams, String clientId, String scope) throws CoinbaseException, IOException {
         URL usersUrl;
         try {
@@ -1029,7 +1028,7 @@ public class Coinbase {
         return post(usersUrl, request, UserResponse.class);
     }
 
-    
+
     public User updateUser(String userId, User userParams) throws CoinbaseException, IOException {
         URL userUrl;
         try {
@@ -1044,7 +1043,7 @@ public class Coinbase {
         return put(userUrl, request, UserResponse.class).getUser();
     }
 
-    
+
     public Token createToken() throws CoinbaseException, IOException {
         URL tokensUrl;
         try {
@@ -1056,7 +1055,7 @@ public class Coinbase {
         return post(tokensUrl, new Request(), TokenResponse.class).getToken();
     }
 
-    
+
     public void redeemToken(String tokenId) throws CoinbaseException, IOException {
         URL redeemTokenUrl;
         try {
@@ -1071,7 +1070,7 @@ public class Coinbase {
         post(redeemTokenUrl, request, Response.class);
     }
 
-    
+
     public Application createApplication(Application applicationParams) throws CoinbaseException, IOException {
         URL applicationsUrl;
         try {
@@ -1086,7 +1085,7 @@ public class Coinbase {
         return post(applicationsUrl, request, ApplicationResponse.class).getApplication();
     }
 
-    
+
     public ApplicationsResponse getApplications() throws IOException, CoinbaseException {
         URL applicationsUrl;
         try {
@@ -1097,7 +1096,7 @@ public class Coinbase {
         return get(applicationsUrl, ApplicationsResponse.class);
     }
 
-    
+
     public Application getApplication(String id) throws IOException, CoinbaseException {
         URL applicationUrl;
         try {
@@ -1108,7 +1107,7 @@ public class Coinbase {
         return get(applicationUrl, ApplicationResponse.class).getApplication();
     }
 
-    
+
     public Report createReport(Report reportParams) throws CoinbaseException, IOException {
         URL reportsUrl;
         try {
@@ -1123,7 +1122,7 @@ public class Coinbase {
         return post(reportsUrl, request, ReportResponse.class).getReport();
     }
 
-    
+
     public Report getReport(String reportId) throws IOException, CoinbaseException {
         URL reportUrl;
         try {
@@ -1138,7 +1137,7 @@ public class Coinbase {
         return get(reportUrl, ReportResponse.class).getReport();
     }
 
-    
+
     public ReportsResponse getReports(int page) throws IOException, CoinbaseException {
         URL reportsUrl;
         try {
@@ -1153,12 +1152,12 @@ public class Coinbase {
         return get(reportsUrl, ReportsResponse.class);
     }
 
-    
+
     public ReportsResponse getReports() throws IOException, CoinbaseException {
         return getReports(1);
     }
 
-    
+
     public AccountChangesResponse getAccountChanges(int page) throws IOException, CoinbaseException {
         URL accountChangesUrl;
         try {
@@ -1173,12 +1172,12 @@ public class Coinbase {
         return get(accountChangesUrl, AccountChangesResponse.class);
     }
 
-    
+
     public AccountChangesResponse getAccountChanges() throws IOException, CoinbaseException {
         return getAccountChanges(1);
     }
 
-    
+
     public String getAuthCode(OAuthCodeRequest request)
             throws CoinbaseException, IOException {
 
@@ -1192,7 +1191,7 @@ public class Coinbase {
         return post(credentialsAuthorizationUrl, request, OAuthCodeResponse.class).getCode();
     }
 
-    
+
     public OAuthTokensResponse getTokens(String clientId, String clientSecret, String authCode, String redirectUri)
             throws UnauthorizedDeviceException, CoinbaseException, IOException {
 
@@ -1213,7 +1212,7 @@ public class Coinbase {
         return post(tokenUrl, request, OAuthTokensResponse.class);
     }
 
-    
+
     public void revokeToken() throws CoinbaseException, IOException {
 
         if (_accessToken == null) {
@@ -1236,7 +1235,7 @@ public class Coinbase {
         _accessToken = null;
     }
 
-    
+
     public OAuthTokensResponse refreshTokens(String clientId, String clientSecret, String refreshToken)
             throws CoinbaseException, IOException {
 
@@ -1256,7 +1255,7 @@ public class Coinbase {
         return post(tokenUrl, request, OAuthTokensResponse.class);
     }
 
-    
+
     public void sendSMS(String clientId, String clientSecret, String email, String password) throws CoinbaseException, IOException {
 
         URL smsUrl;
@@ -1275,7 +1274,7 @@ public class Coinbase {
         post(smsUrl, request, Response.class);
     }
 
-    
+
     public Uri getAuthorizationUri(OAuthCodeRequest params) throws CoinbaseException {
         URL authorizeURL;
         Uri builtUri;
@@ -1330,7 +1329,7 @@ public class Coinbase {
         return uriBuilder.build();
     }
 
-    
+
     public boolean verifyCallback(String body, String signature) {
         return _callbackVerifier.verifyCallback(body, signature);
     }
@@ -1513,7 +1512,7 @@ public class Coinbase {
 
     protected Interceptor buildOAuthInterceptor() {
         return new Interceptor() {
-            
+
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
                 com.squareup.okhttp.Request newRequest = chain
                         .request()
@@ -1527,7 +1526,7 @@ public class Coinbase {
 
     protected Interceptor buildHmacAuthInterceptor() {
         return new Interceptor() {
-            
+
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
                 com.squareup.okhttp.Request request = chain.request();
 
@@ -1584,7 +1583,7 @@ public class Coinbase {
     protected Interceptor buildVersionInterceptor() {
 
         return new Interceptor() {
-            
+
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
                 com.squareup.okhttp.Request newRequest = chain
                         .request()
@@ -1599,7 +1598,7 @@ public class Coinbase {
 
     protected Interceptor languageInterceptor() {
         return new Interceptor() {
-            
+
             public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
                 com.squareup.okhttp.Request newRequest = chain
                         .request()
@@ -1636,20 +1635,19 @@ public class Coinbase {
      *
      * @param callback callback interface
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#show-a-user">Online Documentation</a>
      */
     public Call getUser(final Callback<com.coinbase.v2.models.user.User> callback) {
         com.coinbase.ApiInterface apiInterface = getApiService();
         Call call = apiInterface.getUser();
         call.enqueue(new Callback<com.coinbase.v2.models.user.User>() {
-            
+
             public void onResponse(retrofit.Response<com.coinbase.v2.models.user.User> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -1662,15 +1660,12 @@ public class Coinbase {
     /**
      * Modify current user and their preferences
      *
-     * @param name User's public name
-     * @param timeZone Time zone
+     * @param name           User's public name
+     * @param timeZone       Time zone
      * @param nativeCurrency Local currency used to display amounts converted from BTC
-     * @param callback callback interface
-     *
+     * @param callback       callback interface
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#update-current-user">Online Documentation</a>
-     *
      */
     public Call updateUser(String name, String timeZone, String nativeCurrency, final Callback<com.coinbase.v2.models.user.User> callback) {
         HashMap<String, Object> params = new HashMap<>();
@@ -1705,23 +1700,23 @@ public class Coinbase {
 
     /**
      * Retrieve an account belonging to this user
-     * @param accountId account ID for the account to retrieve
-     * @param callback callback interface
-     * @return call object
      *
+     * @param accountId account ID for the account to retrieve
+     * @param callback  callback interface
+     * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#show-an-account">Online Documentation</a>
      */
     public Call getAccount(String accountId, final Callback<com.coinbase.v2.models.account.Account> callback) {
         com.coinbase.ApiInterface apiInterface = getApiService();
         Call call = apiInterface.getAccount(accountId);
         call.enqueue(new Callback<com.coinbase.v2.models.account.Account>() {
-            
+
             public void onResponse(retrofit.Response<com.coinbase.v2.models.account.Account> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -1733,10 +1728,10 @@ public class Coinbase {
 
     /**
      * Retrieve a list of accounts belonging to this user
-     * @param options endpoint options
+     *
+     * @param options  endpoint options
      * @param callback callback interface
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#list-accounts">Online Documentation</a>
      */
     public Call getAccounts(HashMap<String, Object> options, final Callback<Accounts> callback) {
@@ -1744,13 +1739,13 @@ public class Coinbase {
 
         Call call = apiInterface.getAccounts(options);
         call.enqueue(new Callback<Accounts>() {
-            
+
             public void onResponse(retrofit.Response<Accounts> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -1762,10 +1757,10 @@ public class Coinbase {
 
     /**
      * Create a new account for user
-     * @param options endpoint options
+     *
+     * @param options  endpoint options
      * @param callback callback interface
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#create-account">Online Documentation</a>
      */
     public Call createAccount(HashMap<String, Object> options, final Callback<com.coinbase.v2.models.account.Account> callback) {
@@ -1790,9 +1785,9 @@ public class Coinbase {
 
     /**
      * Promote an account as primary account
+     *
      * @param callback callback interface
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#set-account-as-primary">Online Documentation</a>
      */
     public Call setAccountPrimary(String accountId, final Callback<Void> callback) {
@@ -1817,10 +1812,10 @@ public class Coinbase {
 
     /**
      * Modifies user's account
-     * @param options endpoint options
+     *
+     * @param options  endpoint options
      * @param callback callback interface
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#update-account">Online Documentation</a>
      */
     public Call updateAccount(String accountId, HashMap<String, Object> options, final Callback<com.coinbase.v2.models.account.Account> callback) {
@@ -1845,9 +1840,9 @@ public class Coinbase {
 
     /**
      * Removes user's account. See documentation for restrictions
+     *
      * @param callback callback interface
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#delete-account">Online Documentation</a>
      */
     public Call deleteAccount(String accountId, final Callback<Void> callback) {
@@ -1872,12 +1867,12 @@ public class Coinbase {
 
     /**
      * Retrieve a list of the user's recent transactions.
-     * @param accountId account ID that the transaction belongs to
-     * @param options endpoint options
-     * @param expandOptions expand options
-     * @param callback callback interface
-     * @return call object
      *
+     * @param accountId     account ID that the transaction belongs to
+     * @param options       endpoint options
+     * @param expandOptions expand options
+     * @param callback      callback interface
+     * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#list-transactions">Online Documentation</a>
      */
     public Call getTransactions(String accountId,
@@ -1888,13 +1883,13 @@ public class Coinbase {
 
         Call call = apiInterface.getTransactions(accountId, expandOptions, options);
         call.enqueue(new Callback<Transactions>() {
-            
+
             public void onResponse(retrofit.Response<Transactions> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -1906,11 +1901,11 @@ public class Coinbase {
 
     /**
      * Retrieve details of an individual transaction.
-     * @param accountId account ID that the transaction belongs to
-     * @param transactionId the transaction id or idem field value
-     * @param callback callback interface
-     * @return call object
      *
+     * @param accountId     account ID that the transaction belongs to
+     * @param transactionId the transaction id or idem field value
+     * @param callback      callback interface
+     * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#show-a-transaction">Online Documentation</a>
      */
     public Call getTransaction(String accountId, String transactionId, final Callback<com.coinbase.v2.models.transactions.Transaction> callback) {
@@ -1918,13 +1913,13 @@ public class Coinbase {
         List<String> expandOptions = Arrays.asList(com.coinbase.ApiConstants.FROM, com.coinbase.ApiConstants.TO, com.coinbase.ApiConstants.BUY, com.coinbase.ApiConstants.SELL);
         Call call = apiInterface.getTransaction(accountId, transactionId, expandOptions);
         call.enqueue(new Callback<com.coinbase.v2.models.transactions.Transaction>() {
-            
+
             public void onResponse(retrofit.Response<com.coinbase.v2.models.transactions.Transaction> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -1936,24 +1931,24 @@ public class Coinbase {
 
     /**
      * Complete a money request.
-     * @param accountId account ID that the transaction belongs to
-     * @param transactionId the id of the request money transaction to be completed
-     * @param callback callback interface
-     * @return call object
      *
+     * @param accountId     account ID that the transaction belongs to
+     * @param transactionId the id of the request money transaction to be completed
+     * @param callback      callback interface
+     * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#complete-request-money">Online Documentation</a>
      */
     public Call completeRequest(String accountId, String transactionId, final Callback<Void> callback) {
         com.coinbase.ApiInterface apiInterface = getApiService();
         Call call = apiInterface.completeRequest(accountId, transactionId);
         call.enqueue(new Callback<Void>() {
-            
+
             public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -1965,24 +1960,24 @@ public class Coinbase {
 
     /**
      * Resend emails for a money request.
-     * @param accountId account ID that the transaction belongs to
-     * @param transactionId the id of the request money transaction to be resent
-     * @param callback callback interface
-     * @return call object
      *
+     * @param accountId     account ID that the transaction belongs to
+     * @param transactionId the id of the request money transaction to be resent
+     * @param callback      callback interface
+     * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#re-send-request-money">Online Documentation</a>
      */
     public Call resendRequest(String accountId, String transactionId, final Callback<Void> callback) {
         com.coinbase.ApiInterface apiInterface = getApiService();
         Call call = apiInterface.resendRequest(accountId, transactionId);
         call.enqueue(new Callback<Void>() {
-            
+
             public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -1994,24 +1989,24 @@ public class Coinbase {
 
     /**
      * Cancel a money request.
-     * @param accountId account ID that the transaction belongs to
-     * @param transactionId the id of the request money transaction to be cancelled
-     * @param callback callback interface
-     * @return call object
      *
+     * @param accountId     account ID that the transaction belongs to
+     * @param transactionId the id of the request money transaction to be cancelled
+     * @param callback      callback interface
+     * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#cancel-request-money">Online Documentation</a>
      */
     public Call cancelRequest(String accountId, String transactionId, final Callback<Void> callback) {
         com.coinbase.ApiInterface apiInterface = getApiService();
         Call call = apiInterface.cancelRequest(accountId, transactionId);
         call.enqueue(new Callback<Void>() {
-            
+
             public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -2023,10 +2018,10 @@ public class Coinbase {
 
     /**
      * Send money to an email address or bitcoin address
-     * @param accountId account ID that the transaction belongs to
-     * @param params endpoint parameters
-     * @return call object
      *
+     * @param accountId account ID that the transaction belongs to
+     * @param params    endpoint parameters
+     * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#send-money">Online Documentation</a>
      */
     public Call sendMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transactions.Transaction> callback) {
@@ -2034,13 +2029,13 @@ public class Coinbase {
         com.coinbase.ApiInterface apiInterface = getApiService();
         Call call = apiInterface.sendMoney(accountId, params);
         call.enqueue(new Callback<com.coinbase.v2.models.transactions.Transaction>() {
-            
+
             public void onResponse(retrofit.Response<com.coinbase.v2.models.transactions.Transaction> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -2052,10 +2047,10 @@ public class Coinbase {
 
     /**
      * Request money from an email address or bitcoin address
-     * @param accountId account ID that the transaction belongs to
-     * @param params endpoint parameters
-     * @return call object
      *
+     * @param accountId account ID that the transaction belongs to
+     * @param params    endpoint parameters
+     * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#request-money">Online Documentation</a>
      */
     public Call requestMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transactions.Transaction> callback) {
@@ -2063,13 +2058,13 @@ public class Coinbase {
         com.coinbase.ApiInterface apiInterface = getApiService();
         Call call = apiInterface.requestMoney(accountId, params);
         call.enqueue(new Callback<com.coinbase.v2.models.transactions.Transaction>() {
-            
+
             public void onResponse(retrofit.Response<com.coinbase.v2.models.transactions.Transaction> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -2081,10 +2076,10 @@ public class Coinbase {
 
     /**
      * Transfer bitcoin between two of a user’s accounts
-     * @param accountId account ID that the transaction belongs to
-     * @param params endpoint parameters
-     * @return call object
      *
+     * @param accountId account ID that the transaction belongs to
+     * @param params    endpoint parameters
+     * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#transfer-money-between-accounts">Online Documentation</a>
      */
     public Call transferMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transactions.Transaction> callback) {
@@ -2092,13 +2087,13 @@ public class Coinbase {
         ApiInterface apiInterface = getApiService();
         Call call = apiInterface.transferMoney(accountId, params);
         call.enqueue(new Callback<com.coinbase.v2.models.transactions.Transaction>() {
-            
+
             public void onResponse(retrofit.Response<com.coinbase.v2.models.transactions.Transaction> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -2112,22 +2107,21 @@ public class Coinbase {
      * Buys user-defined amount of bitcoin.
      *
      * @param accountId account ID that the buy belongs to
-     * @param params hashmap of params as indicated in api docs
+     * @param params    hashmap of params as indicated in api docs
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#buy-bitcoin">Online Documentation</a>
      */
     public Call buyBitcoin(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
         com.coinbase.ApiInterface apiInterface = getApiService();
         Call call = apiInterface.buyBitcoin(accountId, params);
         call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
-            
+
             public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
 
-            
+
             public void onFailure(Throwable t) {
                 if (callback != null)
                     callback.onFailure(t);
@@ -2141,9 +2135,8 @@ public class Coinbase {
      * Commits a buy that is created in commit: false state.
      *
      * @param accountId account ID that the buy belongs to
-     * @param buyId buy ID that the buy belongs to
+     * @param buyId     buy ID that the buy belongs to
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-buy">Online Documentation</a>
      */
 
@@ -2172,9 +2165,8 @@ public class Coinbase {
      * Sells user-defined amount of bitcoin.
      *
      * @param accountId account ID that the sell belongs to
-     * @param params hashmap of params as indicated in api docs
+     * @param params    hashmap of params as indicated in api docs
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#sell-bitcoin">Online Documentation</a>
      */
     public Call sellBitcoin(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
@@ -2201,9 +2193,8 @@ public class Coinbase {
      * Commits a sell that is created in commit: false state.
      *
      * @param accountId account ID that the sell belongs to
-     * @param sellId sell ID that the sell belongs to
+     * @param sellId    sell ID that the sell belongs to
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-sell">Online Documentation</a>
      */
 
@@ -2229,22 +2220,21 @@ public class Coinbase {
     }
 
     /**
-     *  Retrieve the current spot price of 1 BTC
+     * Retrieve the current sell price of 1 BTC
      *
      * @param baseCurrency the digital currency in which to retrieve the price against
      * @param fiatCurrency the currency in which to retrieve the price
-     * @param params hashmap of params as indicated in api docs
+     * @param params       HashMap of params as indicated in api docs
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
      */
-    public Call getSpotPrice(String baseCurrency, String fiatCurrency,
-                             HashMap<String, Object> params, final Callback<SpotPrice> callback) {
+    public Call getSellPrice(String baseCurrency, String fiatCurrency,
+                             HashMap<String, Object> params, final Callback<Price> callback) {
         com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.getSpotPrice(baseCurrency, fiatCurrency, params);
-        call.enqueue(new Callback<SpotPrice>() {
+        Call call = apiInterface.getSellPrice(baseCurrency, fiatCurrency, params);
+        call.enqueue(new Callback<Price>() {
 
-            public void onResponse(retrofit.Response<SpotPrice> response, Retrofit retrofit) {
+            public void onResponse(retrofit.Response<Price> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
@@ -2260,11 +2250,70 @@ public class Coinbase {
     }
 
     /**
-     *  Generate new address for an account
+     * Retrieve the current buy price of 1 BTC
+     *
+     * @param baseCurrency the digital currency in which to retrieve the price against
+     * @param fiatCurrency the currency in which to retrieve the price
+     * @param params       HashMap of params as indicated in api docs
+     * @return call object
+     * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
+     */
+    public Call getBuyPrice(String baseCurrency, String fiatCurrency,
+                            HashMap<String, Object> params, final Callback<Price> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.getBuyPrice(baseCurrency, fiatCurrency, params);
+        call.enqueue(new Callback<Price>() {
+
+            public void onResponse(retrofit.Response<Price> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Retrieve the current spot price of 1 BTC
+     *
+     * @param baseCurrency the digital currency in which to retrieve the price against
+     * @param fiatCurrency the currency in which to retrieve the price
+     * @param params       HashMap of params as indicated in api docs
+     * @return call object
+     * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
+     */
+    public Call getSpotPrice(String baseCurrency, String fiatCurrency,
+                             HashMap<String, Object> params, final Callback<Price> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+        Call call = apiInterface.getSpotPrice(baseCurrency, fiatCurrency, params);
+        call.enqueue(new Callback<Price>() {
+
+            public void onResponse(retrofit.Response<Price> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Generate new address for an account
      *
      * @param accountId the accountId of the account
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#create-address">Online Documentation</a>
      */
 
@@ -2291,9 +2340,8 @@ public class Coinbase {
      * Deposits user-defined amount of funds to a fiat account.
      *
      * @param accountId account ID that the deposit belongs to
-     * @param params hashmap of params as indicated in api docs
+     * @param params    hashmap of params as indicated in api docs
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#deposit-funds">Online Documentation</a>
      */
     public Call depositFunds(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
@@ -2322,7 +2370,6 @@ public class Coinbase {
      * @param accountId account ID that the deposit belongs to
      * @param depositId deposit ID that the deposit belongs to
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-deposit">Online Documentation</a>
      */
 
@@ -2351,9 +2398,8 @@ public class Coinbase {
      * Withdraws user-defined amount of funds from a fiat account.
      *
      * @param accountId account ID that the withdrawal belongs to
-     * @param params hashmap of params as indicated in api docs
+     * @param params    hashmap of params as indicated in api docs
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#withdraw-funds">Online Documentation</a>
      */
     public Call withdrawFunds(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
@@ -2379,10 +2425,9 @@ public class Coinbase {
     /**
      * Commits a withdrawal that is created in commit: false state.
      *
-     * @param accountId account ID that the withdrawal belongs to
+     * @param accountId  account ID that the withdrawal belongs to
      * @param withdrawId deposit ID that the withdrawal belongs to
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-deposit">Online Documentation</a>
      */
 
@@ -2409,10 +2454,10 @@ public class Coinbase {
 
     /**
      * Show current user’s payment method.
-     * @param paymentMethodId paymentMethod ID for the account to retrieve
-     * @param callback callback interface
-     * @return call object
      *
+     * @param paymentMethodId paymentMethod ID for the account to retrieve
+     * @param callback        callback interface
+     * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#show-a-payment-method">Online Documentation</a>
      */
     public Call getPaymentMethod(String paymentMethodId, final Callback<PaymentMethod> callback) {
@@ -2437,10 +2482,10 @@ public class Coinbase {
 
     /**
      * Lists current user’s payment methods.
-     * @param options endpoint options
+     *
+     * @param options  endpoint options
      * @param callback callback interface
      * @return call object
-     *
      * @see <a href="https://developers.coinbase.com/api/v2#list-payment-methods">Online Documentation</a>
      */
     public Call getPaymentMethods(HashMap<String, Object> options, final Callback<PaymentMethods> callback) {

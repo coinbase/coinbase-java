@@ -5,7 +5,7 @@ import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.address.Address;
 import com.coinbase.v2.models.paymentMethods.PaymentMethod;
 import com.coinbase.v2.models.paymentMethods.PaymentMethods;
-import com.coinbase.v2.models.spotPrice.SpotPrice;
+import com.coinbase.v2.models.spotPrice.Price;
 import com.coinbase.v2.models.transactions.Transaction;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.coinbase.v2.models.transfers.Transfer;
@@ -78,10 +78,20 @@ public interface ApiInterface {
     @POST(com.coinbase.ApiConstants.ACCOUNTS + "/{id}/" + com.coinbase.ApiConstants.TRANSACTIONS)
     Call<Transaction> transferMoney(@Path("id") String accountId, @Body HashMap<String, Object> body);
 
+    @GET(com.coinbase.ApiConstants.PRICES + "/{base_currency}-" + "{fiat_currency}/" + ApiConstants.BUY)
+    Call<Price> getSellPrice(@Path("base_currency") String baseCurrency,
+                             @Path("fiat_currency") String fiatCurrency,
+                             @QueryMap HashMap<String, Object> body);
+
+    @GET(com.coinbase.ApiConstants.PRICES + "/{base_currency}-" + "{fiat_currency}/" + ApiConstants.SELL)
+    Call<Price> getBuyPrice(@Path("base_currency") String baseCurrency,
+                            @Path("fiat_currency") String fiatCurrency,
+                            @QueryMap HashMap<String, Object> body);
+
     @GET(com.coinbase.ApiConstants.PRICES + "/{base_currency}-" + "{fiat_currency}/" + ApiConstants.SPOT)
-    Call<SpotPrice> getSpotPrice(@Path("base_currency") String baseCurrency,
-                                 @Path("fiat_currency") String fiatCurrency,
-                                 @QueryMap HashMap<String, Object> body);
+    Call<Price> getSpotPrice(@Path("base_currency") String baseCurrency,
+                             @Path("fiat_currency") String fiatCurrency,
+                             @QueryMap HashMap<String, Object> body);
 
     @POST(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.BUYS)
     Call<Transfer> buyBitcoin(@Path("id") String accountId, @Body HashMap<String, Object> body);

@@ -5,7 +5,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("org.jsonschema2pojo")
-public class SpotPrice {
+public class Price {
 
     @SerializedName("data")
     @Expose
