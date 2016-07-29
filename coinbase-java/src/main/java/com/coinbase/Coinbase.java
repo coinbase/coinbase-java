@@ -139,15 +139,32 @@ public class Coinbase {
         _callbackVerifier = new CallbackVerifierImpl();
 
         if (_client == null) {
-            _client = new OkHttpClient();
+            _client = generateClient(_sslContext);
+        }
+    }
 
-            _client.setSslSocketFactory(_sslContext.getSocketFactory());
+    private static OkHttpClient generateClient(SSLContext sslContext) {
+        OkHttpClient client = new OkHttpClient();
 
-            // Disable SPDY, causes issues on some Android versions
-            _client.setProtocols(Collections.singletonList(Protocol.HTTP_1_1));
+        if (sslContext != null)
+            client.setSslSocketFactory(sslContext.getSocketFactory());
 
-            _client.setReadTimeout(30, TimeUnit.SECONDS);
-            _client.setConnectTimeout(30, TimeUnit.SECONDS);
+        // Disable SPDY, causes issues on some Android versions
+        client.setProtocols(Collections.singletonList(Protocol.HTTP_1_1));
+
+        client.setReadTimeout(30, TimeUnit.SECONDS);
+        client.setConnectTimeout(30, TimeUnit.SECONDS);
+
+        return client;
+    }
+
+    public static void setBaseUrl(String url, SSLContext sslContext) {
+        try {
+            getInstance()._baseApiUrl = new URL(url);
+            getInstance()._baseV2ApiUrl = new URL(url);
+            getInstance()._client = generateClient(sslContext);
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -1618,7 +1635,7 @@ public class Coinbase {
 
         _client.interceptors().add(buildVersionInterceptor());
 
-        String url = com.coinbase.ApiConstants.BASE_URL_PRODUCTION + "/" + com.coinbase.ApiConstants.SERVER_VERSION + "/";
+        String url = _baseV2ApiUrl.toString();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .client(_client)
