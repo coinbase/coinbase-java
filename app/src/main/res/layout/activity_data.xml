@@ -7,39 +7,37 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.coinbase.coinbasesample.MainActivity">
+    tools:context="com.coinbase.coinbasesample.DataActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Auth status: ..."
-        android:id="@+id/user_tv"
+        android:text="$0.00"
+        android:id="@+id/price_tv"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sell Price"
+        android:id="@+id/sell_price_btn"
         android:layout_centerHorizontal="true"
-        android:padding="10dp" />
+        android:layout_below="@+id/price_tv" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Authorize Application"
-        android:id="@+id/auth_btn"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/user_tv" />
+        android:text="Buy Price"
+        android:id="@+id/buy_price_btn"
+        android:layout_below="@+id/sell_price_btn"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Transactions"
-        android:id="@+id/transactions_btn"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/auth_btn" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Data"
-        android:id="@+id/data_btn"
-        android:layout_below="@+id/transactions_btn"
+        android:text="Spot Price"
+        android:id="@+id/spot_price_btn"
+        android:layout_below="@+id/buy_price_btn"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

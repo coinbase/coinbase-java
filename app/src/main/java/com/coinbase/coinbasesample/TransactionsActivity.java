@@ -11,6 +11,8 @@ import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.account.Data;
 import com.coinbase.v2.models.transactions.Transactions;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -18,6 +20,8 @@ import retrofit.Retrofit;
 public class TransactionsActivity extends AppCompatActivity {
 
     Data account;
+
+    @BindView(R.id.accounts_tv)
     TextView accountsTextView;
 
     @Override
@@ -25,7 +29,7 @@ public class TransactionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transactions);
 
-        accountsTextView = (TextView) findViewById(R.id.accounts_tv);
+        ButterKnife.bind(this);
 
         final ProgressDialog dialog = ProgressDialog.show(this, "Loading Accounts", null);
         Coinbase.getInstance().getAccounts(null, new Callback<Accounts>() {

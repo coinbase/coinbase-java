@@ -13,6 +13,8 @@ import com.coinbase.OAuth;
 import com.coinbase.v1.entity.OAuthTokensResponse;
 import com.coinbase.v2.models.user.User;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
@@ -23,8 +25,16 @@ public class MainActivity extends AppCompatActivity {
     private static final String API_KEY = "f89d5f52d5bf6678b6449e0b6feb5100bf8e0ed3dc45f5f2be51fcea1232111c";
     private static final String API_SECRET = "9fbb237f4bc9c977f5e88895882b5677c4de395fe0996a6eedf912d4fee2b415";
 
+    @BindView(R.id.transactions_btn)
     Button transactionsButton;
+
+    @BindView(R.id.auth_btn)
     Button authButton;
+
+    @BindView(R.id.data_btn)
+    Button dataButton;
+
+    @BindView(R.id.user_tv)
     TextView userTextView;
 
     @Override
@@ -32,15 +42,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ButterKnife.bind(this);
+
         // In the Activity we set up to listen to our redirect URI
         Intent intent = getIntent();
         if (intent != null && intent.getAction() != null && intent.getAction().equals("android.intent.action.VIEW")) {
             new CompleteAuthorizationTask(intent).execute();
         }
-
-        transactionsButton = (Button) findViewById(R.id.transactions_button);
-        authButton = (Button) findViewById(R.id.login_button);
-        userTextView = (TextView) findViewById(R.id.user_tv);
 
         enableButtons(false);
 
@@ -63,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, TransactionsActivity.class));
+            }
+        });
+
+        dataButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, DataActivity.class));
             }
         });
     }
