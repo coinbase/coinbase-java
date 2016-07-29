@@ -5,7 +5,7 @@ import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.address.Address;
 import com.coinbase.v2.models.paymentMethods.PaymentMethod;
 import com.coinbase.v2.models.paymentMethods.PaymentMethods;
-import com.coinbase.v2.models.spotPrice.Price;
+import com.coinbase.v2.models.price.Price;
 import com.coinbase.v2.models.transactions.Transaction;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.coinbase.v2.models.transfers.Transfer;

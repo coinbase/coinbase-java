@@ -1,4 +1,4 @@
-package com.coinbase.v2.models.spotPrice;
+package com.coinbase.v2.models.price;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;

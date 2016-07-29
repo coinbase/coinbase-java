@@ -7,7 +7,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.coinbase.Coinbase;
-import com.coinbase.v2.models.spotPrice.Price;
+import com.coinbase.v2.models.price.Price;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

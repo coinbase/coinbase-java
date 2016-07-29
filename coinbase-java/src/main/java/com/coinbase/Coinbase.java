@@ -59,7 +59,7 @@ import com.coinbase.v1.exception.UnspecifiedAccount;
 import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.paymentMethods.PaymentMethod;
 import com.coinbase.v2.models.paymentMethods.PaymentMethods;
-import com.coinbase.v2.models.spotPrice.Price;
+import com.coinbase.v2.models.price.Price;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
