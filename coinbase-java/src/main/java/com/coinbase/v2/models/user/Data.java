@@ -71,9 +71,6 @@ public class Data {
     @SerializedName("oauth")
     @Expose
     private Oauth oauth;
-    @SerializedName("email_verified")
-    @Expose
-    private Boolean emailVerified;
     @SerializedName("referral_id")
     @Expose
     private Object referralId;
@@ -436,24 +433,6 @@ public class Data {
      */
     public void setOauth(Oauth oauth) {
         this.oauth = oauth;
-    }
-
-    /**
-     *
-     * @return
-     * The emailVerified
-     */
-    public Boolean getEmailVerified() {
-        return emailVerified;
-    }
-
-    /**
-     *
-     * @param emailVerified
-     * The email_verified
-     */
-    public void setEmailVerified(Boolean emailVerified) {
-        this.emailVerified = emailVerified;
     }
 
     /**
