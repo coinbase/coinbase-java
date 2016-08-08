@@ -62,6 +62,9 @@ public class Data {
     @SerializedName("feature_flags")
     @Expose
     private List<String> featureFlags = new ArrayList<String>();
+    @SerializedName("admin_flags")
+    @Expose
+    private List<String> adminFlags = new ArrayList<String>();
     @SerializedName("personal_details")
     @Expose
     private PersonalDetails personalDetails;
@@ -379,6 +382,24 @@ public class Data {
      */
     public void setFeatureFlags(List<String> featureFlags) {
         this.featureFlags = featureFlags;
+    }
+
+    /**
+     *
+     * @return
+     *     The adminFlags
+     */
+    public List<String> getAdminFlags() {
+        return adminFlags;
+    }
+
+    /**
+     *
+     * @param adminFlags
+     *     The admin_flags
+     */
+    public void setAdminFlags(List<String> adminFlags) {
+        this.adminFlags = adminFlags;
     }
 
     /**
