@@ -4,7 +4,7 @@ public class ApiConstants {
     public static String BASE_URL_PRODUCTION = "https://api.coinbase.com";
     public static String SERVER_VERSION = "v2";
     public static String CLIENT_PLATFORM = "mobile";
-    public static String VERSION = "2015-03-20";
+    public static String VERSION = "2016-08-10";
 
     // Endpoints
     public static final String AUTH_CODE = "oauth/authorize/with-credentials";

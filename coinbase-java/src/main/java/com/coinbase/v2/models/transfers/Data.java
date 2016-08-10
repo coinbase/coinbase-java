@@ -4,9 +4,6 @@ package com.coinbase.v2.models.transfers;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
@@ -53,7 +50,7 @@ public class Data {
     private Boolean instant;
     @SerializedName("fees")
     @Expose
-    private List<Fee> fees = new ArrayList<Fee>();
+    private Amount fees;
     @SerializedName("payout_at")
     @Expose
     private String payoutAt;
@@ -303,7 +300,7 @@ public class Data {
      * @return
      *     The fees
      */
-    public List<Fee> getFees() {
+    public Amount getFees() {
         return fees;
     }
 
@@ -312,7 +309,7 @@ public class Data {
      * @param fees
      *     The fees
      */
-    public void setFees(List<Fee> fees) {
+    public void setFees(Amount fees) {
         this.fees = fees;
     }
 
