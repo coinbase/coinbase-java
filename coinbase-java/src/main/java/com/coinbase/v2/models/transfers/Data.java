@@ -48,9 +48,9 @@ public class Data {
     @SerializedName("instant")
     @Expose
     private Boolean instant;
-    @SerializedName("fees")
+    @SerializedName("fee")
     @Expose
-    private Amount fees;
+    private Amount fee;
     @SerializedName("payout_at")
     @Expose
     private String payoutAt;
@@ -300,8 +300,8 @@ public class Data {
      * @return
      *     The fees
      */
-    public Amount getFees() {
-        return fees;
+    public Amount getFee() {
+        return fee;
     }
 
     /**
@@ -309,8 +309,8 @@ public class Data {
      * @param fees
      *     The fees
      */
-    public void setFees(Amount fees) {
-        this.fees = fees;
+    public void setFee(Amount fee) {
+        this.fee = fee;
     }
 
     /**
