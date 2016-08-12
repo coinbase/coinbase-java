@@ -1522,7 +1522,7 @@ public class Coinbase {
     protected HashMap<String, String> getV2VersionHeaders() {
         HashMap<String, String> headers = new HashMap<>();
         headers.put("CB-VERSION", "2015-03-20");
-        headers.put("USER-AGENT", getPackageVersionName());
+        headers.put("CB-CLIENT", getPackageVersionName());
         return headers;
     }
 
@@ -1606,7 +1606,7 @@ public class Coinbase {
                         .request()
                         .newBuilder()
                         .addHeader("CB-VERSION", com.coinbase.ApiConstants.VERSION)
-                        .addHeader("USER-AGENT", getPackageVersionName())
+                        .addHeader("CB-CLIENT", getPackageVersionName())
                         .build();
                 return chain.proceed(newRequest);
             }
