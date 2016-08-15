@@ -131,13 +131,13 @@ public class Data {
     private Boolean allowBuy;
     @SerializedName("allow_sell")
     @Expose
-    private Boolean allowDeposit;
+    private Boolean allowSell;
     @SerializedName("allow_deposit")
     @Expose
-    private Boolean allowWithdraw;
+    private Boolean allowDeposit;
     @SerializedName("allow_withdraw")
     @Expose
-    private Boolean allowSell;
+    private Boolean allowWithdraw;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
