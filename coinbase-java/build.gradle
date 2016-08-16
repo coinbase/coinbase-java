@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6"
     }
 }
@@ -49,7 +49,7 @@ android {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.4'
+    gradleVersion = '2.14'
 }
 
 // custom tasks for creating source/javadoc jars
