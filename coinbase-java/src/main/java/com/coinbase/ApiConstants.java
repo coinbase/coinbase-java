@@ -1,12 +1,13 @@
 package com.coinbase;
 
 public class ApiConstants {
-    public static String BASE_URL_PRODUCTION = "https://api.coinbase.com";
-    public static String SERVER_VERSION = "v2";
-    public static String CLIENT_PLATFORM = "mobile";
-    public static String VERSION = "2016-08-10";
+    public static final String BASE_URL_PRODUCTION = "https://api.coinbase.com";
+    public static final String SERVER_VERSION = "v2";
+    public static final String CLIENT_PLATFORM = "mobile";
+    public static final String VERSION = "2016-08-10";
 
     // Endpoints
+    public static final String TOKEN = "token";
     public static final String AUTH_CODE = "oauth/authorize/with-credentials";
     public static final String ACCESS_TOKEN = "oauth/token";
     public static final String USER = "user";
@@ -24,6 +25,10 @@ public class ApiConstants {
 
 
     // Params
+    public static final String CLIENT_ID = "client_id";
+    public static final String CLIENT_SECRET = "client_secret";
+    public static final String REFRESH_TOKEN = "refresh_token";
+    public static final String GRANT_TYPE = "grant_type";
     public static final String STARTING_AFTER = "starting_after";
     public static final String LOCALE = "locale";
     public static final String TZ_OFFSET = "tz_offset";

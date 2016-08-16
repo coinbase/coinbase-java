@@ -3,6 +3,7 @@ package com.coinbase;
 import android.content.Context;
 import android.net.Uri;
 
+import com.coinbase.auth.AccessToken;
 import com.coinbase.v1.entity.Account;
 import com.coinbase.v1.entity.AccountChangesResponse;
 import com.coinbase.v1.entity.AccountResponse;
@@ -1627,6 +1628,26 @@ public class Coinbase {
         };
     }
 
+    protected ApiInterface getOAuthApiService() {
+        _client.interceptors().clear();
+
+        if (_accessToken != null)
+            _client.interceptors().add(buildOAuthInterceptor());
+
+        _client.interceptors().add(buildVersionInterceptor());
+
+        String url = _baseOAuthUrl.toString();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .client(_client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        com.coinbase.ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
+
+        return service;
+    }
+
     protected com.coinbase.ApiInterface getApiService() {
         _client.interceptors().clear();
 
@@ -1645,6 +1666,35 @@ public class Coinbase {
         com.coinbase.ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
 
         return service;
+    }
+
+    public Call refreshTokens(String clientId,
+                              String clientSecret,
+                              String refreshToken,
+                              final Callback<AccessToken> callback) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(ApiConstants.CLIENT_ID, clientId);
+        params.put(ApiConstants.CLIENT_SECRET, clientSecret);
+        params.put(ApiConstants.REFRESH_TOKEN, refreshToken);
+        params.put(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
+
+        ApiInterface apiInterface = getOAuthApiService();
+        Call call = apiInterface.refreshTokens(params);
+        call.enqueue(new Callback<AccessToken>() {
+            @Override
+            public void onResponse(retrofit.Response<AccessToken> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
     }
 
     /**
