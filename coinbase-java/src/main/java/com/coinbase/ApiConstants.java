@@ -8,6 +8,7 @@ public class ApiConstants {
 
     // Endpoints
     public static final String TOKEN = "token";
+    public static final String REVOKE = "revoke";
     public static final String AUTH_CODE = "oauth/authorize/with-credentials";
     public static final String ACCESS_TOKEN = "oauth/token";
     public static final String USER = "user";

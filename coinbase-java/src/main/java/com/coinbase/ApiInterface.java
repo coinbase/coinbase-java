@@ -30,6 +30,9 @@ public interface ApiInterface {
     @POST(ApiConstants.TOKEN)
     Call<AccessToken> refreshTokens(@Body HashMap<String, Object> body);
 
+    @POST(ApiConstants.REVOKE)
+    Call<Void> revokeToken(@Body HashMap<String, Object> body);
+
     @GET(ApiConstants.USER)
     Call<User> getUser();
 

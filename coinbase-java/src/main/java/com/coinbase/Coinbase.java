@@ -2,6 +2,7 @@ package com.coinbase;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.coinbase.auth.AccessToken;
 import com.coinbase.v1.entity.Account;
@@ -1668,6 +1669,15 @@ public class Coinbase {
         return service;
     }
 
+    /**
+     * Refresh OAuth token
+     *
+     * @param clientId
+     * @param clientSecret
+     * @param refreshToken
+     * @return call object
+     * @see <a href="https://developers.coinbase.com/docs/wallet/coinbase-connect/access-and-refresh-tokens</a>
+     */
     public Call refreshTokens(String clientId,
                               String clientSecret,
                               String refreshToken,
@@ -1683,6 +1693,41 @@ public class Coinbase {
         call.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(retrofit.Response<AccessToken> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+
+    /**
+     * Revoke OAuth token
+     *
+     * @return call object
+     * @see <a href="https://developers.coinbase.com/docs/wallet/coinbase-connect/access-and-refresh-tokens</a>
+     */
+    public Call revokeToken(String accessToken, final Callback<Void> callback) {
+        if (accessToken == null) {
+            Log.w("Coinbase Error", "This client must have been initialized with an access token in order to call revokeToken()");
+            return null;
+        }
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(ApiConstants.TOKEN, accessToken);
+
+        ApiInterface apiInterface = getOAuthApiService();
+        Call call = apiInterface.revokeToken(params);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
             }
