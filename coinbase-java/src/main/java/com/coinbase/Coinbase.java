@@ -1695,6 +1695,8 @@ public class Coinbase {
             public void onResponse(retrofit.Response<AccessToken> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
+
+                _accessToken = response.body().getAccessToken();
             }
 
             @Override
@@ -1714,14 +1716,14 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/docs/wallet/coinbase-connect/access-and-refresh-tokens</a>
      */
-    public Call revokeToken(String accessToken, final Callback<Void> callback) {
-        if (accessToken == null) {
+    public Call revokeToken(final Callback<Void> callback) {
+        if (_accessToken == null) {
             Log.w("Coinbase Error", "This client must have been initialized with an access token in order to call revokeToken()");
             return null;
         }
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put(ApiConstants.TOKEN, accessToken);
+        params.put(ApiConstants.TOKEN, _accessToken);
 
         ApiInterface apiInterface = getOAuthApiService();
         Call call = apiInterface.revokeToken(params);
