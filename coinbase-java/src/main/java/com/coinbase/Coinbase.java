@@ -1732,6 +1732,8 @@ public class Coinbase {
             public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
+
+                _accessToken = null;
             }
 
             @Override
