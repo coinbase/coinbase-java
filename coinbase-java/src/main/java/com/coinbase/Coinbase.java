@@ -1730,10 +1730,11 @@ public class Coinbase {
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
+                if (response.isSuccess())
+                    _accessToken = null;
+
                 if (callback != null)
                     callback.onResponse(response, retrofit);
-
-                _accessToken = null;
             }
 
             @Override
