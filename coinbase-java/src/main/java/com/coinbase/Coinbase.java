@@ -1696,7 +1696,8 @@ public class Coinbase {
                 if (callback != null)
                     callback.onResponse(response, retrofit);
 
-                _accessToken = response.body().getAccessToken();
+                if (response != null && response.body() != null)
+                    _accessToken = response.body().getAccessToken();
             }
 
             @Override
