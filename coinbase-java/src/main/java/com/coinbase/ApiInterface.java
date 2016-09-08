@@ -1,5 +1,6 @@
 package com.coinbase;
 
+import com.coinbase.auth.AccessToken;
 import com.coinbase.v2.models.account.Account;
 import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.address.Address;
@@ -26,6 +27,12 @@ import retrofit.http.Query;
 import retrofit.http.QueryMap;
 
 public interface ApiInterface {
+    @POST(ApiConstants.TOKEN)
+    Call<AccessToken> refreshTokens(@Body HashMap<String, Object> body);
+
+    @POST(ApiConstants.REVOKE)
+    Call<Void> revokeToken(@Body HashMap<String, Object> body);
+
     @GET(ApiConstants.USER)
     Call<User> getUser();
 

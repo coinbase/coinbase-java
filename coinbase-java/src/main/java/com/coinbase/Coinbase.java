@@ -2,7 +2,9 @@ package com.coinbase;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
+import com.coinbase.auth.AccessToken;
 import com.coinbase.v1.entity.Account;
 import com.coinbase.v1.entity.AccountChangesResponse;
 import com.coinbase.v1.entity.AccountResponse;
@@ -1627,6 +1629,26 @@ public class Coinbase {
         };
     }
 
+    protected ApiInterface getOAuthApiService() {
+        _client.interceptors().clear();
+
+        if (_accessToken != null)
+            _client.interceptors().add(buildOAuthInterceptor());
+
+        _client.interceptors().add(buildVersionInterceptor());
+
+        String url = _baseOAuthUrl.toString();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(url)
+                .client(_client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        com.coinbase.ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
+
+        return service;
+    }
+
     protected com.coinbase.ApiInterface getApiService() {
         _client.interceptors().clear();
 
@@ -1645,6 +1667,85 @@ public class Coinbase {
         com.coinbase.ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
 
         return service;
+    }
+
+    /**
+     * Refresh OAuth token
+     *
+     * @param clientId
+     * @param clientSecret
+     * @param refreshToken
+     * @return call object
+     * @see <a href="https://developers.coinbase.com/docs/wallet/coinbase-connect/access-and-refresh-tokens</a>
+     */
+    public Call refreshTokens(String clientId,
+                              String clientSecret,
+                              String refreshToken,
+                              final Callback<AccessToken> callback) {
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(ApiConstants.CLIENT_ID, clientId);
+        params.put(ApiConstants.CLIENT_SECRET, clientSecret);
+        params.put(ApiConstants.REFRESH_TOKEN, refreshToken);
+        params.put(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
+
+        ApiInterface apiInterface = getOAuthApiService();
+        Call call = apiInterface.refreshTokens(params);
+        call.enqueue(new Callback<AccessToken>() {
+            @Override
+            public void onResponse(retrofit.Response<AccessToken> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+
+                if (response != null && response.body() != null)
+                    _accessToken = response.body().getAccessToken();
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+
+    /**
+     * Revoke OAuth token
+     *
+     * @return call object
+     * @see <a href="https://developers.coinbase.com/docs/wallet/coinbase-connect/access-and-refresh-tokens</a>
+     */
+    public Call revokeToken(final Callback<Void> callback) {
+        if (_accessToken == null) {
+            Log.w("Coinbase Error", "This client must have been initialized with an access token in order to call revokeToken()");
+            return null;
+        }
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(ApiConstants.TOKEN, _accessToken);
+
+        ApiInterface apiInterface = getOAuthApiService();
+        Call call = apiInterface.revokeToken(params);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
+                if (response.isSuccess())
+                    _accessToken = null;
+
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
     }
 
     /**
