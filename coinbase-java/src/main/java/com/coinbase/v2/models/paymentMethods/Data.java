@@ -12,7 +12,7 @@ import java.util.List;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class Data {
+public class Data implements Comparable<Data> {
 
     public enum Type {
         ACH_BANK_ACCOUNT("ach_bank_account"),
@@ -22,13 +22,8 @@ public class Data {
         SEPA_BANK_ACCOUNT("sepa_bank_account"),
         FIAT_ACCOUNT("fiat_account"),
         IDEAL_BANK("ideal_bank_account"),
-        EFT_BANK("eft_bank_account"),
-        INTERAC("interac"),
         XFERS("xfers_account"),
         BANK_WIRE("bank_wire"),
-        BANK_ACCOUNT("bank_account"),
-        FUTURE_MERCHANT_PAYOUT("future_merchant_payout"),
-        SEPA_PAYMENT_METHOD("sepa_payment_method"),
         PAYPAL_ACCOUNT("paypal_account");
 
         private String _value;
@@ -466,4 +461,9 @@ public class Data {
         this.cdvStatus = cdvStatus;
     }
 
+    @Override
+    public int compareTo(Data another) {
+        //Todo Change to limit type
+        return type.compareTo(another.type);
+    }
 }
