@@ -12,7 +12,7 @@ import java.util.List;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class Data implements Comparable<Data> {
+public class Data {
 
     public enum Type {
         ACH_BANK_ACCOUNT("ach_bank_account"),
@@ -142,6 +142,12 @@ public class Data implements Comparable<Data> {
     @SerializedName("fiat_account")
     @Expose
     private FiatAccount fiatAccount;
+    @SerializedName("limits")
+    @Expose
+    private Limits limits;
+    @SerializedName("picker_data")
+    @Expose
+    private PickerData pickerData;
     @SerializedName("verified")
     @Expose
     private Boolean verified;
@@ -390,6 +396,43 @@ public class Data implements Comparable<Data> {
     }
 
     /**
+     *
+     * @return
+     *     The limits
+     */
+    public Limits getLimits() {
+        return limits;
+    }
+
+    /**
+     *
+     * @param limits
+     *     The limits
+     */
+    public void setLimits(Limits limits) {
+        this.limits = limits;
+    }
+
+    /**
+     *
+     * @return
+     *     The pickerData
+     */
+    public PickerData getPickerData() {
+        return pickerData;
+    }
+
+    /**
+     *
+     * @param pickerData
+     *     The picker_data
+     */
+    public void setPickerData(PickerData pickerData) {
+        this.pickerData = pickerData;
+    }
+
+
+    /**
      * 
      * @return
      *     The verified
@@ -459,11 +502,5 @@ public class Data implements Comparable<Data> {
      */
     public void setCdvStatus(String cdvStatus) {
         this.cdvStatus = cdvStatus;
-    }
-
-    @Override
-    public int compareTo(Data another) {
-        //Todo Change to limit type
-        return type.compareTo(another.type);
     }
 }
