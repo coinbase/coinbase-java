@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class Buy {
+public class Limit {
 
     @SerializedName("period_in_days")
     @Expose

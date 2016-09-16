@@ -1,11 +1,13 @@
 
 package com.coinbase.v2.models.paymentMethods;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class Limits {
@@ -15,16 +17,16 @@ public class Limits {
     private String limitType;
     @SerializedName("buy")
     @Expose
-    private List<Buy> buy = new ArrayList<Buy>();
+    private List<Limit> buy = new ArrayList<Limit>();
     @SerializedName("instant_buy")
     @Expose
-    private List<InstantBuy> instantBuy = new ArrayList<InstantBuy>();
+    private List<Limit> instantBuy = new ArrayList<Limit>();
     @SerializedName("sell")
     @Expose
-    private List<Sell> sell = new ArrayList<Sell>();
+    private List<Limit> sell = new ArrayList<Limit>();
     @SerializedName("deposit")
     @Expose
-    private List<Deposit> deposit = new ArrayList<Deposit>();
+    private List<Limit> deposit = new ArrayList<Limit>();
 
     /**
      * 
@@ -49,7 +51,7 @@ public class Limits {
      * @return
      *     The buy
      */
-    public List<Buy> getBuy() {
+    public List<Limit> getBuy() {
         return buy;
     }
 
@@ -58,7 +60,7 @@ public class Limits {
      * @param buy
      *     The buy
      */
-    public void setBuy(List<Buy> buy) {
+    public void setBuy(List<Limit> buy) {
         this.buy = buy;
     }
 
@@ -67,7 +69,7 @@ public class Limits {
      * @return
      *     The instantBuy
      */
-    public List<InstantBuy> getInstantBuy() {
+    public List<Limit> getInstantBuy() {
         return instantBuy;
     }
 
@@ -76,7 +78,7 @@ public class Limits {
      * @param instantBuy
      *     The instant_buy
      */
-    public void setInstantBuy(List<InstantBuy> instantBuy) {
+    public void setInstantBuy(List<Limit> instantBuy) {
         this.instantBuy = instantBuy;
     }
 
@@ -85,7 +87,7 @@ public class Limits {
      * @return
      *     The sell
      */
-    public List<Sell> getSell() {
+    public List<Limit> getSell() {
         return sell;
     }
 
@@ -94,7 +96,7 @@ public class Limits {
      * @param sell
      *     The sell
      */
-    public void setSell(List<Sell> sell) {
+    public void setSell(List<Limit> sell) {
         this.sell = sell;
     }
 
@@ -103,7 +105,7 @@ public class Limits {
      * @return
      *     The deposit
      */
-    public List<Deposit> getDeposit() {
+    public List<Limit> getDeposit() {
         return deposit;
     }
 
@@ -112,7 +114,7 @@ public class Limits {
      * @param deposit
      *     The deposit
      */
-    public void setDeposit(List<Deposit> deposit) {
+    public void setDeposit(List<Limit> deposit) {
         this.deposit = deposit;
     }
 
