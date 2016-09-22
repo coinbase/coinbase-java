@@ -15,6 +15,9 @@ public class Limits {
     @SerializedName("limit_type")
     @Expose
     private String limitType;
+    @SerializedName("limit_name")
+    @Expose
+    private String limitName;
     @SerializedName("buy")
     @Expose
     private List<Limit> buy = new ArrayList<Limit>();
@@ -44,6 +47,24 @@ public class Limits {
      */
     public void setLimitType(String limitType) {
         this.limitType = limitType;
+    }
+
+    /**
+     *
+     * @return
+     *     The limitName
+     */
+    public String getLimitName() {
+        return limitName;
+    }
+
+    /**
+     *
+     * @param limitName
+     *     The limit_name
+     */
+    public void setLimitName(String limitName) {
+        this.limitName = limitName;
     }
 
     /**
