@@ -113,9 +113,10 @@ public class Coinbase {
 
     protected static final ObjectMapper objectMapper = ObjectMapperProvider.createDefaultMapper();
 
-    protected URL _baseApiUrl;
+    protected URL _baseV1ApiUrl;
     protected URL _baseOAuthUrl;
     protected URL _baseV2ApiUrl;
+    protected URL _baseApiUrl;
     protected String _accountId;
     protected String _apiKey;
     protected String _apiSecret;
@@ -129,9 +130,10 @@ public class Coinbase {
 
     public Coinbase() {
         try {
-            _baseApiUrl = new URL("https://coinbase.com/api/v1/");
+            _baseApiUrl = new URL("https://api.coinbase.com/");
+            _baseV1ApiUrl = new URL(ApiConstants.BASE_URL_PRODUCTION + "/v1/");
+            _baseV2ApiUrl = new URL(ApiConstants.BASE_URL_PRODUCTION + "/v2/");
             _baseOAuthUrl = new URL("https://www.coinbase.com/oauth/");
-            _baseV2ApiUrl = new URL(ApiConstants.BASE_URL_PRODUCTION + "/" + ApiConstants.SERVER_VERSION + "/");
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -145,7 +147,7 @@ public class Coinbase {
         }
     }
 
-    private static OkHttpClient generateClient(SSLContext sslContext) {
+    protected static OkHttpClient generateClient(SSLContext sslContext) {
         OkHttpClient client = new OkHttpClient();
 
         if (sslContext != null)
@@ -162,7 +164,7 @@ public class Coinbase {
 
     public static void setBaseUrl(String url, SSLContext sslContext) {
         try {
-            getInstance()._baseApiUrl = new URL(url);
+            getInstance()._baseV1ApiUrl = new URL(url);
             getInstance()._baseV2ApiUrl = new URL(url);
             getInstance()._client = generateClient(sslContext);
         } catch (Exception ex) {
@@ -197,7 +199,7 @@ public class Coinbase {
 
     Coinbase(CoinbaseBuilder builder) {
 
-        _baseApiUrl = builder.base_api_url;
+        _baseV1ApiUrl = builder.base_api_url;
         _baseOAuthUrl = builder.base_oauth_url;
         _apiKey = builder.api_key;
         _apiSecret = builder.api_secret;
@@ -207,8 +209,8 @@ public class Coinbase {
         _callbackVerifier = builder.callback_verifier;
 
         try {
-            if (_baseApiUrl == null) {
-                _baseApiUrl = new URL("https://coinbase.com/api/v1/");
+            if (_baseV1ApiUrl == null) {
+                _baseV1ApiUrl = new URL("https://coinbase.com/api/v1/");
             }
             if (_baseOAuthUrl == null) {
                 _baseOAuthUrl = new URL("https://www.coinbase.com/oauth/");
@@ -242,7 +244,7 @@ public class Coinbase {
     public User getUser() throws IOException, CoinbaseException {
         URL usersUrl;
         try {
-            usersUrl = new URL(_baseApiUrl, "users");
+            usersUrl = new URL(_baseV1ApiUrl, "users");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -269,7 +271,7 @@ public class Coinbase {
         URL accountsUrl;
         try {
             accountsUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "accounts?" +
                             "&page=" + page +
                             "&limit=" + limit +
@@ -295,7 +297,7 @@ public class Coinbase {
     public Money getBalance(String accountId) throws IOException, CoinbaseException {
         URL accountBalanceUrl;
         try {
-            accountBalanceUrl = new URL(_baseApiUrl, "accounts/" + accountId + "/balance");
+            accountBalanceUrl = new URL(_baseV1ApiUrl, "accounts/" + accountId + "/balance");
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid account id");
         }
@@ -306,7 +308,7 @@ public class Coinbase {
     public void setPrimaryAccount(String accountId) throws CoinbaseException, IOException {
         URL setPrimaryUrl;
         try {
-            setPrimaryUrl = new URL(_baseApiUrl, "accounts/" + accountId + "/primary");
+            setPrimaryUrl = new URL(_baseV1ApiUrl, "accounts/" + accountId + "/primary");
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid account id");
         }
@@ -317,7 +319,7 @@ public class Coinbase {
     public void deleteAccount(String accountId) throws CoinbaseException, IOException {
         URL accountUrl;
         try {
-            accountUrl = new URL(_baseApiUrl, "accounts/" + accountId);
+            accountUrl = new URL(_baseV1ApiUrl, "accounts/" + accountId);
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid account id");
         }
@@ -355,7 +357,7 @@ public class Coinbase {
     public Account createAccount(Account account) throws CoinbaseException, IOException {
         URL accountsUrl;
         try {
-            accountsUrl = new URL(_baseApiUrl, "accounts");
+            accountsUrl = new URL(_baseV1ApiUrl, "accounts");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -370,7 +372,7 @@ public class Coinbase {
     public void updateAccount(String accountId, Account account) throws CoinbaseException, IOException {
         URL accountUrl;
         try {
-            accountUrl = new URL(_baseApiUrl, "accounts/" + accountId);
+            accountUrl = new URL(_baseV1ApiUrl, "accounts/" + accountId);
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid account id");
         }
@@ -384,7 +386,7 @@ public class Coinbase {
     public Money getSpotPrice(CurrencyUnit currency) throws IOException, CoinbaseException {
         URL spotPriceUrl;
         try {
-            spotPriceUrl = new URL(_baseApiUrl, "prices/spot_rate?currency=" + URLEncoder.encode(currency.getCurrencyCode(), "UTF-8"));
+            spotPriceUrl = new URL(_baseV1ApiUrl, "prices/spot_rate?currency=" + URLEncoder.encode(currency.getCurrencyCode(), "UTF-8"));
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -408,7 +410,7 @@ public class Coinbase {
         URL buyPriceUrl;
         try {
             buyPriceUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "prices/buy?" + qtyParam + "=" + URLEncoder.encode(amount.getAmount().toPlainString(), "UTF-8") +
                             (_accountId != null ? "&account_id=" + _accountId : "") +
                             (paymentMethodId != null ? "&payment_method_id=" + paymentMethodId : "")
@@ -436,7 +438,7 @@ public class Coinbase {
         URL sellPriceUrl;
         try {
             sellPriceUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "prices/sell?" + qtyParam + "=" + URLEncoder.encode(amount.getAmount().toPlainString(), "UTF-8") +
                             (_accountId != null ? "&account_id=" + _accountId : "") +
                             (paymentMethodId != null ? "&payment_method_id=" + paymentMethodId : "")
@@ -452,7 +454,7 @@ public class Coinbase {
         URL transactionsUrl;
         try {
             transactionsUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "transactions?page=" + page +
                             (_accountId != null ? "&account_id=" + _accountId : "")
             );
@@ -471,7 +473,7 @@ public class Coinbase {
     public Transaction getTransaction(String id) throws IOException, CoinbaseException {
         URL transactionUrl;
         try {
-            transactionUrl = new URL(_baseApiUrl, "transactions/" + id);
+            transactionUrl = new URL(_baseV1ApiUrl, "transactions/" + id);
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid transaction id");
         }
@@ -482,7 +484,7 @@ public class Coinbase {
     public Transaction requestMoney(Transaction transaction) throws CoinbaseException, IOException {
         URL requestMoneyUrl;
         try {
-            requestMoneyUrl = new URL(_baseApiUrl, "transactions/request_money");
+            requestMoneyUrl = new URL(_baseV1ApiUrl, "transactions/request_money");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -501,7 +503,7 @@ public class Coinbase {
     public void resendRequest(String id) throws CoinbaseException, IOException {
         URL resendRequestUrl;
         try {
-            resendRequestUrl = new URL(_baseApiUrl, "transactions/" + id + "/resend_request");
+            resendRequestUrl = new URL(_baseV1ApiUrl, "transactions/" + id + "/resend_request");
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid transaction id");
         }
@@ -512,7 +514,7 @@ public class Coinbase {
     public void deleteRequest(String id) throws CoinbaseException, IOException {
         URL cancelRequestUrl;
         try {
-            cancelRequestUrl = new URL(_baseApiUrl, "transactions/" + id + "/cancel_request");
+            cancelRequestUrl = new URL(_baseV1ApiUrl, "transactions/" + id + "/cancel_request");
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid transaction id");
         }
@@ -523,7 +525,7 @@ public class Coinbase {
     public Transaction completeRequest(String id) throws CoinbaseException, IOException {
         URL completeRequestUrl;
         try {
-            completeRequestUrl = new URL(_baseApiUrl, "transactions/" + id + "/complete_request");
+            completeRequestUrl = new URL(_baseV1ApiUrl, "transactions/" + id + "/complete_request");
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid transaction id");
         }
@@ -534,7 +536,7 @@ public class Coinbase {
     public Transaction sendMoney(Transaction transaction) throws CoinbaseException, IOException {
         URL sendMoneyUrl;
         try {
-            sendMoneyUrl = new URL(_baseApiUrl, "transactions/send_money");
+            sendMoneyUrl = new URL(_baseV1ApiUrl, "transactions/send_money");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -554,7 +556,7 @@ public class Coinbase {
         URL transfersUrl;
         try {
             transfersUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "transfers?page=" + page +
                             (_accountId != null ? "&account_id=" + _accountId : "")
             );
@@ -573,7 +575,7 @@ public class Coinbase {
     public Transaction transferMoneyBetweenAccounts(String amount, String toAccountId) throws CoinbaseException, IOException {
         URL transferMoneyURL;
         try {
-            transferMoneyURL = new URL(_baseApiUrl, "transactions/transfer_money");
+            transferMoneyURL = new URL(_baseV1ApiUrl, "transactions/transfer_money");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -602,7 +604,7 @@ public class Coinbase {
     public Transfer sell(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException {
         URL sellsUrl;
         try {
-            sellsUrl = new URL(_baseApiUrl, "sells");
+            sellsUrl = new URL(_baseV1ApiUrl, "sells");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -630,7 +632,7 @@ public class Coinbase {
     public Transfer buy(Money amount, String paymentMethodId, Boolean commit) throws CoinbaseException, IOException {
         URL buysUrl;
         try {
-            buysUrl = new URL(_baseApiUrl, "buys");
+            buysUrl = new URL(_baseV1ApiUrl, "buys");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -648,7 +650,7 @@ public class Coinbase {
     public Transfer commitTransfer(String accountId, String transactionId) throws CoinbaseException, IOException {
         URL commitUrl;
         try {
-            commitUrl = new URL(_baseApiUrl, "transfers/" + transactionId + "/commit");
+            commitUrl = new URL(_baseV1ApiUrl, "transfers/" + transactionId + "/commit");
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid transaction id");
         }
@@ -663,7 +665,7 @@ public class Coinbase {
     public Order getOrder(String idOrCustom) throws IOException, CoinbaseException {
         URL orderUrl;
         try {
-            orderUrl = new URL(_baseApiUrl, "orders/" + idOrCustom);
+            orderUrl = new URL(_baseV1ApiUrl, "orders/" + idOrCustom);
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid order id/custom");
         }
@@ -675,7 +677,7 @@ public class Coinbase {
         URL ordersUrl;
         try {
             ordersUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "orders?page=" + page +
                             (_accountId != null ? "&account_id=" + _accountId : "")
             );
@@ -695,7 +697,7 @@ public class Coinbase {
         URL addressesUrl;
         try {
             addressesUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "addresses?page=" + page +
                             (_accountId != null ? "&account_id=" + _accountId : "")
             );
@@ -715,7 +717,7 @@ public class Coinbase {
         URL contactsUrl;
         try {
             contactsUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "contacts?page=" + page
             );
         } catch (MalformedURLException ex) {
@@ -735,7 +737,7 @@ public class Coinbase {
         URL contactsUrl;
         try {
             contactsUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "contacts?page=" + page +
                             "&query=" + URLEncoder.encode(query, "UTF-8")
             );
@@ -755,7 +757,7 @@ public class Coinbase {
     public Map<String, BigDecimal> getExchangeRates() throws IOException, CoinbaseException {
         URL ratesUrl;
         try {
-            ratesUrl = new URL(_baseApiUrl, "currencies/exchange_rates");
+            ratesUrl = new URL(_baseV1ApiUrl, "currencies/exchange_rates");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -767,7 +769,7 @@ public class Coinbase {
     public List<CurrencyUnit> getSupportedCurrencies() throws IOException, CoinbaseException {
         URL currenciesUrl;
         try {
-            currenciesUrl = new URL(_baseApiUrl, "currencies");
+            currenciesUrl = new URL(_baseV1ApiUrl, "currencies");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -792,7 +794,7 @@ public class Coinbase {
         URL historicalPricesUrl;
         try {
             historicalPricesUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "prices/historical?page=" + page
             );
         } catch (MalformedURLException ex) {
@@ -834,7 +836,7 @@ public class Coinbase {
     public Button createButton(Button button) throws CoinbaseException, IOException {
         URL buttonsUrl;
         try {
-            buttonsUrl = new URL(_baseApiUrl, "buttons");
+            buttonsUrl = new URL(_baseV1ApiUrl, "buttons");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -849,7 +851,7 @@ public class Coinbase {
     public Order createOrder(Button button) throws CoinbaseException, IOException {
         URL ordersUrl;
         try {
-            ordersUrl = new URL(_baseApiUrl, "orders");
+            ordersUrl = new URL(_baseV1ApiUrl, "orders");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -864,7 +866,7 @@ public class Coinbase {
     public Order createOrderForButton(String buttonCode) throws CoinbaseException, IOException {
         URL createOrderForButtonUrl;
         try {
-            createOrderForButtonUrl = new URL(_baseApiUrl, "buttons/" + buttonCode + "/create_order");
+            createOrderForButtonUrl = new URL(_baseV1ApiUrl, "buttons/" + buttonCode + "/create_order");
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid button code");
         }
@@ -920,7 +922,7 @@ public class Coinbase {
         URL subscribersUrl;
         try {
             subscribersUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "subscribers?page=" + page
             );
         } catch (MalformedURLException ex) {
@@ -940,7 +942,7 @@ public class Coinbase {
         URL recurringPaymentsUrl;
         try {
             recurringPaymentsUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "recurring_payments?page=" + page
             );
         } catch (MalformedURLException ex) {
@@ -958,7 +960,7 @@ public class Coinbase {
     public RecurringPayment getRecurringPayment(String id) throws CoinbaseException, IOException {
         URL recurringPaymentUrl;
         try {
-            recurringPaymentUrl = new URL(_baseApiUrl, "recurring_payments/" + id);
+            recurringPaymentUrl = new URL(_baseV1ApiUrl, "recurring_payments/" + id);
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid payment id");
         }
@@ -970,7 +972,7 @@ public class Coinbase {
     public RecurringPayment getSubscriber(String id) throws CoinbaseException, IOException {
         URL subscriberUrl;
         try {
-            subscriberUrl = new URL(_baseApiUrl, "subscribers/" + id);
+            subscriberUrl = new URL(_baseV1ApiUrl, "subscribers/" + id);
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid subscriber id");
         }
@@ -982,7 +984,7 @@ public class Coinbase {
     public AddressResponse generateReceiveAddress(Address addressParams) throws CoinbaseException, IOException {
         URL generateAddressUrl;
         try {
-            generateAddressUrl = new URL(_baseApiUrl, "account/generate_receive_address");
+            generateAddressUrl = new URL(_baseV1ApiUrl, "account/generate_receive_address");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -1002,7 +1004,7 @@ public class Coinbase {
     public User createUser(User userParams) throws CoinbaseException, IOException {
         URL usersUrl;
         try {
-            usersUrl = new URL(_baseApiUrl, "users");
+            usersUrl = new URL(_baseV1ApiUrl, "users");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -1017,7 +1019,7 @@ public class Coinbase {
     public User createUser(User userParams, String clientId, String scope) throws CoinbaseException, IOException {
         URL usersUrl;
         try {
-            usersUrl = new URL(_baseApiUrl, "users");
+            usersUrl = new URL(_baseV1ApiUrl, "users");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -1034,7 +1036,7 @@ public class Coinbase {
     public UserResponse createUserWithOAuth(User userParams, String clientId, String scope) throws CoinbaseException, IOException {
         URL usersUrl;
         try {
-            usersUrl = new URL(_baseApiUrl, "users");
+            usersUrl = new URL(_baseV1ApiUrl, "users");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -1051,7 +1053,7 @@ public class Coinbase {
     public User updateUser(String userId, User userParams) throws CoinbaseException, IOException {
         URL userUrl;
         try {
-            userUrl = new URL(_baseApiUrl, "users/" + userId);
+            userUrl = new URL(_baseV1ApiUrl, "users/" + userId);
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid user id");
         }
@@ -1066,7 +1068,7 @@ public class Coinbase {
     public Token createToken() throws CoinbaseException, IOException {
         URL tokensUrl;
         try {
-            tokensUrl = new URL(_baseApiUrl, "tokens");
+            tokensUrl = new URL(_baseV1ApiUrl, "tokens");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -1078,7 +1080,7 @@ public class Coinbase {
     public void redeemToken(String tokenId) throws CoinbaseException, IOException {
         URL redeemTokenUrl;
         try {
-            redeemTokenUrl = new URL(_baseApiUrl, "tokens/redeem");
+            redeemTokenUrl = new URL(_baseV1ApiUrl, "tokens/redeem");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -1093,7 +1095,7 @@ public class Coinbase {
     public Application createApplication(Application applicationParams) throws CoinbaseException, IOException {
         URL applicationsUrl;
         try {
-            applicationsUrl = new URL(_baseApiUrl, "oauth/applications");
+            applicationsUrl = new URL(_baseV1ApiUrl, "oauth/applications");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -1108,7 +1110,7 @@ public class Coinbase {
     public ApplicationsResponse getApplications() throws IOException, CoinbaseException {
         URL applicationsUrl;
         try {
-            applicationsUrl = new URL(_baseApiUrl, "oauth/applications");
+            applicationsUrl = new URL(_baseV1ApiUrl, "oauth/applications");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -1119,7 +1121,7 @@ public class Coinbase {
     public Application getApplication(String id) throws IOException, CoinbaseException {
         URL applicationUrl;
         try {
-            applicationUrl = new URL(_baseApiUrl, "oauth/applications/" + id);
+            applicationUrl = new URL(_baseV1ApiUrl, "oauth/applications/" + id);
         } catch (MalformedURLException ex) {
             throw new CoinbaseException("Invalid application id");
         }
@@ -1130,7 +1132,7 @@ public class Coinbase {
     public Report createReport(Report reportParams) throws CoinbaseException, IOException {
         URL reportsUrl;
         try {
-            reportsUrl = new URL(_baseApiUrl, "reports");
+            reportsUrl = new URL(_baseV1ApiUrl, "reports");
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         }
@@ -1146,7 +1148,7 @@ public class Coinbase {
         URL reportUrl;
         try {
             reportUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "reports/" + reportId +
                             (_accountId != null ? "?account_id=" + _accountId : "")
             );
@@ -1161,7 +1163,7 @@ public class Coinbase {
         URL reportsUrl;
         try {
             reportsUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "reports?page=" + page +
                             (_accountId != null ? "&account_id=" + _accountId : "")
             );
@@ -1181,7 +1183,7 @@ public class Coinbase {
         URL accountChangesUrl;
         try {
             accountChangesUrl = new URL(
-                    _baseApiUrl,
+                    _baseV1ApiUrl,
                     "account_changes?page=" + page +
                             (_accountId != null ? "&account_id=" + _accountId : "")
             );
