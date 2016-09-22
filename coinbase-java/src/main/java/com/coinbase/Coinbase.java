@@ -145,7 +145,7 @@ public class Coinbase {
         }
     }
 
-    private static OkHttpClient generateClient(SSLContext sslContext) {
+    protected static OkHttpClient generateClient(SSLContext sslContext) {
         OkHttpClient client = new OkHttpClient();
 
         if (sslContext != null)
