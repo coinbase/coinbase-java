@@ -1,7 +1,7 @@
 package com.coinbase;
 
 public class ApiConstants {
-    public static final String BASE_URL_PRODUCTION = "https://api.coinbase.com";
+    public static final String BASE_URL_PRODUCTION = "https://coinbase.com/api";
     public static final String SERVER_VERSION = "v2";
     public static final String CLIENT_PLATFORM = "mobile";
     public static final String VERSION = "2016-08-10";
