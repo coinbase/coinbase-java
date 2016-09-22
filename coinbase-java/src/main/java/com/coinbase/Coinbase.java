@@ -130,7 +130,7 @@ public class Coinbase {
 
     public Coinbase() {
         try {
-            _baseApiUrl = new URL(ApiConstants.BASE_URL_PRODUCTION + "/");
+            _baseApiUrl = new URL("https://api.coinbase.com/");
             _baseV1ApiUrl = new URL(ApiConstants.BASE_URL_PRODUCTION + "/v1/");
             _baseV2ApiUrl = new URL(ApiConstants.BASE_URL_PRODUCTION + "/v2/");
             _baseOAuthUrl = new URL("https://www.coinbase.com/oauth/");
