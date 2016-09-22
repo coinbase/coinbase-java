@@ -22,13 +22,8 @@ public class Data {
         SEPA_BANK_ACCOUNT("sepa_bank_account"),
         FIAT_ACCOUNT("fiat_account"),
         IDEAL_BANK("ideal_bank_account"),
-        EFT_BANK("eft_bank_account"),
-        INTERAC("interac"),
         XFERS("xfers_account"),
         BANK_WIRE("bank_wire"),
-        BANK_ACCOUNT("bank_account"),
-        FUTURE_MERCHANT_PAYOUT("future_merchant_payout"),
-        SEPA_PAYMENT_METHOD("sepa_payment_method"),
         PAYPAL_ACCOUNT("paypal_account");
 
         private String _value;
@@ -147,6 +142,12 @@ public class Data {
     @SerializedName("fiat_account")
     @Expose
     private FiatAccount fiatAccount;
+    @SerializedName("limits")
+    @Expose
+    private Limits limits;
+    @SerializedName("picker_data")
+    @Expose
+    private PickerData pickerData;
     @SerializedName("verified")
     @Expose
     private Boolean verified;
@@ -395,6 +396,43 @@ public class Data {
     }
 
     /**
+     *
+     * @return
+     *     The limits
+     */
+    public Limits getLimits() {
+        return limits;
+    }
+
+    /**
+     *
+     * @param limits
+     *     The limits
+     */
+    public void setLimits(Limits limits) {
+        this.limits = limits;
+    }
+
+    /**
+     *
+     * @return
+     *     The pickerData
+     */
+    public PickerData getPickerData() {
+        return pickerData;
+    }
+
+    /**
+     *
+     * @param pickerData
+     *     The picker_data
+     */
+    public void setPickerData(PickerData pickerData) {
+        this.pickerData = pickerData;
+    }
+
+
+    /**
      * 
      * @return
      *     The verified
@@ -465,5 +503,4 @@ public class Data {
     public void setCdvStatus(String cdvStatus) {
         this.cdvStatus = cdvStatus;
     }
-
 }
