@@ -164,12 +164,13 @@ public class Coinbase {
 
     public static void setBaseUrl(String url, SSLContext sslContext) {
         try {
-            getInstance()._baseV1ApiUrl = new URL(url);
-            getInstance()._baseV2ApiUrl = new URL(url);
-            getInstance()._client = generateClient(sslContext);
+            getInstance()._baseApiUrl = new URL(url + "/");
+            getInstance()._baseV1ApiUrl = new URL(url + "/v1/");
+            getInstance()._baseV2ApiUrl = new URL(url + "/v2/");
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+        getInstance()._client = generateClient(sslContext);
     }
 
     public static void init(Context context, String apiKey, String apiSecret) {
