@@ -12,12 +12,12 @@ import javax.annotation.Generated;
 @Generated("org.jsonschema2pojo")
 public class Limits {
 
-    @SerializedName("limit_type")
+    @SerializedName("type")
     @Expose
-    private String limitType;
-    @SerializedName("limit_name")
+    private String type;
+    @SerializedName("name")
     @Expose
-    private String limitName;
+    private String name;
     @SerializedName("buy")
     @Expose
     private List<Limit> buy = new ArrayList<Limit>();
@@ -34,37 +34,37 @@ public class Limits {
     /**
      * 
      * @return
-     *     The limitType
+     *     The type
      */
-    public String getLimitType() {
-        return limitType;
+    public String getType() {
+        return type;
     }
 
     /**
      * 
-     * @param limitType
-     *     The limit_type
+     * @param type
+     *     The type
      */
-    public void setLimitType(String limitType) {
-        this.limitType = limitType;
+    public void setType(String type) {
+        this.type = type;
     }
 
     /**
      *
      * @return
-     *     The limitName
+     *     The name
      */
-    public String getLimitName() {
-        return limitName;
+    public String getName() {
+        return name;
     }
 
     /**
      *
-     * @param limitName
-     *     The limit_name
+     * @param name
+     *     The name
      */
-    public void setLimitName(String limitName) {
-        this.limitName = limitName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**

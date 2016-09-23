@@ -21,6 +21,9 @@ public class Limit {
     @SerializedName("next_requirement")
     @Expose
     private NextRequirement nextRequirement;
+    @SerializedName("description")
+    @Expose
+    private String description;
 
     /**
      * 
@@ -93,4 +96,23 @@ public class Limit {
     public void setNextRequirement(NextRequirement nextRequirement) {
         this.nextRequirement = nextRequirement;
     }
+
+    /**
+     *
+     * @return
+     *     The description
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     *
+     * @param periodInDays
+     *     The period_in_days
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 }
