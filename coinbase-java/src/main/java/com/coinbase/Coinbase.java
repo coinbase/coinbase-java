@@ -162,6 +162,15 @@ public class Coinbase {
         return client;
     }
 
+    public static void setBaseUrl(String url) {
+        try {
+            SSLContext context = SSLContext.getDefault();
+            setBaseUrl(url, context);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void setBaseUrl(String url, SSLContext sslContext) {
         try {
             getInstance()._baseApiUrl = new URL(url + "/");

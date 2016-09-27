@@ -85,12 +85,12 @@ public interface ApiInterface {
     @POST(com.coinbase.ApiConstants.ACCOUNTS + "/{id}/" + com.coinbase.ApiConstants.TRANSACTIONS)
     Call<Transaction> transferMoney(@Path("id") String accountId, @Body HashMap<String, Object> body);
 
-    @GET(com.coinbase.ApiConstants.PRICES + "/{base_currency}-" + "{fiat_currency}/" + ApiConstants.BUY)
+    @GET(com.coinbase.ApiConstants.PRICES + "/{base_currency}-" + "{fiat_currency}/" + ApiConstants.SELL)
     Call<Price> getSellPrice(@Path("base_currency") String baseCurrency,
                              @Path("fiat_currency") String fiatCurrency,
                              @QueryMap HashMap<String, Object> body);
 
-    @GET(com.coinbase.ApiConstants.PRICES + "/{base_currency}-" + "{fiat_currency}/" + ApiConstants.SELL)
+    @GET(com.coinbase.ApiConstants.PRICES + "/{base_currency}-" + "{fiat_currency}/" + ApiConstants.BUY)
     Call<Price> getBuyPrice(@Path("base_currency") String baseCurrency,
                             @Path("fiat_currency") String fiatCurrency,
                             @QueryMap HashMap<String, Object> body);
