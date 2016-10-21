@@ -4,6 +4,7 @@ import com.coinbase.auth.AccessToken;
 import com.coinbase.v2.models.account.Account;
 import com.coinbase.v2.models.account.Accounts;
 import com.coinbase.v2.models.address.Address;
+import com.coinbase.v2.models.exchangeRates.ExchangeRates;
 import com.coinbase.v2.models.paymentMethods.PaymentMethod;
 import com.coinbase.v2.models.paymentMethods.PaymentMethods;
 import com.coinbase.v2.models.price.Price;
@@ -133,4 +134,6 @@ public interface ApiInterface {
     @GET(ApiConstants.PAYMENT_METHODS + "/{id}")
     Call<PaymentMethod> getPaymentMethod(@Path("id") String paymentMethodId);
 
+    @GET(ApiConstants.EXCHANGE_RATES)
+    Call<ExchangeRates> getExchangeRates(@QueryMap HashMap<String, Object> body);
 }

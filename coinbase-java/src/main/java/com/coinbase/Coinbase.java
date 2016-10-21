@@ -59,6 +59,7 @@ import com.coinbase.v1.exception.UnauthorizedDeviceException;
 import com.coinbase.v1.exception.UnauthorizedException;
 import com.coinbase.v1.exception.UnspecifiedAccount;
 import com.coinbase.v2.models.account.Accounts;
+import com.coinbase.v2.models.exchangeRates.ExchangeRates;
 import com.coinbase.v2.models.paymentMethods.PaymentMethod;
 import com.coinbase.v2.models.paymentMethods.PaymentMethods;
 import com.coinbase.v2.models.price.Price;
@@ -2629,6 +2630,34 @@ public class Coinbase {
                     callback.onResponse(response, retrofit);
             }
 
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Get current exchange rates.
+     *
+     * @param currency  base currency (Default: USD)
+     * @param callback callback interface
+     * @return call object
+     * @see <a href="https://developers.coinbase.com/api/v2#get-exchange-rates">Online Documentation</a>
+     */
+    public Call getExchangeRates(HashMap<String, Object> currency, final Callback<ExchangeRates> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+
+        Call call = apiInterface.getExchangeRates(currency);
+        call.enqueue(new Callback<ExchangeRates>() {
+
+            public void onResponse(retrofit.Response<ExchangeRates> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
 
             public void onFailure(Throwable t) {
                 if (callback != null)
