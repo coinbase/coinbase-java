@@ -25,6 +25,14 @@ public class Data {
         public String toString() {
             return super.toString().toLowerCase();
         }
+
+        public static Type toType(String value) {
+            try {
+                return valueOf(value.toUpperCase());
+            } catch (Exception e) {
+                return UNKNOWN;
+            }
+        }
     }
 
     @SerializedName("id")
