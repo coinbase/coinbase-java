@@ -1,7 +1,5 @@
 package com.coinbase.v2.models.account;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,32 +9,21 @@ import javax.annotation.Generated;
 public class Data {
 
     public enum Type {
-        WALLET("wallet"),
-        VAULT("vault"),
-        MULTISIG_VAULT("multisig_vault"),
-        MULTISIG("multisig"),
-        FIAT("fiat");
-
-        private String _value;
-
-        private Type(String value) {
-            this._value = value;
-        }
+        @SerializedName("wallet")
+        WALLET(),
+        @SerializedName("vault")
+        VAULT(),
+        @SerializedName("multisig_vault")
+        MULTISIG_VAULT(),
+        @SerializedName("multisig")
+        MULTISIG(),
+        @SerializedName("fiat")
+        FIAT(),
+        UNKNOWN();
 
         @Override
-        @JsonValue
         public String toString() {
-            return this._value;
-        }
-
-        @JsonCreator
-        public static Type create(String val) {
-            for (Type type : Type.values()) {
-                if (type.toString().equalsIgnoreCase(val)) {
-                    return type;
-                }
-            }
-            return null;
+            return super.toString().toLowerCase();
         }
     }
 
@@ -49,9 +36,7 @@ public class Data {
     @SerializedName("primary")
     @Expose
     private Boolean primary;
-    @SerializedName("type")
-    @Expose
-    private String type;
+    private Type type;
     @SerializedName("currency")
     @Expose
     private String currency;
@@ -139,7 +124,7 @@ public class Data {
      * @return
      * The type
      */
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
@@ -148,7 +133,7 @@ public class Data {
      * @param type
      * The type
      */
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 

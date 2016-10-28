@@ -1,8 +1,6 @@
 
 package com.coinbase.v2.models.paymentMethods;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,100 +13,64 @@ import javax.annotation.Generated;
 public class Data {
 
     public enum Type {
-        ACH_BANK_ACCOUNT("ach_bank_account"),
-        CREDIT_CARD("credit_card"),
-        DEBIT_CARD("debit_card"),
-        SECURE_3DS("secure3d_card"),
-        SEPA_BANK_ACCOUNT("sepa_bank_account"),
-        FIAT_ACCOUNT("fiat_account"),
-        IDEAL_BANK("ideal_bank_account"),
-        XFERS("xfers_account"),
-        BANK_WIRE("bank_wire"),
-        PAYPAL_ACCOUNT("paypal_account");
-
-        private String _value;
-
-        private Type(String value) {
-            this._value = value;
-        }
+        @SerializedName("ach_bank_account")
+        ACH_BANK_ACCOUNT(),
+        @SerializedName("credit_card")
+        CREDIT_CARD(),
+        @SerializedName("debit_card")
+        DEBIT_CARD(),
+        @SerializedName("secure3d_card")
+        SECURE_3DS(),
+        @SerializedName("sepa_bank_account")
+        SEPA_BANK_ACCOUNT(),
+        @SerializedName("fiat_account")
+        FIAT_ACCOUNT(),
+        @SerializedName("ideal_bank_account")
+        IDEAL_BANK(),
+        @SerializedName("xfers_account")
+        XFERS(),
+        @SerializedName("bank_wire")
+        BANK_WIRE(),
+        @SerializedName("paypal_account")
+        PAYPAL_ACCOUNT(),
+        UNKNOWN();
 
         @Override
-        @JsonValue
         public String toString() {
-            return this._value;
-        }
-
-        @JsonCreator
-        public static Type create(String val) {
-            for (Type type : Type.values()) {
-                if (type.toString().equalsIgnoreCase(val)) {
-                    return type;
-                }
-            }
-            return null;
+            return super.toString().toLowerCase();
         }
     }
 
     public enum VerificationMethod {
-        CDV("cdv"),
-        ACH_SETUP_SESSION("ach_setup_session");
-
-        private String _value;
-
-        private VerificationMethod(String value) {
-            this._value = value;
-        }
+        @SerializedName("cdv")
+        CDV(),
+        @SerializedName("ach_setup_session")
+        ACH_SETUP_SESSION(),
+        UNKNOWN();
 
         @Override
-        @JsonValue
         public String toString() {
-            return this._value;
-        }
-
-        @JsonCreator
-        public static VerificationMethod create(String val) {
-            for (VerificationMethod type : VerificationMethod.values()) {
-                if (type.toString().equalsIgnoreCase(val)) {
-                    return type;
-                }
-            }
-            return null;
+            return super.toString().toLowerCase();
         }
     }
 
     public enum CDVStatus {
-        READY("ready"),
-        IN_PROGRESS("in_progress");
-
-        private String _value;
-
-        private CDVStatus(String value) {
-            this._value = value;
-        }
+        @SerializedName("ready")
+        READY(),
+        @SerializedName("in_progress")
+        IN_PROGRESS(),
+        UNKNOWN();
 
         @Override
-        @JsonValue
         public String toString() {
-            return this._value;
-        }
-
-        @JsonCreator
-        public static CDVStatus create(String val) {
-            for (CDVStatus type : CDVStatus.values()) {
-                if (type.toString().equalsIgnoreCase(val)) {
-                    return type;
-                }
-            }
-            return null;
+            return super.toString().toLowerCase();
         }
     }
 
     @SerializedName("id")
     @Expose
     private String id;
-    @SerializedName("type")
-    @Expose
-    private String type;
+    private Type type;
     @SerializedName("name")
     @Expose
     private String name;
@@ -154,12 +116,8 @@ public class Data {
     @SerializedName("recurring_options")
     @Expose
     private List<Object> recurringOptions = new ArrayList<Object>();
-    @SerializedName("verification_method")
-    @Expose
-    private String verificationMethod;
-    @SerializedName("cdv_status")
-    @Expose
-    private String cdvStatus;
+    private VerificationMethod verificationMethod;
+    private CDVStatus cdvStatus;
 
     /**
      * 
@@ -184,7 +142,7 @@ public class Data {
      * @return
      *     The type
      */
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
@@ -193,7 +151,7 @@ public class Data {
      * @param type
      *     The type
      */
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
@@ -473,7 +431,7 @@ public class Data {
      * @return
      *     The verificationMethod
      */
-    public String getVerificationMethod() {
+    public VerificationMethod getVerificationMethod() {
         return verificationMethod;
     }
 
@@ -482,7 +440,7 @@ public class Data {
      * @param verificationMethod
      *     The verification_method
      */
-    public void setVerificationMethod(String verificationMethod) {
+    public void setVerificationMethod(VerificationMethod verificationMethod) {
         this.verificationMethod = verificationMethod;
     }
 
@@ -491,7 +449,7 @@ public class Data {
      * @return
      *     The cdvStatus
      */
-    public String getCdvStatus() {
+    public CDVStatus getCdvStatus() {
         return cdvStatus;
     }
 
@@ -500,7 +458,7 @@ public class Data {
      * @param cdvStatus
      *     The cdv_status
      */
-    public void setCdvStatus(String cdvStatus) {
+    public void setCdvStatus(CDVStatus cdvStatus) {
         this.cdvStatus = cdvStatus;
     }
 }
