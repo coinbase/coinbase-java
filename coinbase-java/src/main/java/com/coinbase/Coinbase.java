@@ -63,6 +63,7 @@ import com.coinbase.v2.models.exchangeRates.ExchangeRates;
 import com.coinbase.v2.models.paymentMethods.PaymentMethod;
 import com.coinbase.v2.models.paymentMethods.PaymentMethods;
 import com.coinbase.v2.models.price.Price;
+import com.coinbase.v2.models.supportedCurrencies.SupportedCurrencies;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -2668,4 +2669,29 @@ public class Coinbase {
         return call;
     }
 
+    /**
+     * Get a list of known currencies.
+     *
+     * @return call object
+     * @see <a href="https://developers.coinbase.com/api/v2#currencies">Online Documentation</a>
+     */
+    public Call getSupportedCurrencies(final Callback<SupportedCurrencies> callback) {
+        com.coinbase.ApiInterface apiInterface = getApiService();
+
+        Call call = apiInterface.getSupportedCurrencies();
+        call.enqueue(new Callback<SupportedCurrencies>() {
+
+            public void onResponse(retrofit.Response<SupportedCurrencies> response, Retrofit retrofit) {
+                if (callback != null)
+                    callback.onResponse(response, retrofit);
+            }
+
+            public void onFailure(Throwable t) {
+                if (callback != null)
+                    callback.onFailure(t);
+            }
+        });
+
+        return call;
+    }
 }

@@ -24,6 +24,7 @@ public class ApiConstants {
     public static final String WITHDRAWALS = "withdrawals";
     public static final String PAYMENT_METHODS = "payment-methods";
     public static final String EXCHANGE_RATES = "exchange-rates";
+    public static final String CURRENCIES = "currencies";
 
 
     // Params

@@ -8,6 +8,7 @@ import com.coinbase.v2.models.exchangeRates.ExchangeRates;
 import com.coinbase.v2.models.paymentMethods.PaymentMethod;
 import com.coinbase.v2.models.paymentMethods.PaymentMethods;
 import com.coinbase.v2.models.price.Price;
+import com.coinbase.v2.models.supportedCurrencies.SupportedCurrencies;
 import com.coinbase.v2.models.transactions.Transaction;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.coinbase.v2.models.transfers.Transfer;
@@ -136,4 +137,7 @@ public interface ApiInterface {
 
     @GET(ApiConstants.EXCHANGE_RATES)
     Call<ExchangeRates> getExchangeRates(@QueryMap HashMap<String, Object> body);
+
+    @GET(ApiConstants.CURRENCIES)
+    Call<SupportedCurrencies> getSupportedCurrencies();
 }
