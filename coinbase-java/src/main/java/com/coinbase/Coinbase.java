@@ -3,6 +3,7 @@ package com.coinbase;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+import android.util.Pair;
 
 import com.coinbase.auth.AccessToken;
 import com.coinbase.v1.entity.Account;
@@ -67,9 +68,6 @@ import com.coinbase.v2.models.supportedCurrencies.SupportedCurrencies;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Protocol;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
@@ -105,11 +103,17 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
+
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
+
 import okio.Buffer;
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.GsonConverterFactory;
-import retrofit.Retrofit;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Coinbase {
 
@@ -126,7 +130,6 @@ public class Coinbase {
     protected SSLContext _sslContext;
     protected SSLSocketFactory _socketFactory;
     protected CallbackVerifier _callbackVerifier;
-    protected OkHttpClient _client;
     protected static Coinbase _instance = null;
     protected Context _context;
 
@@ -143,25 +146,21 @@ public class Coinbase {
         _sslContext = CoinbaseSSL.getSSLContext();
         _socketFactory = _sslContext.getSocketFactory();
         _callbackVerifier = new CallbackVerifierImpl();
-
-        if (_client == null) {
-            _client = generateClient(_sslContext);
-        }
     }
 
-    protected static OkHttpClient generateClient(SSLContext sslContext) {
-        OkHttpClient client = new OkHttpClient();
-
-        if (sslContext != null)
-            client.setSslSocketFactory(sslContext.getSocketFactory());
+    protected static OkHttpClient.Builder generateClientBuilder(SSLContext sslContext) {
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+        if (sslContext != null) {
+            clientBuilder.sslSocketFactory(sslContext.getSocketFactory());
+        }
 
         // Disable SPDY, causes issues on some Android versions
-        client.setProtocols(Collections.singletonList(Protocol.HTTP_1_1));
+        clientBuilder.protocols(Collections.singletonList(Protocol.HTTP_1_1));
 
-        client.setReadTimeout(30, TimeUnit.SECONDS);
-        client.setConnectTimeout(30, TimeUnit.SECONDS);
+        clientBuilder.readTimeout(30, TimeUnit.SECONDS);
+        clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
 
-        return client;
+        return clientBuilder;
     }
 
     public static void setBaseUrl(String url) {
@@ -181,7 +180,6 @@ public class Coinbase {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-        getInstance()._client = generateClient(sslContext);
     }
 
     public static void init(Context context, String apiKey, String apiSecret) {
@@ -1546,8 +1544,8 @@ public class Coinbase {
     protected Interceptor buildOAuthInterceptor() {
         return new Interceptor() {
 
-            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                com.squareup.okhttp.Request newRequest = chain
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request newRequest = chain
                         .request()
                         .newBuilder()
                         .addHeader("Authorization", "Bearer " + _accessToken)
@@ -1560,15 +1558,15 @@ public class Coinbase {
     protected Interceptor buildHmacAuthInterceptor() {
         return new Interceptor() {
 
-            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                com.squareup.okhttp.Request request = chain.request();
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request request = chain.request();
 
                 String timestamp = String.valueOf(System.currentTimeMillis() / 1000L);
                 String method = request.method().toUpperCase();
-                String path = request.url().getFile();
+                String path = request.url().url().getFile();
                 String body = "";
                 if (request.body() != null) {
-                    final com.squareup.okhttp.Request requestCopy = request.newBuilder().build();
+                    final okhttp3.Request requestCopy = request.newBuilder().build();
                     final Buffer buffer = new Buffer();
                     requestCopy.body().writeTo(buffer);
                     body = buffer.readUtf8();
@@ -1585,7 +1583,7 @@ public class Coinbase {
 
                 String signature = new String(Hex.encodeHex(mac.doFinal(message.getBytes())));
 
-                com.squareup.okhttp.Request newRequest = request.newBuilder()
+                okhttp3.Request newRequest = request.newBuilder()
                         .addHeader("CB-ACCESS-KEY", _apiKey)
                         .addHeader("CB-ACCESS_SIGN", signature)
                         .addHeader("CB-ACCESS-TIMESTAMP", timestamp)
@@ -1617,8 +1615,8 @@ public class Coinbase {
 
         return new Interceptor() {
 
-            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                com.squareup.okhttp.Request newRequest = chain
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request newRequest = chain
                         .request()
                         .newBuilder()
                         .addHeader("CB-VERSION", com.coinbase.ApiConstants.VERSION)
@@ -1632,8 +1630,8 @@ public class Coinbase {
     protected Interceptor languageInterceptor() {
         return new Interceptor() {
 
-            public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
-                com.squareup.okhttp.Request newRequest = chain
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request newRequest = chain
                         .request()
                         .newBuilder()
                         .addHeader("Accept-Language", Locale.getDefault().getLanguage())
@@ -1643,44 +1641,31 @@ public class Coinbase {
         };
     }
 
-    protected ApiInterface getOAuthApiService() {
-        _client.interceptors().clear();
-
-        if (_accessToken != null)
-            _client.interceptors().add(buildOAuthInterceptor());
-
-        _client.interceptors().add(buildVersionInterceptor());
-
-        String url = _baseOAuthUrl.toString();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
-                .client(_client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        com.coinbase.ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
-
-        return service;
+    protected Pair<ApiInterface, Retrofit> getOAuthApiService() {
+        return getService(_baseOAuthUrl.toString());
     }
 
-    protected com.coinbase.ApiInterface getApiService() {
-        _client.interceptors().clear();
+    protected Pair<ApiInterface, Retrofit> getApiService() {
+        return getService(_baseV2ApiUrl.toString());
+    }
+
+    private Pair<ApiInterface, Retrofit> getService(String url) {
+        OkHttpClient.Builder clientBuilder = generateClientBuilder(_sslContext);
 
         if (_accessToken != null)
-            _client.interceptors().add(buildOAuthInterceptor());
+            clientBuilder.addInterceptor(buildOAuthInterceptor());
 
-        _client.interceptors().add(buildVersionInterceptor());
+        clientBuilder.addInterceptor(buildVersionInterceptor());
 
-        String url = _baseV2ApiUrl.toString();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
-                .client(_client)
+                .client(clientBuilder.build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         com.coinbase.ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
 
-        return service;
+        return new Pair<ApiInterface, Retrofit>(service, retrofit);
     }
 
     /**
@@ -1689,35 +1674,36 @@ public class Coinbase {
      * @param clientId
      * @param clientSecret
      * @param refreshToken
+     * @param callback
      * @return call object
      * @see <a href="https://developers.coinbase.com/docs/wallet/coinbase-connect/access-and-refresh-tokens</a>
      */
     public Call refreshTokens(String clientId,
                               String clientSecret,
                               String refreshToken,
-                              final Callback<AccessToken> callback) {
+                              final CallbackWithRetrofit<AccessToken> callback) {
         HashMap<String, Object> params = new HashMap<>();
         params.put(ApiConstants.CLIENT_ID, clientId);
         params.put(ApiConstants.CLIENT_SECRET, clientSecret);
         params.put(ApiConstants.REFRESH_TOKEN, refreshToken);
         params.put(ApiConstants.GRANT_TYPE, ApiConstants.REFRESH_TOKEN);
 
-        ApiInterface apiInterface = getOAuthApiService();
-        Call call = apiInterface.refreshTokens(params);
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getOAuthApiService();
+        Call call = apiRetrofitPair.first.refreshTokens(params);
         call.enqueue(new Callback<AccessToken>() {
             @Override
-            public void onResponse(retrofit.Response<AccessToken> response, Retrofit retrofit) {
+            public void onResponse(Call<AccessToken> call, retrofit2.Response<AccessToken> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
 
                 if (response != null && response.body() != null)
                     _accessToken = response.body().getAccessToken();
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<AccessToken> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -1728,10 +1714,11 @@ public class Coinbase {
     /**
      * Revoke OAuth token
      *
+     * @param callback
      * @return call object
      * @see <a href="https://developers.coinbase.com/docs/wallet/coinbase-connect/access-and-refresh-tokens</a>
      */
-    public Call revokeToken(final Callback<Void> callback) {
+    public Call revokeToken(final CallbackWithRetrofit<Void> callback) {
         if (_accessToken == null) {
             Log.w("Coinbase Error", "This client must have been initialized with an access token in order to call revokeToken()");
             return null;
@@ -1740,22 +1727,23 @@ public class Coinbase {
         HashMap<String, Object> params = new HashMap<>();
         params.put(ApiConstants.TOKEN, _accessToken);
 
-        ApiInterface apiInterface = getOAuthApiService();
-        Call call = apiInterface.revokeToken(params);
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getOAuthApiService();
+        Call call = apiRetrofitPair.first.revokeToken(params);
         call.enqueue(new Callback<Void>() {
             @Override
-            public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
-                if (response.isSuccess())
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                if (response.isSuccessful()) {
                     _accessToken = null;
+                }
 
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -1764,25 +1752,24 @@ public class Coinbase {
 
     /**
      * Retrieve the current user and their settings.
-     *
      * @param callback callback interface
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#show-a-user">Online Documentation</a>
      */
-    public Call getUser(final Callback<com.coinbase.v2.models.user.User> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.getUser();
+    public Call getUser(final CallbackWithRetrofit<com.coinbase.v2.models.user.User> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.getUser();
         call.enqueue(new Callback<com.coinbase.v2.models.user.User>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.user.User> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.user.User> call, retrofit2.Response<com.coinbase.v2.models.user.User> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.user.User> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -1799,7 +1786,7 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#update-current-user">Online Documentation</a>
      */
-    public Call updateUser(String name, String timeZone, String nativeCurrency, final Callback<com.coinbase.v2.models.user.User> callback) {
+    public Call updateUser(String name, String timeZone, String nativeCurrency,final CallbackWithRetrofit<com.coinbase.v2.models.user.User> callback) {
         HashMap<String, Object> params = new HashMap<>();
 
         if (name != null)
@@ -1811,19 +1798,19 @@ public class Coinbase {
         if (nativeCurrency != null)
             params.put(ApiConstants.NATIVE_CURRENCY, nativeCurrency);
 
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.updateUser(params);
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair =  getApiService();
+        Call call = apiRetrofitPair.first.updateUser(params);
         call.enqueue(new Callback<com.coinbase.v2.models.user.User>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.user.User> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.user.User> call, retrofit2.Response<com.coinbase.v2.models.user.User> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.user.User> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -1838,20 +1825,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#show-an-account">Online Documentation</a>
      */
-    public Call getAccount(String accountId, final Callback<com.coinbase.v2.models.account.Account> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.getAccount(accountId);
+    public Call getAccount(String accountId, final CallbackWithRetrofit<com.coinbase.v2.models.account.Account> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.getAccount(accountId);
         call.enqueue(new Callback<com.coinbase.v2.models.account.Account>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.account.Account> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.account.Account> call, retrofit2.Response<com.coinbase.v2.models.account.Account> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.account.Account> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -1866,21 +1853,23 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#list-accounts">Online Documentation</a>
      */
-    public Call getAccounts(HashMap<String, Object> options, final Callback<Accounts> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
+    public Call getAccounts(HashMap<String, Object> options, final CallbackWithRetrofit<Accounts> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
 
-        Call call = apiInterface.getAccounts(options);
+        options = cleanQueryMap(options);
+
+        Call call = apiRetrofitPair.first.getAccounts(options);
         call.enqueue(new Callback<Accounts>() {
 
-            public void onResponse(retrofit.Response<Accounts> response, Retrofit retrofit) {
+            public void onResponse(Call<Accounts> call, retrofit2.Response<Accounts> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Accounts> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -1895,20 +1884,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#create-account">Online Documentation</a>
      */
-    public Call createAccount(HashMap<String, Object> options, final Callback<com.coinbase.v2.models.account.Account> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.createAccount(options);
+    public Call createAccount(HashMap<String, Object> options, final CallbackWithRetrofit<com.coinbase.v2.models.account.Account> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.createAccount(options);
         call.enqueue(new Callback<com.coinbase.v2.models.account.Account>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.account.Account> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.account.Account> call, retrofit2.Response<com.coinbase.v2.models.account.Account> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.account.Account> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -1922,20 +1911,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#set-account-as-primary">Online Documentation</a>
      */
-    public Call setAccountPrimary(String accountId, final Callback<Void> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.setAccountPrimary(accountId);
+    public Call setAccountPrimary(String accountId, final CallbackWithRetrofit<Void> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.setAccountPrimary(accountId);
         call.enqueue(new Callback() {
             @Override
-            public void onResponse(retrofit.Response response, Retrofit retrofit) {
+            public void onResponse(Call call, retrofit2.Response response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -1950,20 +1939,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#update-account">Online Documentation</a>
      */
-    public Call updateAccount(String accountId, HashMap<String, Object> options, final Callback<com.coinbase.v2.models.account.Account> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.updateAccount(accountId, options);
+    public Call updateAccount(String accountId, HashMap<String, Object> options, final CallbackWithRetrofit<com.coinbase.v2.models.account.Account> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.updateAccount(accountId, options);
         call.enqueue(new Callback<com.coinbase.v2.models.account.Account>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.account.Account> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.account.Account> call, retrofit2.Response<com.coinbase.v2.models.account.Account> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.account.Account> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -1977,20 +1966,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#delete-account">Online Documentation</a>
      */
-    public Call deleteAccount(String accountId, final Callback<Void> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.deleteAccount(accountId);
+    public Call deleteAccount(String accountId, final CallbackWithRetrofit<Void> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.deleteAccount(accountId);
         call.enqueue(new Callback() {
             @Override
-            public void onResponse(retrofit.Response response, Retrofit retrofit) {
+            public void onResponse(Call call, retrofit2.Response response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2010,21 +1999,23 @@ public class Coinbase {
     public Call getTransactions(String accountId,
                                 HashMap<String, Object> options,
                                 List<String> expandOptions,
-                                final Callback<Transactions> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
+                                final CallbackWithRetrofit<Transactions> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
 
-        Call call = apiInterface.getTransactions(accountId, expandOptions, options);
+        options = cleanQueryMap(options);
+
+        Call call = apiRetrofitPair.first.getTransactions(accountId, expandOptions, options);
         call.enqueue(new Callback<Transactions>() {
 
-            public void onResponse(retrofit.Response<Transactions> response, Retrofit retrofit) {
+            public void onResponse(Call<Transactions> call, retrofit2.Response<Transactions> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Transactions> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2040,21 +2031,21 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#show-a-transaction">Online Documentation</a>
      */
-    public Call getTransaction(String accountId, String transactionId, final Callback<com.coinbase.v2.models.transactions.Transaction> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
+    public Call getTransaction(String accountId, String transactionId, final CallbackWithRetrofit<com.coinbase.v2.models.transactions.Transaction> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
         List<String> expandOptions = Arrays.asList(com.coinbase.ApiConstants.FROM, com.coinbase.ApiConstants.TO, com.coinbase.ApiConstants.BUY, com.coinbase.ApiConstants.SELL);
-        Call call = apiInterface.getTransaction(accountId, transactionId, expandOptions);
+        Call call = apiRetrofitPair.first.getTransaction(accountId, transactionId, expandOptions);
         call.enqueue(new Callback<com.coinbase.v2.models.transactions.Transaction>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transactions.Transaction> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transactions.Transaction> call, retrofit2.Response<com.coinbase.v2.models.transactions.Transaction> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transactions.Transaction> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2070,20 +2061,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#complete-request-money">Online Documentation</a>
      */
-    public Call completeRequest(String accountId, String transactionId, final Callback<Void> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.completeRequest(accountId, transactionId);
+    public Call completeRequest(String accountId, String transactionId, final CallbackWithRetrofit<Void> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.completeRequest(accountId, transactionId);
         call.enqueue(new Callback<Void>() {
 
-            public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2099,20 +2090,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#re-send-request-money">Online Documentation</a>
      */
-    public Call resendRequest(String accountId, String transactionId, final Callback<Void> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.resendRequest(accountId, transactionId);
+    public Call resendRequest(String accountId, String transactionId, final CallbackWithRetrofit<Void> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.resendRequest(accountId, transactionId);
         call.enqueue(new Callback<Void>() {
 
-            public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2128,20 +2119,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#cancel-request-money">Online Documentation</a>
      */
-    public Call cancelRequest(String accountId, String transactionId, final Callback<Void> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.cancelRequest(accountId, transactionId);
+    public Call cancelRequest(String accountId, String transactionId, final CallbackWithRetrofit<Void> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.cancelRequest(accountId, transactionId);
         call.enqueue(new Callback<Void>() {
 
-            public void onResponse(retrofit.Response<Void> response, Retrofit retrofit) {
+            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Void> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2156,21 +2147,21 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#send-money">Online Documentation</a>
      */
-    public Call sendMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transactions.Transaction> callback) {
+    public Call sendMoney(String accountId, HashMap<String, Object> params, final CallbackWithRetrofit<com.coinbase.v2.models.transactions.Transaction> callback) {
         params.put(com.coinbase.ApiConstants.TYPE, com.coinbase.ApiConstants.SEND);
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.sendMoney(accountId, params);
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.sendMoney(accountId, params);
         call.enqueue(new Callback<com.coinbase.v2.models.transactions.Transaction>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transactions.Transaction> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transactions.Transaction> call, retrofit2.Response<com.coinbase.v2.models.transactions.Transaction> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transactions.Transaction> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2185,21 +2176,21 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#request-money">Online Documentation</a>
      */
-    public Call requestMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transactions.Transaction> callback) {
+    public Call requestMoney(String accountId, HashMap<String, Object> params, final CallbackWithRetrofit<com.coinbase.v2.models.transactions.Transaction> callback) {
         params.put(com.coinbase.ApiConstants.TYPE, com.coinbase.ApiConstants.REQUEST);
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.requestMoney(accountId, params);
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.requestMoney(accountId, params);
         call.enqueue(new Callback<com.coinbase.v2.models.transactions.Transaction>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transactions.Transaction> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transactions.Transaction> call, retrofit2.Response<com.coinbase.v2.models.transactions.Transaction> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transactions.Transaction> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2214,21 +2205,21 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#transfer-money-between-accounts">Online Documentation</a>
      */
-    public Call transferMoney(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transactions.Transaction> callback) {
+    public Call transferMoney(String accountId, HashMap<String, Object> params, final CallbackWithRetrofit<com.coinbase.v2.models.transactions.Transaction> callback) {
         params.put(com.coinbase.ApiConstants.TYPE, ApiConstants.TRANSFER);
-        ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.transferMoney(accountId, params);
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.transferMoney(accountId, params);
         call.enqueue(new Callback<com.coinbase.v2.models.transactions.Transaction>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transactions.Transaction> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transactions.Transaction> call, retrofit2.Response<com.coinbase.v2.models.transactions.Transaction> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transactions.Transaction> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2243,20 +2234,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#buy-bitcoin">Online Documentation</a>
      */
-    public Call buyBitcoin(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.buyBitcoin(accountId, params);
+    public Call buyBitcoin(String accountId, HashMap<String, Object> params, final CallbackWithRetrofit<com.coinbase.v2.models.transfers.Transfer> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.buyBitcoin(accountId, params);
         call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transfers.Transfer> call, retrofit2.Response<com.coinbase.v2.models.transfers.Transfer> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transfers.Transfer> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2272,21 +2263,21 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-buy">Online Documentation</a>
      */
 
-    public Call commitBuyBitcoin(String accountId, String buyId, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.commitBuyBitcoin(accountId, buyId);
+    public Call commitBuyBitcoin(String accountId, String buyId, final CallbackWithRetrofit<com.coinbase.v2.models.transfers.Transfer> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.commitBuyBitcoin(accountId, buyId);
 
         call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transfers.Transfer> call, retrofit2.Response<com.coinbase.v2.models.transfers.Transfer> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transfers.Transfer> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2301,20 +2292,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#sell-bitcoin">Online Documentation</a>
      */
-    public Call sellBitcoin(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.sellBitcoin(accountId, params);
+    public Call sellBitcoin(String accountId, HashMap<String, Object> params, final CallbackWithRetrofit<com.coinbase.v2.models.transfers.Transfer> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.sellBitcoin(accountId, params);
         call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transfers.Transfer> call, retrofit2.Response<com.coinbase.v2.models.transfers.Transfer> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transfers.Transfer> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2330,21 +2321,21 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-sell">Online Documentation</a>
      */
 
-    public Call commitSellBitcoin(String accountId, String sellId, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.commitSellBitcoin(accountId, sellId);
+    public Call commitSellBitcoin(String accountId, String sellId, final CallbackWithRetrofit<com.coinbase.v2.models.transfers.Transfer> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.commitSellBitcoin(accountId, sellId);
 
         call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transfers.Transfer> call, retrofit2.Response<com.coinbase.v2.models.transfers.Transfer> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transfers.Transfer> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2361,20 +2352,23 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
      */
     public Call getSellPrice(String baseCurrency, String fiatCurrency,
-                             HashMap<String, Object> params, final Callback<Price> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.getSellPrice(baseCurrency, fiatCurrency, params);
+                             HashMap<String, Object> params, final CallbackWithRetrofit<Price> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+
+        params = cleanQueryMap(params);
+
+        Call call = apiRetrofitPair.first.getSellPrice(baseCurrency, fiatCurrency, params);
         call.enqueue(new Callback<Price>() {
 
-            public void onResponse(retrofit.Response<Price> response, Retrofit retrofit) {
+            public void onResponse(Call<Price> call, retrofit2.Response<Price> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Price> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2386,25 +2380,28 @@ public class Coinbase {
      *
      * @param baseCurrency the digital currency in which to retrieve the price against
      * @param fiatCurrency the currency in which to retrieve the price
-     * @param params       HashMap of params as indicated in api docs
+     * @param params       optional HashMap of params as indicated in api docs
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
      */
     public Call getBuyPrice(String baseCurrency, String fiatCurrency,
-                            HashMap<String, Object> params, final Callback<Price> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.getBuyPrice(baseCurrency, fiatCurrency, params);
+                            HashMap<String, Object> params, final CallbackWithRetrofit<Price> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+
+        params = cleanQueryMap(params);
+
+        Call call = apiRetrofitPair.first.getBuyPrice(baseCurrency, fiatCurrency, params);
         call.enqueue(new Callback<Price>() {
 
-            public void onResponse(retrofit.Response<Price> response, Retrofit retrofit) {
+            public void onResponse(Call<Price> call, retrofit2.Response<Price> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Price> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2421,20 +2418,23 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
      */
     public Call getSpotPrice(String baseCurrency, String fiatCurrency,
-                             HashMap<String, Object> params, final Callback<Price> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.getSpotPrice(baseCurrency, fiatCurrency, params);
+                              HashMap<String, Object> params, final CallbackWithRetrofit<Price> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+
+        params = cleanQueryMap(params);
+
+        Call call = apiRetrofitPair.first.getSpotPrice(baseCurrency, fiatCurrency, params);
         call.enqueue(new Callback<Price>() {
 
-            public void onResponse(retrofit.Response<Price> response, Retrofit retrofit) {
+            public void onResponse(Call<Price> call, retrofit2.Response<Price> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Price> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2449,19 +2449,19 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#create-address">Online Documentation</a>
      */
 
-    public Call generateAddress(String accountId, final Callback<com.coinbase.v2.models.address.Address> callback) {
-        ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.generateAddress(accountId);
+    public Call generateAddress(String accountId, final CallbackWithRetrofit<com.coinbase.v2.models.address.Address> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.generateAddress(accountId);
         call.enqueue(new Callback<com.coinbase.v2.models.address.Address>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.address.Address> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.address.Address> call, retrofit2.Response<com.coinbase.v2.models.address.Address> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.address.Address> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2476,20 +2476,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#deposit-funds">Online Documentation</a>
      */
-    public Call depositFunds(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.depositFunds(accountId, params);
+    public Call depositFunds(String accountId, HashMap<String, Object> params, final CallbackWithRetrofit<com.coinbase.v2.models.transfers.Transfer> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.depositFunds(accountId, params);
         call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transfers.Transfer> call, retrofit2.Response<com.coinbase.v2.models.transfers.Transfer> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transfers.Transfer> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2505,21 +2505,21 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-deposit">Online Documentation</a>
      */
 
-    public Call commitDeposit(String accountId, String depositId, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.commitDeposit(accountId, depositId);
+    public Call commitDeposit(String accountId, String depositId, final CallbackWithRetrofit<com.coinbase.v2.models.transfers.Transfer> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.commitDeposit(accountId, depositId);
 
         call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transfers.Transfer> call, retrofit2.Response<com.coinbase.v2.models.transfers.Transfer> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transfers.Transfer> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2534,20 +2534,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#withdraw-funds">Online Documentation</a>
      */
-    public Call withdrawFunds(String accountId, HashMap<String, Object> params, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.withdrawFunds(accountId, params);
+    public Call withdrawFunds(String accountId, HashMap<String, Object> params, final CallbackWithRetrofit<com.coinbase.v2.models.transfers.Transfer> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.withdrawFunds(accountId, params);
         call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transfers.Transfer> call, retrofit2.Response<com.coinbase.v2.models.transfers.Transfer> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transfers.Transfer> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2563,21 +2563,21 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-deposit">Online Documentation</a>
      */
 
-    public Call commitWithdraw(String accountId, String withdrawId, final Callback<com.coinbase.v2.models.transfers.Transfer> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.commitWithdraw(accountId, withdrawId);
+    public Call commitWithdraw(String accountId, String withdrawId, final CallbackWithRetrofit<com.coinbase.v2.models.transfers.Transfer> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.commitWithdraw(accountId, withdrawId);
 
         call.enqueue(new Callback<com.coinbase.v2.models.transfers.Transfer>() {
 
-            public void onResponse(retrofit.Response<com.coinbase.v2.models.transfers.Transfer> response, Retrofit retrofit) {
+            public void onResponse(Call<com.coinbase.v2.models.transfers.Transfer> call, retrofit2.Response<com.coinbase.v2.models.transfers.Transfer> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<com.coinbase.v2.models.transfers.Transfer> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2592,20 +2592,20 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#show-a-payment-method">Online Documentation</a>
      */
-    public Call getPaymentMethod(String paymentMethodId, final Callback<PaymentMethod> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
-        Call call = apiInterface.getPaymentMethod(paymentMethodId);
+    public Call getPaymentMethod(String paymentMethodId, final CallbackWithRetrofit<PaymentMethod> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+        Call call = apiRetrofitPair.first.getPaymentMethod(paymentMethodId);
         call.enqueue(new Callback<PaymentMethod>() {
 
-            public void onResponse(retrofit.Response<PaymentMethod> response, Retrofit retrofit) {
+            public void onResponse(Call<PaymentMethod> call, retrofit2.Response<PaymentMethod> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<PaymentMethod> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2620,21 +2620,23 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#list-payment-methods">Online Documentation</a>
      */
-    public Call getPaymentMethods(HashMap<String, Object> options, final Callback<PaymentMethods> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
+    public Call getPaymentMethods(HashMap<String, Object> options, final CallbackWithRetrofit<PaymentMethods> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
 
-        Call call = apiInterface.getPaymentMethods(options);
+        options = cleanQueryMap(options);
+
+        Call call = apiRetrofitPair.first.getPaymentMethods(options);
         call.enqueue(new Callback<PaymentMethods>() {
 
-            public void onResponse(retrofit.Response<PaymentMethods> response, Retrofit retrofit) {
+            public void onResponse(Call<PaymentMethods> call, retrofit2.Response<PaymentMethods> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<PaymentMethods> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2644,25 +2646,27 @@ public class Coinbase {
     /**
      * Get current exchange rates.
      *
-     * @param currency  base currency (Default: USD)
+     * @param currency base currency (Default: USD)
      * @param callback callback interface
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#get-exchange-rates">Online Documentation</a>
      */
-    public Call getExchangeRates(HashMap<String, Object> currency, final Callback<ExchangeRates> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
+    public Call getExchangeRates(HashMap<String, Object> currency, final CallbackWithRetrofit<ExchangeRates> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
 
-        Call call = apiInterface.getExchangeRates(currency);
+        currency = cleanQueryMap(currency);
+
+        Call call = apiRetrofitPair.first.getExchangeRates(currency);
         call.enqueue(new Callback<ExchangeRates>() {
 
-            public void onResponse(retrofit.Response<ExchangeRates> response, Retrofit retrofit) {
+            public void onResponse(Call<ExchangeRates> call, retrofit2.Response<ExchangeRates> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<ExchangeRates> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
@@ -2675,23 +2679,45 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#currencies">Online Documentation</a>
      */
-    public Call getSupportedCurrencies(final Callback<SupportedCurrencies> callback) {
-        com.coinbase.ApiInterface apiInterface = getApiService();
+    public Call getSupportedCurrencies(final CallbackWithRetrofit<SupportedCurrencies> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
 
-        Call call = apiInterface.getSupportedCurrencies();
+        Call call = apiRetrofitPair.first.getSupportedCurrencies();
         call.enqueue(new Callback<SupportedCurrencies>() {
 
-            public void onResponse(retrofit.Response<SupportedCurrencies> response, Retrofit retrofit) {
+            public void onResponse(Call<SupportedCurrencies> call, retrofit2.Response<SupportedCurrencies> response) {
                 if (callback != null)
-                    callback.onResponse(response, retrofit);
+                    callback.onResponse(call, response, apiRetrofitPair.second);
             }
 
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<SupportedCurrencies> call, Throwable t) {
                 if (callback != null)
-                    callback.onFailure(t);
+                    callback.onFailure(call, t);
             }
         });
 
         return call;
+    }
+
+    /**
+     * Remove any null values from the HashMap. If the HashMap is itself null, return an empty HashMap.
+     * This is due to a difference between retrofit 1 and retrofit 2.  Retrofit 1 would quietly remove any
+     * null query params and handle the query map itself being null. Retrofit2 throws an exception and fails
+     * the request.
+     * @param options
+     * @return
+     */
+    protected HashMap<String, Object> cleanQueryMap(HashMap<String, Object> options) {
+        if (options == null) {
+            return new HashMap<>();
+        } else {
+            HashMap optionsCopy = new HashMap<>(options);
+            for (String key : options.keySet()) {
+                if (optionsCopy.get(key) == null) {
+                    optionsCopy.remove(key);
+                }
+            }
+            return optionsCopy;
+        }
     }
 }
