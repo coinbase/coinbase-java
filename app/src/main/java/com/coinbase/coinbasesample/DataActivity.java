@@ -6,14 +6,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.coinbase.CallbackWithRetrofit;
 import com.coinbase.Coinbase;
 import com.coinbase.v2.models.price.Price;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class DataActivity extends AppCompatActivity {
 
@@ -43,14 +45,14 @@ public class DataActivity extends AppCompatActivity {
         sellPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Coinbase.getInstance().getSellPrice(BTC, USD, null, new Callback<Price>() {
+                Coinbase.getInstance().getSellPrice(BTC, USD, null, new CallbackWithRetrofit<Price>() {
                     @Override
-                    public void onResponse(Response<Price> response, Retrofit retrofit) {
+                    public void onResponse(Call<Price> call, Response<Price> response, Retrofit retrofit) {
                         handleResponse(response);
                     }
 
                     @Override
-                    public void onFailure(Throwable t) {
+                    public void onFailure(Call call, Throwable t) {
                         showError();
                     }
                 });
@@ -60,14 +62,14 @@ public class DataActivity extends AppCompatActivity {
         buyPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Coinbase.getInstance().getBuyPrice(BTC, USD, null, new Callback<Price>() {
+                Coinbase.getInstance().getBuyPrice(BTC, USD, null, new CallbackWithRetrofit<Price>() {
                     @Override
-                    public void onResponse(Response<Price> response, Retrofit retrofit) {
+                    public void onResponse(Call<Price> call, Response<Price> response, Retrofit retrofit) {
                         handleResponse(response);
                     }
 
                     @Override
-                    public void onFailure(Throwable t) {
+                    public void onFailure(Call<Price> call, Throwable t) {
                         showError();
                     }
                 });
@@ -77,14 +79,14 @@ public class DataActivity extends AppCompatActivity {
         spotPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Coinbase.getInstance().getSpotPrice(BTC, USD, null, new Callback<Price>() {
+                Coinbase.getInstance().getSpotPrice(BTC, USD, null, new CallbackWithRetrofit<Price>() {
                     @Override
-                    public void onResponse(Response<Price> response, Retrofit retrofit) {
+                    public void onResponse(Call<Price> call, Response<Price> response, Retrofit retrofit) {
                         handleResponse(response);
                     }
 
                     @Override
-                    public void onFailure(Throwable t) {
+                    public void onFailure(Call<Price> call, Throwable t) {
                         showError();
                     }
                 });
@@ -93,7 +95,7 @@ public class DataActivity extends AppCompatActivity {
     }
 
     private void handleResponse(Response<Price> response) {
-        if (!response.isSuccess()) {
+        if (!response.isSuccessful()) {
             showError();
             return;
         }

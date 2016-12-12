@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.coinbase.CallbackWithRetrofit;
 import com.coinbase.Coinbase;
 import com.coinbase.OAuth;
 import com.coinbase.v1.entity.OAuthTokensResponse;
@@ -15,9 +16,10 @@ import com.coinbase.v2.models.user.User;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
     // NOTE: Go to https://www.coinbase.com/oauth/applications/new
@@ -83,10 +85,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getUser() {
-        Coinbase.getInstance().getUser(new Callback<User>() {
+        Coinbase.getInstance().getUser(new CallbackWithRetrofit<User>() {
             @Override
-            public void onResponse(Response<User> response, Retrofit retrofit) {
-                if (response.isSuccess()) {
+            public void onResponse(Call<User> call, Response<User> response, Retrofit retrofit) {
+                if (response.isSuccessful()) {
                     userTextView.setText("User: " + response.body().getData().getName());
                     enableButtons(true);
                 } else
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<User> call, Throwable t) {
                 handleLoginError(null);
             }
         });
