@@ -672,7 +672,7 @@ public interface Coinbase {
      * @see <a href="https://coinbase.com/api/doc/1.0/users/create.html">Online Documentation</a>
      *
      */
-    public User createUser(User userParams) throws CoinbaseException, IOException;
+    public UserResponse createUser(User userParams) throws CoinbaseException, IOException;
 
     /**
      * Unauthenticated resource that creates a user with an email and password.
@@ -690,7 +690,7 @@ public interface Coinbase {
      * @see <a href="https://coinbase.com/docs/api/permissions">Permissions Reference</a>
      *
      */
-    public User createUser(User userParams, String clientId, String scope) throws CoinbaseException, IOException;
+    public UserResponse createUser(User userParams, String clientId, String scope) throws CoinbaseException, IOException;
 
     /**
      * Authenticated resource that creates a user with an email and password and gets the OAuth

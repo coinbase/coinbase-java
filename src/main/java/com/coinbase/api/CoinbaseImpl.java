@@ -1,38 +1,5 @@
 package com.coinbase.api;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.StringReader;
-import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-
-import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.client.utils.URIBuilder;
-import org.joda.money.CurrencyUnit;
-import org.joda.money.IllegalCurrencyException;
-import org.joda.money.Money;
-import org.joda.time.DateTime;
-
-import au.com.bytecode.opencsv.CSVReader;
-
 import com.coinbase.api.entity.Account;
 import com.coinbase.api.entity.AccountChangesResponse;
 import com.coinbase.api.entity.AccountResponse;
@@ -85,6 +52,39 @@ import com.coinbase.api.exception.UnauthorizedException;
 import com.coinbase.api.exception.UnspecifiedAccount;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.client.utils.URIBuilder;
+import org.joda.money.CurrencyUnit;
+import org.joda.money.IllegalCurrencyException;
+import org.joda.money.Money;
+import org.joda.time.DateTime;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 class CoinbaseImpl implements Coinbase {
 
@@ -844,7 +844,7 @@ class CoinbaseImpl implements Coinbase {
     }
 
     @Override
-    public User createUser(User userParams) throws CoinbaseException, IOException {
+    public UserResponse createUser(User userParams) throws CoinbaseException, IOException {
         URL usersUrl;
         try {
             usersUrl = new URL(_baseApiUrl, "users");
@@ -855,11 +855,11 @@ class CoinbaseImpl implements Coinbase {
         Request request = new Request();
         request.setUser(userParams);
 
-        return post(usersUrl, request, UserResponse.class).getUser();
+        return post(usersUrl, request, UserResponse.class);
     }
 
     @Override
-    public User createUser(User userParams, String clientId, String scope) throws CoinbaseException, IOException {
+    public UserResponse createUser(User userParams, String clientId, String scope) throws CoinbaseException, IOException {
         URL usersUrl;
         try {
             usersUrl = new URL(_baseApiUrl, "users");
@@ -872,7 +872,7 @@ class CoinbaseImpl implements Coinbase {
         request.setScopes(scope);
         request.setClientId(clientId);
 
-        return post(usersUrl, request, UserResponse.class).getUser();
+        return post(usersUrl, request, UserResponse.class);
     }
 
     @Override
