@@ -1,7 +1,11 @@
 package com.coinbase.v2.models.transactions;
 
+import com.coinbase.v2.models.transfers.UserWarning;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Generated;
 
@@ -17,6 +21,9 @@ public class Data {
     @SerializedName("status")
     @Expose
     private String status;
+    @SerializedName("delayed_send_date")
+    @Expose
+    private String delayedSendDate;
     @SerializedName("amount")
     @Expose
     private Amount amount;
@@ -89,6 +96,9 @@ public class Data {
     @SerializedName("details")
     @Expose
     private Details details;
+    @SerializedName("user_warnings")
+    @Expose
+    private List<UserWarning> userWarnings = new ArrayList<UserWarning>();
 
     /**
      *
@@ -142,6 +152,24 @@ public class Data {
      */
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    /**
+     *
+     * @return
+     * The delayedSendDate
+     */
+    public String getDelayedSendDate() {
+        return delayedSendDate;
+    }
+
+    /**
+     *
+     * @param delayedSendDate
+     * The delayedSendDate
+     */
+    public void setDelayedSendDate(String delayedSendDate) {
+        this.delayedSendDate = delayedSendDate;
     }
 
     /**
@@ -574,5 +602,23 @@ public class Data {
      */
     public void setDetails(Details details) {
         this.details = details;
+    }
+
+    /**
+     *
+     * @return
+     *     The userWarnings
+     */
+    public List<UserWarning> getUserWarnings() {
+        return userWarnings;
+    }
+
+    /**
+     *
+     * @param userWarnings
+     *     The user_warnings
+     */
+    public void setUserWarnings(List<UserWarning> userWarnings) {
+        this.userWarnings = userWarnings;
     }
 }
