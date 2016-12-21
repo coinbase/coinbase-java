@@ -76,7 +76,7 @@ public interface ApiInterface {
     Call<Void> resendRequest(@Path("account_id") String accountId, @Path("transaction_id") String transactionId);
 
     @DELETE(com.coinbase.ApiConstants.ACCOUNTS + "/{account_id}/" + com.coinbase.ApiConstants.TRANSACTIONS + "/{transaction_id}")
-    Call<Void> cancelRequest(@Path("account_id") String accountId, @Path("transaction_id") String transactionId);
+    Call<Void> cancelTransaction(@Path("account_id") String accountId, @Path("transaction_id") String transactionId);
 
     @POST(com.coinbase.ApiConstants.ACCOUNTS + "/{id}/" + com.coinbase.ApiConstants.TRANSACTIONS)
     Call<Transaction> sendMoney(@Path("id") String accountId, @Body HashMap<String, Object> body);

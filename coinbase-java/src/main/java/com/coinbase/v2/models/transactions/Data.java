@@ -1,6 +1,5 @@
 package com.coinbase.v2.models.transactions;
 
-import com.coinbase.v2.models.transfers.UserWarning;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

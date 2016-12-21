@@ -2121,7 +2121,7 @@ public class Coinbase {
      */
     public Call cancelRequest(String accountId, String transactionId, final CallbackWithRetrofit<Void> callback) {
         final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
-        Call call = apiRetrofitPair.first.cancelRequest(accountId, transactionId);
+        Call call = apiRetrofitPair.first.cancelTransaction(accountId, transactionId);
         call.enqueue(new Callback<Void>() {
 
             public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
