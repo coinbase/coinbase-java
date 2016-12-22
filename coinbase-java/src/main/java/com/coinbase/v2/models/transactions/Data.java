@@ -3,9 +3,6 @@ package com.coinbase.v2.models.transactions;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
@@ -95,9 +92,6 @@ public class Data {
     @SerializedName("details")
     @Expose
     private Details details;
-    @SerializedName("user_warnings")
-    @Expose
-    private List<UserWarning> userWarnings = new ArrayList<UserWarning>();
 
     /**
      *
@@ -603,21 +597,4 @@ public class Data {
         this.details = details;
     }
 
-    /**
-     *
-     * @return
-     *     The userWarnings
-     */
-    public List<UserWarning> getUserWarnings() {
-        return userWarnings;
-    }
-
-    /**
-     *
-     * @param userWarnings
-     *     The user_warnings
-     */
-    public void setUserWarnings(List<UserWarning> userWarnings) {
-        this.userWarnings = userWarnings;
-    }
 }
