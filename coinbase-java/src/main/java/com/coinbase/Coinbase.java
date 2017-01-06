@@ -133,6 +133,9 @@ public class Coinbase {
     protected static Coinbase _instance = null;
     protected Context _context;
 
+
+    private final HashMap<String, Pair<ApiInterface, Retrofit>> mInitializedServices = new HashMap<>();
+
     public Coinbase() {
         try {
             _baseApiUrl = new URL("https://api.coinbase.com/");
@@ -1649,7 +1652,11 @@ public class Coinbase {
         return getService(_baseV2ApiUrl.toString());
     }
 
-    private Pair<ApiInterface, Retrofit> getService(String url) {
+    private synchronized Pair<ApiInterface, Retrofit> getService(String url) {
+        if (mInitializedServices.containsKey(url)) {
+            return mInitializedServices.get(url);
+        }
+
         OkHttpClient.Builder clientBuilder = generateClientBuilder(_sslContext);
 
         if (_accessToken != null)
@@ -1665,7 +1672,10 @@ public class Coinbase {
 
         com.coinbase.ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
 
-        return new Pair<ApiInterface, Retrofit>(service, retrofit);
+        Pair<ApiInterface, Retrofit> servicePair = new Pair<>(service, retrofit);
+        mInitializedServices.put(url, servicePair);
+
+        return servicePair;
     }
 
     /**
