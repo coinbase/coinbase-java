@@ -2,6 +2,7 @@ package com.coinbase;
 
 import android.content.Context;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 
@@ -193,6 +194,9 @@ public class Coinbase {
 
 
     public static void init(Context context, String accessToken) {
+        if (!TextUtils.equals(getInstance()._accessToken, accessToken)) {
+            getInstance().mInitializedServices.clear();
+        }
         getInstance()._accessToken = accessToken;
         getInstance()._context = context;
     }
