@@ -135,7 +135,7 @@ public class Coinbase {
     protected Context _context;
 
 
-    private final HashMap<String, Pair<ApiInterface, Retrofit>> mInitializedServices = new HashMap<>();
+    protected final HashMap<String, Pair<ApiInterface, Retrofit>> mInitializedServices = new HashMap<>();
 
     public Coinbase() {
         try {
