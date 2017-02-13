@@ -11,7 +11,7 @@ public class Limit {
 
     @SerializedName("period_in_days")
     @Expose
-    private Integer periodInDays;
+    private Float periodInDays;
     @SerializedName("total")
     @Expose
     private Amount total;
@@ -30,7 +30,7 @@ public class Limit {
      * @return
      *     The periodInDays
      */
-    public Integer getPeriodInDays() {
+    public Float getPeriodInDays() {
         return periodInDays;
     }
 
@@ -39,7 +39,7 @@ public class Limit {
      * @param periodInDays
      *     The period_in_days
      */
-    public void setPeriodInDays(Integer periodInDays) {
+    public void setPeriodInDays(Float periodInDays) {
         this.periodInDays = periodInDays;
     }
 
