@@ -118,8 +118,8 @@ install {
 }
 
 bintray {
-    user = "asdf";//project.property('bintrayUser')
-    key = "asdf";//project.property('bintrayKey')
+    user = project.property('bintrayUser')
+    key = project.property('bintrayKey')
 
     configurations = ['archives']
     publish = true

@@ -1865,7 +1865,6 @@ public class Coinbase {
         return Observable.combineLatest(revokeObservable,
                 retrofitObservable,
                 (a, b) -> {
-                    //ASDFASDF how to check if response is success and only then set the access token to null?
                     _accessToken = null;
                     return new Pair<>(a, b);
                 });
@@ -3495,6 +3494,9 @@ public class Coinbase {
     }
 
     private List<String> getTransactionExpandOptions() {
-        return Arrays.asList(com.coinbase.ApiConstants.FROM, com.coinbase.ApiConstants.TO, com.coinbase.ApiConstants.BUY, com.coinbase.ApiConstants.SELL);
+        return Arrays.asList(com.coinbase.ApiConstants.FROM,
+                com.coinbase.ApiConstants.TO,
+                com.coinbase.ApiConstants.BUY,
+                com.coinbase.ApiConstants.SELL);
     }
 }
