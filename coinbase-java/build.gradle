@@ -12,7 +12,7 @@ buildscript {
 }
 
 def packageName = 'coinbase-java'
-def packageVersion = '2.1.0-59'
+def packageVersion = '2.2.0-60'
 def packageDescription = 'Coinbase Android SDK'
 group = 'com.coinbase'
 version = packageVersion
@@ -144,6 +144,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.5'
     compile 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
     compile 'org.joda:joda-money:0.11'
     compile 'joda-time:joda-time:2.3'

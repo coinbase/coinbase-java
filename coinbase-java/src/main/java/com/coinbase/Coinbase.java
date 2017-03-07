@@ -114,6 +114,7 @@ import okio.Buffer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 
@@ -1728,6 +1729,7 @@ public class Coinbase {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .client(clientBuilder.build())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
