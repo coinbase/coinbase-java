@@ -7,6 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6"
+        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
     }
 }
 
@@ -24,6 +25,7 @@ allprojects {
     apply plugin: 'com.github.dcendents.android-maven'
     apply plugin: 'maven-publish'
     apply plugin: 'com.jfrog.bintray'
+    apply plugin: 'me.tatarka.retrolambda'
 }
 
 android {
@@ -39,6 +41,12 @@ android {
     lintOptions {
         warning 'InvalidPackage'
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 
     buildTypes {
         release {
@@ -144,6 +152,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.0'
     compile 'commons-io:commons-io:2.4'
     compile 'commons-codec:commons-codec:1.10'
+    compile 'io.reactivex:rxjava:1.0.+'
+    compile 'io.reactivex:rxandroid:0.23.+'
     testCompile 'junit:junit:4.12'
     testCompile "org.powermock:powermock-module-junit4:1.6.2"
     testCompile "org.powermock:powermock-module-junit4-rule:1.6.2"
