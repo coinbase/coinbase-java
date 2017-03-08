@@ -117,6 +117,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
+import rx.Scheduler;
+import rx.schedulers.Schedulers;
 
 public class Coinbase {
 
@@ -133,6 +135,7 @@ public class Coinbase {
     protected SSLContext _sslContext;
     protected SSLSocketFactory _socketFactory;
     protected CallbackVerifier _callbackVerifier;
+    protected Scheduler _backgroundScheduler;
     protected static Coinbase _instance = null;
     protected Context _context;
 
@@ -153,6 +156,7 @@ public class Coinbase {
         _sslContext = CoinbaseSSL.getSSLContext();
         _socketFactory = _sslContext.getSocketFactory();
         _callbackVerifier = new CallbackVerifierImpl();
+        _backgroundScheduler = Schedulers.io();
     }
 
     protected static OkHttpClient.Builder generateClientBuilder(SSLContext sslContext) {
@@ -187,6 +191,14 @@ public class Coinbase {
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * Set this before using any of the methods, otherwise it will have no effect.
+     * @param backgroundScheduler
+     */
+    public static void setBackgroundScheduler(Scheduler backgroundScheduler) {
+        getInstance()._backgroundScheduler = backgroundScheduler;
     }
 
     public static void init(Context context, String apiKey, String apiSecret) {
@@ -228,6 +240,7 @@ public class Coinbase {
         _accountId = builder.acct_id;
         _sslContext = builder.ssl_context;
         _callbackVerifier = builder.callback_verifier;
+        _backgroundScheduler = builder.scheduler;
 
         try {
             if (_baseV1ApiUrl == null) {
@@ -1729,7 +1742,8 @@ public class Coinbase {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .client(clientBuilder.build())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory((_backgroundScheduler == null) ?
+                        RxJavaCallAdapterFactory.create() : RxJavaCallAdapterFactory.createWithScheduler(_backgroundScheduler))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -1793,13 +1807,13 @@ public class Coinbase {
      * @return observable object emitting acesstoken/retrofit pair
      * @see <a href="https://developers.coinbase.com/docs/wallet/coinbase-connect/access-and-refresh-tokens</a>
      */
-    public Observable<Pair<AccessToken, Retrofit>> refreshTokensRx(String clientId,
+    public Observable<Pair<retrofit2.Response<AccessToken>, Retrofit>> refreshTokensRx(String clientId,
                                                                    String clientSecret,
                                                                    String refreshToken) {
         HashMap<String, Object> params = getRefreshTokensParams(clientId, clientSecret, refreshToken);
 
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getOAuthApiServiceRx();
-        Observable<AccessToken> userObservable = apiRetrofitPair.first.refreshTokens(params);
+        Observable<retrofit2.Response<AccessToken>> userObservable = apiRetrofitPair.first.refreshTokens(params);
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(userObservable,
                 retrofitObservable,
@@ -1852,7 +1866,7 @@ public class Coinbase {
      * @return observable object emitting void/retrofit pair
      * @see <a href="https://developers.coinbase.com/docs/wallet/coinbase-connect/access-and-refresh-tokens</a>
      */
-    public Observable<Pair<Void, Retrofit>> revokeTokenRx() {
+    public Observable<Pair<retrofit2.Response<Void>, Retrofit>> revokeTokenRx() {
         if (_accessToken == null) {
             Log.w("Coinbase Error", "This client must have been initialized with an access token in order to call revokeToken()");
             return null;
@@ -1862,7 +1876,7 @@ public class Coinbase {
         params.put(ApiConstants.TOKEN, _accessToken);
 
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getOAuthApiServiceRx();
-        Observable<Void> revokeObservable = apiRetrofitPair.first.revokeToken(params);
+        Observable<retrofit2.Response<Void>> revokeObservable = apiRetrofitPair.first.revokeToken(params);
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(revokeObservable,
                 retrofitObservable,
@@ -1906,9 +1920,9 @@ public class Coinbase {
      * @return observable object that emits user/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#show-a-user">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.user.User, Retrofit>> getUserRx() {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.user.User>, Retrofit>> getUserRx() {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
-        Observable<com.coinbase.v2.models.user.User> userObservable = apiRetrofitPair.first.getUser();
+        Observable<retrofit2.Response<com.coinbase.v2.models.user.User>> userObservable = apiRetrofitPair.first.getUser();
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(userObservable,
                 retrofitObservable,
@@ -1957,11 +1971,11 @@ public class Coinbase {
      * @return observable object with user/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#update-current-user">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.user.User, Retrofit>> updateUserRx(String name, String timeZone, String nativeCurrency) {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.user.User>, Retrofit>> updateUserRx(String name, String timeZone, String nativeCurrency) {
         HashMap<String, Object> params = getUpdateUserParams(name, timeZone, nativeCurrency);
 
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
-        Observable<com.coinbase.v2.models.user.User> userObservable = apiRetrofitPair.first.updateUser(params);
+        Observable<retrofit2.Response<com.coinbase.v2.models.user.User>> userObservable = apiRetrofitPair.first.updateUser(params);
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(userObservable,
                 retrofitObservable,
@@ -2003,9 +2017,9 @@ public class Coinbase {
      * @return observable object emitting account/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#show-an-account">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.account.Account, Retrofit>> getAccountRx(String accountId) {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.account.Account>, Retrofit>> getAccountRx(String accountId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
-        Observable<com.coinbase.v2.models.account.Account> accountObservable = apiRetrofitPair.first.getAccount(accountId);
+        Observable<retrofit2.Response<com.coinbase.v2.models.account.Account>> accountObservable = apiRetrofitPair.first.getAccount(accountId);
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(accountObservable,
                 retrofitObservable,
@@ -2051,11 +2065,11 @@ public class Coinbase {
      * @return observable object emitting accounts/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#list-accounts">Online Documentation</a>
      */
-    public Observable<Pair<Accounts, Retrofit>> getAccountsRx(HashMap<String, Object> options) {
+    public Observable<Pair<retrofit2.Response<Accounts>, Retrofit>> getAccountsRx(HashMap<String, Object> options) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
         options = cleanQueryMap(options);
 
-        Observable<Accounts> accountsObservable = apiRetrofitPair.first.getAccounts(options);
+        Observable<retrofit2.Response<Accounts>> accountsObservable = apiRetrofitPair.first.getAccounts(options);
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(accountsObservable,
                 retrofitObservable,
@@ -2099,10 +2113,10 @@ public class Coinbase {
      * @return observable object emitting account/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#create-account">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.account.Account, Retrofit>> createAccountRx(HashMap<String, Object> options) {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.account.Account>, Retrofit>> createAccountRx(HashMap<String, Object> options) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<com.coinbase.v2.models.account.Account> accountObservable = apiRetrofitPair.first.createAccount(options);
+        Observable<retrofit2.Response<com.coinbase.v2.models.account.Account>> accountObservable = apiRetrofitPair.first.createAccount(options);
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(accountObservable,
                 retrofitObservable,
@@ -2143,10 +2157,10 @@ public class Coinbase {
      * @return observable object emitting void/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#set-account-as-primary">Online Documentation</a>
      */
-    public Observable<Pair<Void, Retrofit>> setAccountPrimaryRx(String accountId) {
+    public Observable<Pair<retrofit2.Response<Void>, Retrofit>> setAccountPrimaryRx(String accountId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<Void> observable = apiRetrofitPair.first.setAccountPrimary(accountId);
+        Observable<retrofit2.Response<Void>> observable = apiRetrofitPair.first.setAccountPrimary(accountId);
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
                 retrofitObservable,
@@ -2188,12 +2202,12 @@ public class Coinbase {
      * @return observable object account/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#update-account">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.account.Account, Retrofit>> updateAccountRx(String accountId,
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.account.Account>, Retrofit>> updateAccountRx(String accountId,
                                                                                               HashMap<String, Object> options) {
 
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<com.coinbase.v2.models.account.Account> accountObservable = apiRetrofitPair.first.updateAccount(accountId, options);
+        Observable<retrofit2.Response<com.coinbase.v2.models.account.Account>> accountObservable = apiRetrofitPair.first.updateAccount(accountId, options);
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(accountObservable,
                 retrofitObservable,
@@ -2234,10 +2248,10 @@ public class Coinbase {
      * @return observable object void/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#delete-account">Online Documentation</a>
      */
-    public Observable<Pair<Void, Retrofit>> deleteAccountRx(String accountId) {
+    public Observable<Pair<retrofit2.Response<Void>, Retrofit>> deleteAccountRx(String accountId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<Void> observable = apiRetrofitPair.first.deleteAccount(accountId);
+        Observable<retrofit2.Response<Void>> observable = apiRetrofitPair.first.deleteAccount(accountId);
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
                 retrofitObservable,
@@ -2291,14 +2305,14 @@ public class Coinbase {
      * @return observable object emitting transactions/retrofit object
      * @see <a href="https://developers.coinbase.com/api/v2#list-transactions">Online Documentation</a>
      */
-    public Observable<Pair<Transactions, Retrofit>> getTransactionsRx(String accountId,
+    public Observable<Pair<retrofit2.Response<Transactions>, Retrofit>> getTransactionsRx(String accountId,
                                                                       HashMap<String, Object> options,
                                                                       List<String> expandOptions) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
         options = cleanQueryMap(options);
 
-        Observable<Transactions> transactionObservable = apiRetrofitPair.first.getTransactions(accountId, expandOptions, options);
+        Observable<retrofit2.Response<Transactions>> transactionObservable = apiRetrofitPair.first.getTransactions(accountId, expandOptions, options);
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(transactionObservable,
                 retrofitObservable,
@@ -2344,13 +2358,13 @@ public class Coinbase {
      * @return call object
      * @see <a href="https://developers.coinbase.com/api/v2#show-a-transaction">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.transactions.Transaction, Retrofit>> getTransactionRx(String accountId,
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transactions.Transaction>, Retrofit>> getTransactionRx(String accountId,
                                                                                                         String transactionId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
         List<String> expandOptions = getTransactionExpandOptions();
 
-        Observable<com.coinbase.v2.models.transactions.Transaction> transactionObservable =
+        Observable<retrofit2.Response<com.coinbase.v2.models.transactions.Transaction>> transactionObservable =
                 apiRetrofitPair.first.getTransaction(accountId, transactionId, expandOptions);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
@@ -2396,10 +2410,10 @@ public class Coinbase {
      * @return observable object emitting void/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#complete-request-money">Online Documentation</a>
      */
-    public Observable<Pair<Void, Retrofit>> completeRequestRx(String accountId, String transactionId) {
+    public Observable<Pair<retrofit2.Response<Void>, Retrofit>> completeRequestRx(String accountId, String transactionId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<Void> observable = apiRetrofitPair.first.completeRequest(accountId, transactionId);
+        Observable<retrofit2.Response<Void>> observable = apiRetrofitPair.first.completeRequest(accountId, transactionId);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -2446,10 +2460,10 @@ public class Coinbase {
      * @return observable object emitting void/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#re-send-request-money">Online Documentation</a>
      */
-    public Observable<Pair<Void, Retrofit>> resendRequestRx(String accountId, String transactionId) {
+    public Observable<Pair<retrofit2.Response<Void>, Retrofit>> resendRequestRx(String accountId, String transactionId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<Void> observable = apiRetrofitPair.first.resendRequest(accountId, transactionId);
+        Observable<retrofit2.Response<Void>> observable = apiRetrofitPair.first.resendRequest(accountId, transactionId);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -2495,10 +2509,10 @@ public class Coinbase {
      * @return observable object emitting void/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#cancel-request-money">Online Documentation</a>
      */
-    public Observable<Pair<Void, Retrofit>> cancelRequestRx(String accountId, String transactionId) {
+    public Observable<Pair<retrofit2.Response<Void>, Retrofit>> cancelRequestRx(String accountId, String transactionId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<Void> observable = apiRetrofitPair.first.cancelTransaction(accountId, transactionId);
+        Observable<retrofit2.Response<Void>> observable = apiRetrofitPair.first.cancelTransaction(accountId, transactionId);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -2544,12 +2558,12 @@ public class Coinbase {
      * @return observable object emitting transaction/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#send-money">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.transactions.Transaction, Retrofit>> sendMoneyRx(String accountId,
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transactions.Transaction>, Retrofit>> sendMoneyRx(String accountId,
                                                                                                    HashMap<String, Object> params) {
         params.put(com.coinbase.ApiConstants.TYPE, com.coinbase.ApiConstants.SEND);
 
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
-        Observable<com.coinbase.v2.models.transactions.Transaction> observable = apiRetrofitPair.first.sendMoney(accountId, params);
+        Observable<retrofit2.Response<com.coinbase.v2.models.transactions.Transaction>> observable = apiRetrofitPair.first.sendMoney(accountId, params);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -2595,12 +2609,12 @@ public class Coinbase {
      * @return observable object emitting transaction/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#request-money">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.transactions.Transaction, Retrofit>> requestMoneyRx(String accountId,
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transactions.Transaction>, Retrofit>> requestMoneyRx(String accountId,
                                                                                                       HashMap<String, Object> params) {
         params.put(com.coinbase.ApiConstants.TYPE, com.coinbase.ApiConstants.REQUEST);
 
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
-        Observable<com.coinbase.v2.models.transactions.Transaction> observable = apiRetrofitPair.first.requestMoney(accountId, params);
+        Observable<retrofit2.Response<com.coinbase.v2.models.transactions.Transaction>> observable = apiRetrofitPair.first.requestMoney(accountId, params);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -2645,11 +2659,11 @@ public class Coinbase {
      * @return observable object emitting transaction/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#transfer-money-between-accounts">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.transactions.Transaction, Retrofit>> transferMoneyRx(String accountId, HashMap<String, Object> params) {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transactions.Transaction>, Retrofit>> transferMoneyRx(String accountId, HashMap<String, Object> params) {
         params.put(com.coinbase.ApiConstants.TYPE, ApiConstants.TRANSFER);
 
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
-        Observable<com.coinbase.v2.models.transactions.Transaction> observable = apiRetrofitPair.first.transferMoney(accountId, params);
+        Observable<retrofit2.Response<com.coinbase.v2.models.transactions.Transaction>> observable = apiRetrofitPair.first.transferMoney(accountId, params);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -2694,9 +2708,9 @@ public class Coinbase {
      * @return observable object emitting transfer/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#buy-bitcoin">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.transfers.Transfer, Retrofit>> buyBitcoinRx(String accountId, HashMap<String, Object> params) {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>, Retrofit>> buyBitcoinRx(String accountId, HashMap<String, Object> params) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
-        Observable<com.coinbase.v2.models.transfers.Transfer> observable = apiRetrofitPair.first.buyBitcoin(accountId, params);
+        Observable<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>> observable = apiRetrofitPair.first.buyBitcoin(accountId, params);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -2744,9 +2758,9 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-buy">Online Documentation</a>
      */
 
-    public Observable<Pair<com.coinbase.v2.models.transfers.Transfer, Retrofit>> commitBuyBitcoinRx(String accountId, String buyId) {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>, Retrofit>> commitBuyBitcoinRx(String accountId, String buyId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
-        Observable<com.coinbase.v2.models.transfers.Transfer> observable = apiRetrofitPair.first.commitBuyBitcoin(accountId, buyId);
+        Observable<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>> observable = apiRetrofitPair.first.commitBuyBitcoin(accountId, buyId);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -2789,9 +2803,9 @@ public class Coinbase {
      * @return observable object emitting transfer/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#sell-bitcoin">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.transfers.Transfer, Retrofit>> sellBitcoinRx(String accountId, HashMap<String, Object> params) {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>, Retrofit>> sellBitcoinRx(String accountId, HashMap<String, Object> params) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
-        Observable<com.coinbase.v2.models.transfers.Transfer> observable = apiRetrofitPair.first.sellBitcoin(accountId, params);
+        Observable<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>> observable = apiRetrofitPair.first.sellBitcoin(accountId, params);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -2838,9 +2852,9 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-sell">Online Documentation</a>
      */
 
-    public Observable<Pair<com.coinbase.v2.models.transfers.Transfer, Retrofit>> commitSellBitcoinRx(String accountId, String sellId) {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>, Retrofit>> commitSellBitcoinRx(String accountId, String sellId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
-        Observable<com.coinbase.v2.models.transfers.Transfer> observable = apiRetrofitPair.first.commitSellBitcoin(accountId, sellId);
+        Observable<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>> observable = apiRetrofitPair.first.commitSellBitcoin(accountId, sellId);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -2890,11 +2904,11 @@ public class Coinbase {
      * @return observable object emitting price/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
      */
-    public Observable<Pair<Price, Retrofit>> getSellPriceRx(String baseCurrency, String fiatCurrency, HashMap<String, Object> params) {
+    public Observable<Pair<retrofit2.Response<Price>, Retrofit>> getSellPriceRx(String baseCurrency, String fiatCurrency, HashMap<String, Object> params) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
         params = cleanQueryMap(params);
-        Observable<Price> observable = apiRetrofitPair.first.getSellPrice(baseCurrency, fiatCurrency, params);
+        Observable<retrofit2.Response<Price>> observable = apiRetrofitPair.first.getSellPrice(baseCurrency, fiatCurrency, params);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -2944,12 +2958,12 @@ public class Coinbase {
      * @return observable object emitting price/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
      */
-    public Observable<Pair<Price, Retrofit>> getBuyPriceRx(String baseCurrency, String fiatCurrency, HashMap<String, Object> params) {
+    public Observable<Pair<retrofit2.Response<Price>, Retrofit>> getBuyPriceRx(String baseCurrency, String fiatCurrency, HashMap<String, Object> params) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
         params = cleanQueryMap(params);
 
-        Observable<Price> observable = apiRetrofitPair.first.getBuyPrice(baseCurrency, fiatCurrency, params);
+        Observable<retrofit2.Response<Price>> observable = apiRetrofitPair.first.getBuyPrice(baseCurrency, fiatCurrency, params);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -3000,12 +3014,12 @@ public class Coinbase {
      * @return observable object emitting price/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
      */
-    public Observable<Pair<Price, Retrofit>> getSpotPriceRx(String baseCurrency, String fiatCurrency, HashMap<String, Object> params) {
+    public Observable<Pair<retrofit2.Response<Price>, Retrofit>> getSpotPriceRx(String baseCurrency, String fiatCurrency, HashMap<String, Object> params) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
         params = cleanQueryMap(params);
 
-        Observable<Price> observable = apiRetrofitPair.first.getSpotPrice(baseCurrency, fiatCurrency, params);
+        Observable<retrofit2.Response<Price>> observable = apiRetrofitPair.first.getSpotPrice(baseCurrency, fiatCurrency, params);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -3049,10 +3063,10 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#create-address">Online Documentation</a>
      */
 
-    public Observable<Pair<com.coinbase.v2.models.address.Address, Retrofit>> generateAddressRx(String accountId) {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.address.Address>, Retrofit>> generateAddressRx(String accountId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<com.coinbase.v2.models.address.Address> observable = apiRetrofitPair.first.generateAddress(accountId);
+        Observable<retrofit2.Response<com.coinbase.v2.models.address.Address>> observable = apiRetrofitPair.first.generateAddress(accountId);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -3096,11 +3110,11 @@ public class Coinbase {
      * @return observable object emitting transfer/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#deposit-funds">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.transfers.Transfer, Retrofit>> depositFundsRx(String accountId,
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>, Retrofit>> depositFundsRx(String accountId,
                                                                                                 HashMap<String, Object> params) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<com.coinbase.v2.models.transfers.Transfer> observable = apiRetrofitPair.first.depositFunds(accountId, params);
+        Observable<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>> observable = apiRetrofitPair.first.depositFunds(accountId, params);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -3147,10 +3161,10 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-deposit">Online Documentation</a>
      */
 
-    public Observable<Pair<com.coinbase.v2.models.transfers.Transfer, Retrofit>> commitDepositRx(String accountId, String depositId) {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>, Retrofit>> commitDepositRx(String accountId, String depositId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<com.coinbase.v2.models.transfers.Transfer> observable = apiRetrofitPair.first.commitDeposit(accountId, depositId);
+        Observable<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>> observable = apiRetrofitPair.first.commitDeposit(accountId, depositId);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -3195,11 +3209,11 @@ public class Coinbase {
      * @return observable object emitting transfer/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#withdraw-funds">Online Documentation</a>
      */
-    public Observable<Pair<com.coinbase.v2.models.transfers.Transfer, Retrofit>> withdrawFundsRx(String accountId,
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>, Retrofit>> withdrawFundsRx(String accountId,
                                                                                                  HashMap<String, Object> params) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<com.coinbase.v2.models.transfers.Transfer> observable = apiRetrofitPair.first.withdrawFunds(accountId, params);
+        Observable<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>> observable = apiRetrofitPair.first.withdrawFunds(accountId, params);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -3246,10 +3260,10 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#commit-a-deposit">Online Documentation</a>
      */
 
-    public Observable<Pair<com.coinbase.v2.models.transfers.Transfer, Retrofit>> commitWithdrawRx(String accountId, String withdrawId) {
+    public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>, Retrofit>> commitWithdrawRx(String accountId, String withdrawId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<com.coinbase.v2.models.transfers.Transfer> observable = apiRetrofitPair.first.commitWithdraw(accountId, withdrawId);
+        Observable<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>> observable = apiRetrofitPair.first.commitWithdraw(accountId, withdrawId);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -3292,10 +3306,10 @@ public class Coinbase {
      * @return observable object paymentmethod/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#show-a-payment-method">Online Documentation</a>
      */
-    public Observable<Pair<PaymentMethod, Retrofit>> getPaymentMethodRx(String paymentMethodId) {
+    public Observable<Pair<retrofit2.Response<PaymentMethod>, Retrofit>> getPaymentMethodRx(String paymentMethodId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<PaymentMethod> observable = apiRetrofitPair.first.getPaymentMethod(paymentMethodId);
+        Observable<retrofit2.Response<PaymentMethod>> observable = apiRetrofitPair.first.getPaymentMethod(paymentMethodId);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -3341,12 +3355,12 @@ public class Coinbase {
      * @return observable object emitting paymentmethods/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#list-payment-methods">Online Documentation</a>
      */
-    public Observable<Pair<PaymentMethods, Retrofit>> getPaymentMethodsRx(HashMap<String, Object> options) {
+    public Observable<Pair<retrofit2.Response<PaymentMethods>, Retrofit>> getPaymentMethodsRx(HashMap<String, Object> options) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
         options = cleanQueryMap(options);
 
-        Observable<PaymentMethods> observable = apiRetrofitPair.first.getPaymentMethods(options);
+        Observable<retrofit2.Response<PaymentMethods>> observable = apiRetrofitPair.first.getPaymentMethods(options);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -3391,12 +3405,12 @@ public class Coinbase {
      * @return observable object emitting exchangerates/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#get-exchange-rates">Online Documentation</a>
      */
-    public Observable<Pair<ExchangeRates, Retrofit>> getExchangeRatesRx(HashMap<String, Object> currency) {
+    public Observable<Pair<retrofit2.Response<ExchangeRates>, Retrofit>> getExchangeRatesRx(HashMap<String, Object> currency) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
         currency = cleanQueryMap(currency);
 
-        Observable<ExchangeRates> observable = apiRetrofitPair.first.getExchangeRates(currency);
+        Observable<retrofit2.Response<ExchangeRates>> observable = apiRetrofitPair.first.getExchangeRates(currency);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
@@ -3437,10 +3451,10 @@ public class Coinbase {
      * @return observable object emitting supportedcurrencies/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#currencies">Online Documentation</a>
      */
-    public Observable<Pair<SupportedCurrencies, Retrofit>> getSupportedCurrenciesRx() {
+    public Observable<Pair<retrofit2.Response<SupportedCurrencies>, Retrofit>> getSupportedCurrenciesRx() {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<SupportedCurrencies> observable  = apiRetrofitPair.first.getSupportedCurrencies();
+        Observable<retrofit2.Response<SupportedCurrencies>> observable  = apiRetrofitPair.first.getSupportedCurrencies();
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
