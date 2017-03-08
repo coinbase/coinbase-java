@@ -4,6 +4,8 @@ import java.net.URL;
 
 import javax.net.ssl.SSLContext;
 
+import rx.Scheduler;
+
 public class CoinbaseBuilder {
 
     String access_token;
@@ -14,6 +16,7 @@ public class CoinbaseBuilder {
     URL base_oauth_url;
     URL base_api_url;
     com.coinbase.CallbackVerifier callback_verifier;
+    Scheduler scheduler;
 
     /**
      * Build a new Coinbase client object with the specified options
@@ -116,6 +119,21 @@ public class CoinbaseBuilder {
      */
     public CoinbaseBuilder withBaseOAuthURL(URL base_oauth_url) {
         this.base_oauth_url = base_oauth_url;
+        return this;
+    }
+
+    /**
+     * Optional - specify the rx scheduler to run the subscriber (i.e. network io) requests on.
+     * If you don't specify one, it's up to you to call subscribeOn with the scheduler you'd like to use.
+     *
+     * By default, this is 'https://coinbase.com/oauth/'
+     *
+     * @param scheduler the rx.Scheduler to run the background requests on.
+     *
+     * @return this CoinbaseBuilder object
+     */
+    public CoinbaseBuilder withScheduler(Scheduler scheduler) {
+        this.scheduler = scheduler;
         return this;
     }
 
