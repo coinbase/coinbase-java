@@ -7,6 +7,7 @@ import android.util.Log;
 import android.util.Pair;
 
 import com.coinbase.auth.AccessToken;
+import com.coinbase.cache.OkHttpInMemoryLruCache;
 import com.coinbase.v1.entity.Account;
 import com.coinbase.v1.entity.AccountChangesResponse;
 import com.coinbase.v1.entity.AccountResponse;
@@ -104,13 +105,10 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
 import au.com.bytecode.opencsv.CSVReader;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
-
 import okio.Buffer;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -123,6 +121,8 @@ import rx.schedulers.Schedulers;
 public class Coinbase {
 
     protected static final ObjectMapper objectMapper = ObjectMapperProvider.createDefaultMapper();
+
+    private static final int DEFAULT_CACHE_SIZE = 1024 * 1024 / 2; //500kb
 
     protected URL _baseV1ApiUrl;
     protected URL _baseOAuthUrl;
@@ -138,10 +138,12 @@ public class Coinbase {
     protected Scheduler _backgroundScheduler;
     protected static Coinbase _instance = null;
     protected Context _context;
+    protected OkHttpInMemoryLruCache _cache = new OkHttpInMemoryLruCache(DEFAULT_CACHE_SIZE);
 
 
     protected final HashMap<String, Pair<ApiInterface, Retrofit>> mInitializedServices = new HashMap<>();
     protected final HashMap<String, Pair<ApiInterfaceRx, Retrofit>> mInitializedServicesRx = new HashMap<>();
+
 
     public Coinbase() {
         try {
@@ -195,6 +197,7 @@ public class Coinbase {
 
     /**
      * Set this before using any of the methods, otherwise it will have no effect.
+     *
      * @param backgroundScheduler
      */
     public static void setBackgroundScheduler(Scheduler backgroundScheduler) {
@@ -205,6 +208,7 @@ public class Coinbase {
         getInstance()._apiKey = apiKey;
         getInstance()._apiSecret = apiSecret;
         getInstance()._context = context;
+        getInstance()._cache.evictAll();
     }
 
 
@@ -215,6 +219,7 @@ public class Coinbase {
         }
         getInstance()._accessToken = accessToken;
         getInstance()._context = context;
+        getInstance()._cache.evictAll();
     }
 
     /**
@@ -241,6 +246,7 @@ public class Coinbase {
         _sslContext = builder.ssl_context;
         _callbackVerifier = builder.callback_verifier;
         _backgroundScheduler = builder.scheduler;
+        _cache = new OkHttpInMemoryLruCache(builder.cacheSize > 0 ? builder.cacheSize : DEFAULT_CACHE_SIZE);
 
         try {
             if (_baseV1ApiUrl == null) {
@@ -1688,13 +1694,14 @@ public class Coinbase {
             return servicePair;
         }
 
-
         OkHttpClient.Builder clientBuilder = generateClientBuilder(_sslContext);
 
         if (_accessToken != null)
             clientBuilder.addInterceptor(buildOAuthInterceptor());
 
         clientBuilder.addInterceptor(buildVersionInterceptor());
+
+        clientBuilder.addInterceptor(_cache.createInterceptor());
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -1738,6 +1745,8 @@ public class Coinbase {
             clientBuilder.addInterceptor(buildOAuthInterceptor());
 
         clientBuilder.addInterceptor(buildVersionInterceptor());
+
+        clientBuilder.addInterceptor(_cache.createInterceptor());
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -1808,8 +1817,8 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/docs/wallet/coinbase-connect/access-and-refresh-tokens</a>
      */
     public Observable<Pair<retrofit2.Response<AccessToken>, Retrofit>> refreshTokensRx(String clientId,
-                                                                   String clientSecret,
-                                                                   String refreshToken) {
+                                                                                       String clientSecret,
+                                                                                       String refreshToken) {
         HashMap<String, Object> params = getRefreshTokensParams(clientId, clientSecret, refreshToken);
 
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getOAuthApiServiceRx();
@@ -1896,12 +1905,14 @@ public class Coinbase {
      */
     public Call getUser(final CallbackWithRetrofit<com.coinbase.v2.models.user.User> callback) {
         final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+
         Call call = apiRetrofitPair.first.getUser();
         call.enqueue(new Callback<com.coinbase.v2.models.user.User>() {
 
             public void onResponse(Call<com.coinbase.v2.models.user.User> call, retrofit2.Response<com.coinbase.v2.models.user.User> response) {
-                if (callback != null)
+                if (callback != null) {
                     callback.onResponse(call, response, apiRetrofitPair.second);
+                }
             }
 
 
@@ -2203,7 +2214,7 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#update-account">Online Documentation</a>
      */
     public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.account.Account>, Retrofit>> updateAccountRx(String accountId,
-                                                                                              HashMap<String, Object> options) {
+                                                                                                                  HashMap<String, Object> options) {
 
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
@@ -2306,8 +2317,8 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#list-transactions">Online Documentation</a>
      */
     public Observable<Pair<retrofit2.Response<Transactions>, Retrofit>> getTransactionsRx(String accountId,
-                                                                      HashMap<String, Object> options,
-                                                                      List<String> expandOptions) {
+                                                                                          HashMap<String, Object> options,
+                                                                                          List<String> expandOptions) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
         options = cleanQueryMap(options);
@@ -2359,7 +2370,7 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#show-a-transaction">Online Documentation</a>
      */
     public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transactions.Transaction>, Retrofit>> getTransactionRx(String accountId,
-                                                                                                        String transactionId) {
+                                                                                                                            String transactionId) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
         List<String> expandOptions = getTransactionExpandOptions();
@@ -2559,7 +2570,7 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#send-money">Online Documentation</a>
      */
     public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transactions.Transaction>, Retrofit>> sendMoneyRx(String accountId,
-                                                                                                   HashMap<String, Object> params) {
+                                                                                                                       HashMap<String, Object> params) {
         params.put(com.coinbase.ApiConstants.TYPE, com.coinbase.ApiConstants.SEND);
 
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
@@ -2610,7 +2621,7 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#request-money">Online Documentation</a>
      */
     public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transactions.Transaction>, Retrofit>> requestMoneyRx(String accountId,
-                                                                                                      HashMap<String, Object> params) {
+                                                                                                                          HashMap<String, Object> params) {
         params.put(com.coinbase.ApiConstants.TYPE, com.coinbase.ApiConstants.REQUEST);
 
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
@@ -2795,6 +2806,7 @@ public class Coinbase {
 
         return call;
     }
+
     /**
      * Sells user-defined amount of bitcoin.
      *
@@ -3111,7 +3123,7 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#deposit-funds">Online Documentation</a>
      */
     public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>, Retrofit>> depositFundsRx(String accountId,
-                                                                                                HashMap<String, Object> params) {
+                                                                                                                    HashMap<String, Object> params) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
         Observable<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>> observable = apiRetrofitPair.first.depositFunds(accountId, params);
@@ -3210,7 +3222,7 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#withdraw-funds">Online Documentation</a>
      */
     public Observable<Pair<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>, Retrofit>> withdrawFundsRx(String accountId,
-                                                                                                 HashMap<String, Object> params) {
+                                                                                                                     HashMap<String, Object> params) {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
         Observable<retrofit2.Response<com.coinbase.v2.models.transfers.Transfer>> observable = apiRetrofitPair.first.withdrawFunds(accountId, params);
@@ -3351,7 +3363,7 @@ public class Coinbase {
     /**
      * Lists current user’s payment methods.
      *
-     * @param options  endpoint options
+     * @param options endpoint options
      * @return observable object emitting paymentmethods/retrofit pair
      * @see <a href="https://developers.coinbase.com/api/v2#list-payment-methods">Online Documentation</a>
      */
@@ -3454,7 +3466,7 @@ public class Coinbase {
     public Observable<Pair<retrofit2.Response<SupportedCurrencies>, Retrofit>> getSupportedCurrenciesRx() {
         final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
 
-        Observable<retrofit2.Response<SupportedCurrencies>> observable  = apiRetrofitPair.first.getSupportedCurrencies();
+        Observable<retrofit2.Response<SupportedCurrencies>> observable = apiRetrofitPair.first.getSupportedCurrencies();
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
