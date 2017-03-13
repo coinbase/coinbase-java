@@ -56,6 +56,10 @@ public class OkHttpInMemoryLruCache extends LruCache<String, Pair<String, OkHttp
                     synchronized (OkHttpInMemoryLruCache.this) {
                         put(url, responseBodyPair);
                     }
+                    return response.newBuilder()
+                            .body(ResponseBody.create(responseBodyPair.second.contentType(), responseBodyPair.second.body()))
+                            .code(responseBodyPair.second.successCode())
+                            .build();
                 }
             } else if (response.code() == NOT_MODIFIED) {
                 //Server sent us a 304, return the cached body if we have it (we should)
