@@ -14,6 +14,9 @@ public class Details {
     @SerializedName("subtitle")
     @Expose
     private String subtitle;
+    @SerializedName("payment_method_name")
+    @Expose
+    private String paymetnMethodName;
 
     /**
      *
@@ -49,6 +52,24 @@ public class Details {
      */
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
+    }
+
+    /**
+     *
+     * @return
+     * The paymetnMethodName
+     */
+    public String getPaymetnMethodName() {
+        return paymetnMethodName;
+    }
+
+    /**
+     *
+     * @param paymetnMethodName
+     * The paymetnMethodName
+     */
+    public void setPaymetnMethodName(String paymetnMethodName) {
+        this.paymetnMethodName = paymetnMethodName;
     }
 
 }
