@@ -16,7 +16,7 @@ public class Details {
     private String subtitle;
     @SerializedName("payment_method_name")
     @Expose
-    private String paymetnMethodName;
+    private String paymentMethodName;
 
     /**
      *
@@ -57,19 +57,19 @@ public class Details {
     /**
      *
      * @return
-     * The paymetnMethodName
+     * The paymentMethodName
      */
     public String getPaymetnMethodName() {
-        return paymetnMethodName;
+        return paymentMethodName;
     }
 
     /**
      *
-     * @param paymetnMethodName
-     * The paymetnMethodName
+     * @param paymentMethodName
+     * The paymentMethodName
      */
-    public void setPaymetnMethodName(String paymetnMethodName) {
-        this.paymetnMethodName = paymetnMethodName;
+    public void setPaymentMethodName(String paymentMethodName) {
+        this.paymentMethodName = paymentMethodName;
     }
 
 }
