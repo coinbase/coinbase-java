@@ -1685,15 +1685,6 @@ public class Coinbase {
             return mInitializedServices.get(url);
         }
 
-
-        if (mInitializedServicesRx.containsKey(url)) {
-            Retrofit retrofit = mInitializedServicesRx.get(url).second;
-            ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
-            Pair<ApiInterface, Retrofit> servicePair = new Pair<>(service, retrofit);
-            mInitializedServices.put(url, servicePair);
-            return servicePair;
-        }
-
         OkHttpClient.Builder clientBuilder = generateClientBuilder(_sslContext);
 
         if (_accessToken != null)
@@ -1729,14 +1720,6 @@ public class Coinbase {
     private synchronized Pair<ApiInterfaceRx, Retrofit> getServiceRx(String url) {
         if (mInitializedServicesRx.containsKey(url)) {
             return mInitializedServicesRx.get(url);
-        }
-
-        if (mInitializedServices.containsKey(url)) {
-            Retrofit retrofit = mInitializedServices.get(url).second;
-            ApiInterfaceRx service = retrofit.create(ApiInterfaceRx.class);
-            Pair<ApiInterfaceRx, Retrofit> servicePair = new Pair<>(service, retrofit);
-            mInitializedServicesRx.put(url, servicePair);
-            return servicePair;
         }
 
         OkHttpClient.Builder clientBuilder = generateClientBuilder(_sslContext);
