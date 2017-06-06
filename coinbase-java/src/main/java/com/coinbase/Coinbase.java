@@ -1691,7 +1691,7 @@ public class Coinbase {
             clientBuilder.addInterceptor(buildOAuthInterceptor());
 
         clientBuilder.addInterceptor(buildVersionInterceptor());
-
+        clientBuilder.addInterceptor(languageInterceptor());
         clientBuilder.addInterceptor(_cache.createInterceptor());
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -1728,7 +1728,7 @@ public class Coinbase {
             clientBuilder.addInterceptor(buildOAuthInterceptor());
 
         clientBuilder.addInterceptor(buildVersionInterceptor());
-
+        clientBuilder.addInterceptor(languageInterceptor());
         clientBuilder.addInterceptor(_cache.createInterceptor());
 
         Retrofit retrofit = new Retrofit.Builder()
