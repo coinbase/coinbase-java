@@ -72,6 +72,9 @@ public class Data {
     @SerializedName("active")
     @Expose
     private Boolean active;
+    @SerializedName("image")
+    @Expose
+    private Image image;
 
     /**
      *
@@ -306,6 +309,14 @@ public class Data {
      */
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 
 }
