@@ -92,6 +92,9 @@ public class Data {
     @SerializedName("details")
     @Expose
     private Details details;
+    @SerializedName("image")
+    @Expose
+    private Image image;
 
     /**
      *
@@ -597,4 +600,11 @@ public class Data {
         this.details = details;
     }
 
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
 }

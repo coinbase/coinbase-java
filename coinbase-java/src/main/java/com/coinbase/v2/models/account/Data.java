@@ -47,7 +47,7 @@ public class Data {
     private Type type;
     @SerializedName("currency")
     @Expose
-    private String currency;
+    private Currency currency;
     @SerializedName("balance")
     @Expose
     private Balance balance;
@@ -153,7 +153,7 @@ public class Data {
      * @return
      * The currency
      */
-    public String getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
@@ -162,7 +162,7 @@ public class Data {
      * @param currency
      * The currency
      */
-    public void setCurrency(String currency) {
+    public void setCurrency(Currency currency) {
         this.currency = currency;
     }
 
