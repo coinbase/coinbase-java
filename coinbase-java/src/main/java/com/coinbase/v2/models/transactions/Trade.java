@@ -35,6 +35,9 @@ public class Trade {
     @SerializedName("resource_path")
     @Expose
     private String resourcePath;
+    @SerializedName("fee")
+    @Expose
+    private Fee fee;
     @SerializedName("amount")
     @Expose
     private Amount amount;

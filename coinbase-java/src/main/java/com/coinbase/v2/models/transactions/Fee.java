@@ -14,41 +14,43 @@ public class Fee {
     @SerializedName("amount")
     @Expose
     private Amount amount;
+    @SerializedName("currency")
+    @Expose
+    private String currency;
 
     /**
-     *
-     * @return
-     * The type
+     * @return The type
      */
     public String getType() {
         return type;
     }
 
     /**
-     *
-     * @param type
-     * The type
+     * @param type The type
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     *
-     * @return
-     * The amount
+     * @return The amount
      */
     public Amount getAmount() {
         return amount;
     }
 
     /**
-     *
-     * @param amount
-     * The amount
+     * @param amount The amount
      */
     public void setAmount(Amount amount) {
         this.amount = amount;
     }
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
 }
