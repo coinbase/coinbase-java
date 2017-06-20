@@ -58,273 +58,220 @@ public class Trade {
     private Boolean instant;
 
     /**
-     *
-     * @return
-     * The id
+     * @return The id
      */
     public String getId() {
         return id;
     }
 
     /**
-     *
-     * @param id
-     * The id
+     * @param id The id
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     *
-     * @return
-     * The status
+     * @return The status
      */
     public String getStatus() {
         return status;
     }
 
     /**
-     *
-     * @param status
-     * The status
+     * @param status The status
      */
     public void setStatus(String status) {
         this.status = status;
     }
 
     /**
-     *
-     * @return
-     * The paymentMethod
+     * @return The paymentMethod
      */
     public PaymentMethod getPaymentMethod() {
         return paymentMethod;
     }
 
     /**
-     *
-     * @param paymentMethod
-     * The payment_method
+     * @param paymentMethod The payment_method
      */
     public void setPaymentMethod(PaymentMethod paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
 
     /**
-     *
-     * @return
-     * The transaction
+     * @return The transaction
      */
     public Transaction getTransaction() {
         return transaction;
     }
 
     /**
-     *
-     * @param transaction
-     * The transaction
+     * @param transaction The transaction
      */
     public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
     }
 
     /**
-     *
-     * @return
-     * The fees
+     * @return The fees
      */
     public List<Fee> getFees() {
         return fees;
     }
 
     /**
-     *
-     * @param fees
-     * The fees
+     * @param fees The fees
      */
     public void setFees(List<Fee> fees) {
         this.fees = fees;
     }
 
     /**
-     *
-     * @return
-     * The createdAt
+     * @return The createdAt
      */
     public String getCreatedAt() {
         return createdAt;
     }
 
     /**
-     *
-     * @param createdAt
-     * The created_at
+     * @param createdAt The created_at
      */
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
     /**
-     *
-     * @return
-     * The updatedAt
+     * @return The updatedAt
      */
     public String getUpdatedAt() {
         return updatedAt;
     }
 
     /**
-     *
-     * @param updatedAt
-     * The updated_at
+     * @param updatedAt The updated_at
      */
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
     }
 
     /**
-     *
-     * @return
-     * The resource
+     * @return The resource
      */
     public String getResource() {
         return resource;
     }
 
     /**
-     *
-     * @param resource
-     * The resource
+     * @param resource The resource
      */
     public void setResource(String resource) {
         this.resource = resource;
     }
 
     /**
-     *
-     * @return
-     * The resourcePath
+     * @return The resourcePath
      */
     public String getResourcePath() {
         return resourcePath;
     }
 
     /**
-     *
-     * @param resourcePath
-     * The resource_path
+     * @param resourcePath The resource_path
      */
     public void setResourcePath(String resourcePath) {
         this.resourcePath = resourcePath;
     }
 
     /**
-     *
-     * @return
-     * The amount
+     * @return The amount
      */
     public Amount getAmount() {
         return amount;
     }
 
     /**
-     *
-     * @param amount
-     * The amount
+     * @param amount The amount
      */
     public void setAmount(Amount amount) {
         this.amount = amount;
     }
 
     /**
-     *
-     * @return
-     * The total
+     * @return The total
      */
     public Amount getTotal() {
         return total;
     }
 
     /**
-     *
-     * @param total
-     * The total
+     * @param total The total
      */
     public void setTotal(Amount total) {
         this.total = total;
     }
 
     /**
-     *
-     * @return
-     * The subtotal
+     * @return The subtotal
      */
     public Amount getSubtotal() {
         return subtotal;
     }
 
     /**
-     *
-     * @param subtotal
-     * The subtotal
+     * @param subtotal The subtotal
      */
     public void setSubtotal(Amount subtotal) {
         this.subtotal = subtotal;
     }
 
     /**
-     *
-     * @return
-     * The committed
+     * @return The committed
      */
     public Boolean getCommitted() {
         return committed;
     }
 
     /**
-     *
-     * @param committed
-     * The committed
+     * @param committed The committed
      */
     public void setCommitted(Boolean committed) {
         this.committed = committed;
     }
 
     /**
-     *
-     * @return
-     * The payoutAt
+     * @return The payoutAt
      */
     public String getPayoutAt() {
         return payoutAt;
     }
 
     /**
-     *
-     * @param payoutAt
-     * The payout_at
+     * @param payoutAt The payout_at
      */
     public void setPayoutAt(String payoutAt) {
         this.payoutAt = payoutAt;
     }
 
     /**
-     *
-     * @return
-     * The instant
+     * @return The instant
      */
     public Boolean getInstant() {
         return instant;
     }
 
     /**
-     *
-     * @param instant
-     * The instant
+     * @param instant The instant
      */
     public void setInstant(Boolean instant) {
         this.instant = instant;
     }
 
+    public Fee getFee() {
+        return fee;
+    }
+
+    public void setFee(Fee fee) {
+        this.fee = fee;
+    }
 }
