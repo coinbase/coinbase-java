@@ -37,7 +37,7 @@ public class Trade {
     private String resourcePath;
     @SerializedName("fee")
     @Expose
-    private Fee fee;
+    private Amount fee;
     @SerializedName("amount")
     @Expose
     private Amount amount;
@@ -267,11 +267,11 @@ public class Trade {
         this.instant = instant;
     }
 
-    public Fee getFee() {
+    public Amount getFee() {
         return fee;
     }
 
-    public void setFee(Fee fee) {
+    public void setFee(Amount fee) {
         this.fee = fee;
     }
 }

@@ -13,7 +13,7 @@ public class Fee {
     private String type;
     @SerializedName("amount")
     @Expose
-    private String amount;
+    private Amount amount;
     @SerializedName("currency")
     @Expose
     private String currency;
@@ -35,14 +35,14 @@ public class Fee {
     /**
      * @return The amount
      */
-    public String getAmount() {
+    public Amount getAmount() {
         return amount;
     }
 
     /**
      * @param amount The amount
      */
-    public void setAmount(String amount) {
+    public void setAmount(Amount amount) {
         this.amount = amount;
     }
 
