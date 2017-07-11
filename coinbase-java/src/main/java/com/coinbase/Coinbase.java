@@ -1625,7 +1625,7 @@ public class Coinbase {
         };
     }
 
-    private String getPackageVersionName() {
+    protected String getPackageVersionName() {
         String packageName = "";
         String versionName = "";
 
