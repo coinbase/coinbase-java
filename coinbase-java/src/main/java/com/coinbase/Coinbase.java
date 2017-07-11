@@ -8,6 +8,7 @@ import android.util.Pair;
 
 import com.coinbase.auth.AccessToken;
 import com.coinbase.cache.OkHttpInMemoryLruCache;
+import com.coinbase.coinbase_java.BuildConfig;
 import com.coinbase.v1.entity.Account;
 import com.coinbase.v1.entity.AccountChangesResponse;
 import com.coinbase.v1.entity.AccountResponse;
@@ -1633,7 +1634,7 @@ public class Coinbase {
         }
 
         try {
-            versionName = _context.getPackageManager().getPackageInfo(_context.getPackageName(), 0).versionName;
+            versionName = BuildConfig.VERSION_NAME + "/" + BuildConfig.VERSION_CODE;
         } catch (Throwable t) {
 
         }
