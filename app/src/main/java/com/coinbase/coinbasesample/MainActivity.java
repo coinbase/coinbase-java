@@ -54,11 +54,12 @@ public class MainActivity extends AppCompatActivity {
 
         enableButtons(false);
 
+        final OAuth oauth = ((MainApplication)getApplicationContext()).getOAuth();
         authButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    OAuth.beginAuthorization(MainActivity.this,
+                    oauth.beginAuthorization(MainActivity.this,
                             API_KEY,
                             "wallet:user:read,wallet:accounts:read",
                             "coinbase-sample-app://coinbase-oauth",
@@ -93,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getUser() {
-        Coinbase.getInstance().getUser(new CallbackWithRetrofit<User>() {
+        Coinbase coinbase = ((MainApplication)getApplicationContext()).getClient();
+        coinbase.getUser(new CallbackWithRetrofit<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response, Retrofit retrofit) {
                 if (response.isSuccessful()) {
@@ -132,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public OAuthTokensResponse doInBackground(Void... params) {
             try {
-                return OAuth.completeAuthorization(MainActivity.this,
+                final OAuth oauth = ((MainApplication)getApplicationContext()).getOAuth();
+                return oauth.completeAuthorization(MainActivity.this,
                         API_KEY,
                         API_SECRET,
                         mIntent.getData());
@@ -144,7 +147,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPostExecute(OAuthTokensResponse tokens) {
-            Coinbase.init(MainActivity.this, tokens.getAccessToken());
+            Coinbase coinbase = ((MainApplication)getApplicationContext()).getClient();
+            coinbase.init(MainActivity.this, tokens.getAccessToken());
             getUser();
         }
     }

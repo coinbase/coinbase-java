@@ -18,7 +18,13 @@ public class OAuth {
     private static final String KEY_COINBASE_PREFERENCES = "com.coinbase.android.sdk";
     private static final String KEY_LOGIN_CSRF_TOKEN = "com.coinbase.android.sdk.login_csrf_token";
 
-    public static void beginAuthorization(Context context, String clientId,
+    private final Coinbase mCoinbase;
+
+    public OAuth(Coinbase coinbase) {
+        mCoinbase = coinbase;
+    }
+
+    public void beginAuthorization(Context context, String clientId,
                                           String scope, String redirectUri, OAuthCodeRequest.Meta meta)
             throws CoinbaseException {
 
@@ -28,7 +34,7 @@ public class OAuth {
         request.setRedirectUri(redirectUri);
         request.setMeta(meta);
 
-        Uri authorizationUri = Coinbase.getInstance().getAuthorizationUri(request);
+        Uri authorizationUri = mCoinbase.getAuthorizationUri(request);
 
         Intent i = new Intent(Intent.ACTION_VIEW);
         Uri androidUri = Uri.parse(authorizationUri.toString());
@@ -37,7 +43,7 @@ public class OAuth {
         context.startActivity(i);
     }
 
-    public static OAuthTokensResponse completeAuthorization(Context context, String clientId,
+    public OAuthTokensResponse completeAuthorization(Context context, String clientId,
                                                             String clientSecret, Uri redirectUri) throws UnauthorizedException, IOException {
 
         String csrfToken = redirectUri.getQueryParameter("state");
@@ -51,14 +57,14 @@ public class OAuth {
         } else {
             try {
                 Uri redirectUriWithoutQuery = redirectUri.buildUpon().clearQuery().build();
-                return Coinbase.getInstance().getTokens(clientId, clientSecret, authCode, redirectUriWithoutQuery.toString());
+                return mCoinbase.getTokens(clientId, clientSecret, authCode, redirectUriWithoutQuery.toString());
             } catch (CoinbaseException ex) {
                 throw new UnauthorizedException(ex.getMessage());
             }
         }
     }
 
-    public static String getLoginCSRFToken(Context context) {
+    public String getLoginCSRFToken(Context context) {
         SharedPreferences prefs = context.getSharedPreferences(KEY_COINBASE_PREFERENCES, Context.MODE_PRIVATE);
 
         int result = prefs.getInt(KEY_LOGIN_CSRF_TOKEN, 0);

@@ -42,10 +42,12 @@ public class DataActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        final Coinbase coinbase = ((MainApplication)getApplicationContext()).getClient();
+
         sellPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Coinbase.getInstance().getSellPrice(BTC, USD, null, new CallbackWithRetrofit<Price>() {
+                coinbase.getSellPrice(BTC, USD, null, new CallbackWithRetrofit<Price>() {
                     @Override
                     public void onResponse(Call<Price> call, Response<Price> response, Retrofit retrofit) {
                         handleResponse(response);
@@ -62,7 +64,7 @@ public class DataActivity extends AppCompatActivity {
         buyPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Coinbase.getInstance().getBuyPrice(BTC, USD, null, new CallbackWithRetrofit<Price>() {
+                coinbase.getBuyPrice(BTC, USD, null, new CallbackWithRetrofit<Price>() {
                     @Override
                     public void onResponse(Call<Price> call, Response<Price> response, Retrofit retrofit) {
                         handleResponse(response);
@@ -79,7 +81,7 @@ public class DataActivity extends AppCompatActivity {
         spotPriceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Coinbase.getInstance().getSpotPrice(BTC, USD, null, new CallbackWithRetrofit<Price>() {
+                coinbase.getSpotPrice(BTC, USD, null, new CallbackWithRetrofit<Price>() {
                     @Override
                     public void onResponse(Call<Price> call, Response<Price> response, Retrofit retrofit) {
                         handleResponse(response);
