@@ -43,7 +43,9 @@ public class OkHttpInMemoryLruCache extends LruCache<String, Pair<String, OkHttp
             }
 
             if (responseBodyPair != null) {
-                request = request.newBuilder().header("If-None-Match", get(url).first).build();
+                synchronized (OkHttpInMemoryLruCache.this) {
+                    request = request.newBuilder().header("If-None-Match", get(url).first).build();
+                }
             }
 
             Response response = chain.proceed(request);
