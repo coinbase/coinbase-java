@@ -34,7 +34,8 @@ public class TransactionsActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         final ProgressDialog dialog = ProgressDialog.show(this, "Loading Accounts", null);
-        Coinbase.getInstance().getAccounts(null, new CallbackWithRetrofit<Accounts>() {
+        Coinbase coinbase = ((MainApplication)getApplicationContext()).getClient();
+        coinbase.getAccounts(null, new CallbackWithRetrofit<Accounts>() {
             @Override
             public void onResponse(Call<Accounts> call, Response<Accounts> response, Retrofit retrofit) {
                 if (!response.isSuccessful()) {
@@ -58,7 +59,8 @@ public class TransactionsActivity extends AppCompatActivity {
     }
 
     private void getTransactions() {
-        Coinbase.getInstance().getTransactions(account.getId(), null, null, new CallbackWithRetrofit<Transactions>() {
+        Coinbase coinbase = ((MainApplication)getApplicationContext()).getClient();
+        coinbase.getTransactions(account.getId(), null, null, new CallbackWithRetrofit<Transactions>() {
             @Override
             public void onResponse(Call<Transactions> call, Response<Transactions> response, Retrofit retrofit) {
                 if (!response.isSuccessful()) {

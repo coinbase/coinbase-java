@@ -137,7 +137,6 @@ public class Coinbase {
     protected SSLSocketFactory _socketFactory;
     protected CallbackVerifier _callbackVerifier;
     protected Scheduler _backgroundScheduler;
-    protected static Coinbase _instance = null;
     protected Context _context;
     protected OkHttpInMemoryLruCache _cache = new OkHttpInMemoryLruCache(DEFAULT_CACHE_SIZE);
 
@@ -162,7 +161,7 @@ public class Coinbase {
         _backgroundScheduler = Schedulers.io();
     }
 
-    protected static OkHttpClient.Builder generateClientBuilder(SSLContext sslContext) {
+    protected OkHttpClient.Builder generateClientBuilder(SSLContext sslContext) {
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
         if (sslContext != null) {
             clientBuilder.sslSocketFactory(sslContext.getSocketFactory());
@@ -177,7 +176,7 @@ public class Coinbase {
         return clientBuilder;
     }
 
-    public static void setBaseUrl(String url) {
+    public void setBaseUrl(String url) {
         try {
             SSLContext context = SSLContext.getDefault();
             setBaseUrl(url, context);
@@ -186,11 +185,11 @@ public class Coinbase {
         }
     }
 
-    public static void setBaseUrl(String url, SSLContext sslContext) {
+    public void setBaseUrl(String url, SSLContext sslContext) {
         try {
-            getInstance()._baseApiUrl = new URL(url + "/");
-            getInstance()._baseV1ApiUrl = new URL(url + "/v1/");
-            getInstance()._baseV2ApiUrl = new URL(url + "/v2/");
+            _baseApiUrl = new URL(url + "/");
+            _baseV1ApiUrl = new URL(url + "/v1/");
+            _baseV2ApiUrl = new URL(url + "/v2/");
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
@@ -201,39 +200,26 @@ public class Coinbase {
      *
      * @param backgroundScheduler
      */
-    public static void setBackgroundScheduler(Scheduler backgroundScheduler) {
-        getInstance()._backgroundScheduler = backgroundScheduler;
+    public void setBackgroundScheduler(Scheduler backgroundScheduler) {
+        _backgroundScheduler = backgroundScheduler;
     }
 
-    public static void init(Context context, String apiKey, String apiSecret) {
-        getInstance()._apiKey = apiKey;
-        getInstance()._apiSecret = apiSecret;
-        getInstance()._context = context;
-        getInstance()._cache.evictAll();
+    public void init(Context context, String apiKey, String apiSecret) {
+        _apiKey = apiKey;
+        _apiSecret = apiSecret;
+        _context = context;
+        _cache.evictAll();
     }
 
 
-    public static void init(Context context, String accessToken) {
-        if (!TextUtils.equals(getInstance()._accessToken, accessToken)) {
-            getInstance().mInitializedServices.clear();
-            getInstance().mInitializedServicesRx.clear();
+    public void init(Context context, String accessToken) {
+        if (!TextUtils.equals(_accessToken, accessToken)) {
+            mInitializedServices.clear();
+            mInitializedServicesRx.clear();
         }
-        getInstance()._accessToken = accessToken;
-        getInstance()._context = context;
-        getInstance()._cache.evictAll();
-    }
-
-    /**
-     * Retrieve the coinbase singleton object.
-     *
-     * @return Coinbase object
-     */
-    public static Coinbase getInstance() {
-        if (_instance == null) {
-            _instance = new Coinbase();
-        }
-
-        return _instance;
+        _accessToken = accessToken;
+        _context = context;
+        _cache.evictAll();
     }
 
     Coinbase(CoinbaseBuilder builder) {
@@ -280,7 +266,6 @@ public class Coinbase {
             _callbackVerifier = new CallbackVerifierImpl();
         }
     }
-
 
     public User getUser() throws IOException, CoinbaseException {
         URL usersUrl;
@@ -1672,6 +1657,24 @@ public class Coinbase {
         };
     }
 
+    /**
+     * Interceptor for device info, override this to add device info
+     * @return
+     */
+    protected Interceptor deviceInfoInterceptor() {
+        return new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                okhttp3.Request newRequest = chain
+                        .request()
+                        .newBuilder()
+                        .build();
+
+                return chain.proceed(newRequest);
+            }
+        };
+    }
+
     protected Pair<ApiInterface, Retrofit> getOAuthApiService() {
         return getService(_baseOAuthUrl.toString());
     }
@@ -1693,6 +1696,7 @@ public class Coinbase {
 
         clientBuilder.addInterceptor(buildVersionInterceptor());
         clientBuilder.addInterceptor(languageInterceptor());
+        clientBuilder.addInterceptor(deviceInfoInterceptor());
         clientBuilder.addInterceptor(_cache.createInterceptor());
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -1730,6 +1734,7 @@ public class Coinbase {
 
         clientBuilder.addInterceptor(buildVersionInterceptor());
         clientBuilder.addInterceptor(languageInterceptor());
+        clientBuilder.addInterceptor(deviceInfoInterceptor());
         clientBuilder.addInterceptor(_cache.createInterceptor());
 
         Retrofit retrofit = new Retrofit.Builder()
