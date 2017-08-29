@@ -20,6 +20,12 @@ public class Currency {
     @SerializedName("exponent")
     @Expose
     private Integer exponent;
+    @SerializedName("uri_scheme")
+    @Expose
+    private String uriScheme;
+    @SerializedName("image")
+    @Expose
+    private Image image;
 
     public String getCode() {
         return code;
@@ -53,4 +59,19 @@ public class Currency {
         this.exponent = exponent;
     }
 
+    public String getUriScheme() {
+        return uriScheme;
+    }
+
+    public void setUriScheme(String uriScheme) {
+        this.uriScheme = uriScheme;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
 }
