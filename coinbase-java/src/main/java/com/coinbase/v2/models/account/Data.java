@@ -51,6 +51,9 @@ public class Data {
     @SerializedName("balance")
     @Expose
     private Balance balance;
+    @SerializedName("native_balance")
+    @Expose
+    private NativeBalance nativeBalance;
     @SerializedName("created_at")
     @Expose
     private String createdAt;
@@ -179,6 +182,24 @@ public class Data {
      */
     public void setBalance(Balance balance) {
         this.balance = balance;
+    }
+
+    /**
+     *
+     * @return
+     * The nativeBalance
+     */
+    public NativeBalance getNativeBalance() {
+        return nativeBalance;
+    }
+
+    /**
+     *
+     * @param nativeBalance
+     * The native_balance
+     */
+    public void setNativeBalance(NativeBalance nativeBalance) {
+        this.nativeBalance = nativeBalance;
     }
 
     /**

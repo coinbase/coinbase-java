@@ -8,6 +8,7 @@ import com.coinbase.v2.models.exchangeRates.ExchangeRates;
 import com.coinbase.v2.models.paymentMethods.PaymentMethod;
 import com.coinbase.v2.models.paymentMethods.PaymentMethods;
 import com.coinbase.v2.models.price.Price;
+import com.coinbase.v2.models.price.Prices;
 import com.coinbase.v2.models.supportedCurrencies.SupportedCurrencies;
 import com.coinbase.v2.models.transactions.Transaction;
 import com.coinbase.v2.models.transactions.Transactions;
@@ -102,6 +103,10 @@ public interface ApiInterfaceRx {
     Observable<Response<Price>> getSpotPrice(@Path("base_currency") String baseCurrency,
                              @Path("fiat_currency") String fiatCurrency,
                              @QueryMap HashMap<String, Object> body);
+
+    @GET(com.coinbase.ApiConstants.PRICES + "/{fiat_currency}/" + ApiConstants.SPOT)
+    Observable<Response<Prices>> getSpotPrices(@Path("fiat_currency") String fiatCurrency,
+                                               @QueryMap HashMap<String, Object> body);
 
     @POST(ApiConstants.ACCOUNTS + "/{id}/" + ApiConstants.BUYS)
     Observable<Response<Transfer>> buyBitcoin(@Path("id") String accountId, @Body HashMap<String, Object> body);

@@ -1,18 +1,29 @@
 package com.coinbase.v2.models.price;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import javax.annotation.Generated;
+
 @Generated("org.jsonschema2pojo")
 public class Data {
-
+    @SerializedName("base")
+    @Expose
+    private String base;
     @SerializedName("amount")
     @Expose
     private String amount;
     @SerializedName("currency")
     @Expose
     private String currency;
+
+    public String getBase() {
+        return base;
+    }
+
+    public void setBase(String base) {
+        this.base = base;
+    }
 
     /**
      *

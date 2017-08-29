@@ -67,6 +67,7 @@ import com.coinbase.v2.models.exchangeRates.ExchangeRates;
 import com.coinbase.v2.models.paymentMethods.PaymentMethod;
 import com.coinbase.v2.models.paymentMethods.PaymentMethods;
 import com.coinbase.v2.models.price.Price;
+import com.coinbase.v2.models.price.Prices;
 import com.coinbase.v2.models.supportedCurrencies.SupportedCurrencies;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -3021,6 +3022,59 @@ public class Coinbase {
         params = cleanQueryMap(params);
 
         Observable<retrofit2.Response<Price>> observable = apiRetrofitPair.first.getSpotPrice(baseCurrency, fiatCurrency, params);
+
+        Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
+        return Observable.combineLatest(observable,
+                retrofitObservable,
+                (a, b) -> new Pair<>(a, b));
+    }
+
+    /**
+     * Retrieve the spot prices for all supported currencies for the given fiatCurrency
+     *
+     * @param fiatCurrency the currency in which to retrieve the price
+     * @param params       HashMap of params as indicated in api docs
+     * @return observable object emitting price/retrofit pair
+     * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
+     */
+    public Call getSpotPrices(String fiatCurrency,
+                             HashMap<String, Object> params, final CallbackWithRetrofit<Prices> callback) {
+        final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
+
+        params = cleanQueryMap(params);
+
+        Call call = apiRetrofitPair.first.getSpotPrices(fiatCurrency, params);
+        call.enqueue(new Callback<Prices>() {
+
+            public void onResponse(Call<Prices> call, retrofit2.Response<Prices> response) {
+                if (callback != null)
+                    callback.onResponse(call, response, apiRetrofitPair.second);
+            }
+
+
+            public void onFailure(Call<Prices> call, Throwable t) {
+                if (callback != null)
+                    callback.onFailure(call, t);
+            }
+        });
+
+        return call;
+    }
+
+    /**
+     * Retrieve the spot prices for all supported currencies for the given fiatCurrency
+     *
+     * @param fiatCurrency the currency in which to retrieve the price
+     * @param params       HashMap of params as indicated in api docs
+     * @return observable object emitting price/retrofit pair
+     * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
+     */
+    public Observable<Pair<retrofit2.Response<Prices>, Retrofit>> getSpotPricesRx(String fiatCurrency, HashMap<String, Object> params) {
+        final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
+
+        params = cleanQueryMap(params);
+
+        Observable<retrofit2.Response<Prices>> observable = apiRetrofitPair.first.getSpotPrices(fiatCurrency, params);
 
         Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
         return Observable.combineLatest(observable,
