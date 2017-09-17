@@ -88,9 +88,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse("coinbase-identity-verification://"));
-        startActivity(intent);
     }
 
     private void getUser() {
