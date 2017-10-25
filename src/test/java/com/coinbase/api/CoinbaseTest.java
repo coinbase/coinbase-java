@@ -1,78 +1,52 @@
 package com.coinbase.api;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.net.URL;
-import java.util.List;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import org.apache.commons.io.output.NullOutputStream;
+import com.coinbase.api.entity.*;
+import com.coinbase.api.exception.CoinbaseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.coinbase.api.entity.Account;
-import com.coinbase.api.entity.AccountChange;
-import com.coinbase.api.entity.AccountChangesResponse;
-import com.coinbase.api.entity.AccountsResponse;
-import com.coinbase.api.entity.Address;
-import com.coinbase.api.entity.AddressResponse;
-import com.coinbase.api.entity.AddressesResponse;
-import com.coinbase.api.entity.Application;
-import com.coinbase.api.entity.Button;
-import com.coinbase.api.entity.Contact;
-import com.coinbase.api.entity.ContactsResponse;
-import com.coinbase.api.entity.HistoricalPrice;
-import com.coinbase.api.entity.Merchant;
-import com.coinbase.api.entity.Order;
-import com.coinbase.api.entity.OrdersResponse;
-import com.coinbase.api.entity.PaymentMethod;
-import com.coinbase.api.entity.PaymentMethodsResponse;
-import com.coinbase.api.entity.Quote;
-import com.coinbase.api.entity.RecurringPayment;
-import com.coinbase.api.entity.RecurringPaymentsResponse;
-import com.coinbase.api.entity.Report;
-import com.coinbase.api.entity.Token;
-import com.coinbase.api.entity.Transaction;
-import com.coinbase.api.entity.TransactionsResponse;
-import com.coinbase.api.entity.Transfer;
-import com.coinbase.api.entity.TransfersResponse;
-import com.coinbase.api.entity.User;
-import com.coinbase.api.exception.CoinbaseException;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.powermock.api.mockito.PowerMockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore("javax.net.ssl.*")
-@PrepareForTest(CoinbaseImpl.class)
+@PrepareForTest({CoinbaseImpl.class, URL.class})
 public class CoinbaseTest {
 
+    private static final ObjectMapper objectMapper = ObjectMapperProvider.createDefaultMapper();
     private HttpsURLConnection mockConnection;
-    private URL mockURL;
     private Coinbase cb;
+    private ByteArrayOutputStream requestStream;
+    private ArgumentCaptor<String> urlCaptor;
 
     @Before
     public void setUp() throws Exception {
         mockConnection = mock(HttpsURLConnection.class);
-        mockURL = mock(URL.class);
+        URL mockURL = mock(URL.class);
+        requestStream = new ByteArrayOutputStream();
+        urlCaptor = ArgumentCaptor.forClass(String.class);
 
-        whenNew(URL.class).withAnyArguments().thenReturn(mockURL);
+        whenNew(URL.class).withArguments(any(URL.class), urlCaptor.capture()).thenReturn(mockURL);
         when(mockURL.openConnection()).thenReturn(mockConnection);
-        when(mockConnection.getOutputStream()).thenReturn(new NullOutputStream());
+        when(mockConnection.getOutputStream()).thenReturn(requestStream);
 
         cb = new CoinbaseBuilder().build();
     }
@@ -108,6 +82,7 @@ public class CoinbaseTest {
         when(mockConnection.getInputStream()).thenReturn(in);
 
         AccountsResponse r = cb.getAccounts();
+        assertEquals("accounts?&page=1&limit=25&all_accounts=false", urlCaptor.getValue());
         List<Account> accounts = r.getAccounts();
         assertEquals(2, accounts.size());
 
@@ -138,6 +113,7 @@ public class CoinbaseTest {
 
         User user = cb.getUser();
 
+        assertEquals("users", urlCaptor.getValue());
         assertEquals("512db383f8182bd24d000001", user.getId());
         assertEquals("User One", user.getName());
         assertEquals("user1@example.com", user.getEmail());
@@ -161,6 +137,7 @@ public class CoinbaseTest {
 
         Transaction t = cb.getTransaction("5018f833f8182b129c00002f");
 
+        assertEquals("transactions/5018f833f8182b129c00002f", urlCaptor.getValue());
         assertEquals("5018f833f8182b129c00002f", t.getId());
         assertTrue(DateTime.parse("2012-08-01T02:34:43-07:00").isEqual(t.getCreatedAt()));
         assertEquals(Money.parse("BTC -1.1"), t.getAmount());
@@ -187,6 +164,7 @@ public class CoinbaseTest {
 
         TransactionsResponse r = cb.getTransactions();
 
+        assertEquals("transactions?page=1", urlCaptor.getValue());
         User current_user = r.getCurrentUser();
         assertEquals("5011f33df8182b142400000e", current_user.getId());
         assertEquals("User Two", current_user.getName());
@@ -215,6 +193,7 @@ public class CoinbaseTest {
 
         TransfersResponse r = cb.getTransfers();
 
+        assertEquals("transfers?page=1", urlCaptor.getValue());
         assertEquals(1, r.getTotalCount());
         assertEquals(1, r.getNumPages());
         assertEquals(1, r.getCurrentPage());
@@ -242,6 +221,7 @@ public class CoinbaseTest {
 
         Quote q = cb.getBuyQuote(Money.parse("BTC 1"));
 
+        assertEquals("prices/buy?qty=1.00000000", urlCaptor.getValue());
         assertEquals(Money.parse("BTC 1"), q.getBtc());
         assertEquals(Money.parse("USD 10.10"), q.getSubtotal());
         assertEquals(2, q.getFees().size());
@@ -257,6 +237,7 @@ public class CoinbaseTest {
 
         AddressesResponse r = cb.getAddresses();
 
+        assertEquals("addresses?page=1", urlCaptor.getValue());
         assertNull(r.isSuccess());
 
         List<Address> addresses = r.getAddresses();
@@ -284,6 +265,7 @@ public class CoinbaseTest {
         buttonParams.setPrice(Money.parse("USD 2"));
         Button button = cb.createButton(buttonParams);
 
+        assertEquals("buttons", urlCaptor.getValue());
         assertEquals(Money.parse("USD 1.23"), button.getPrice());
         assertEquals("http://www.example.com/my_custom_button_callback", button.getCallbackUrl());
         assertEquals("Order123", button.getCustom());
@@ -302,6 +284,7 @@ public class CoinbaseTest {
 
         ContactsResponse r = cb.getContacts();
 
+        assertEquals("contacts?page=1", urlCaptor.getValue());
         Contact c1 = r.getContacts().get(0);
         Contact c2 = r.getContacts().get(1);
 
@@ -310,7 +293,21 @@ public class CoinbaseTest {
     }
 
     @Test
-    public void sell() throws Exception {
+    public void sellRequest() throws Exception
+    {
+        final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/new_sell.json");
+        when(mockConnection.getInputStream()).thenReturn(in);
+
+        cb.sell(Money.parse("BTC 1.00"));
+
+        assertEquals("sells", urlCaptor.getValue());
+        Request request = objectMapper.readValue(requestStream.toString(), Request.class);
+        assertEquals(Double.valueOf(1), request.getQty());
+        assertEquals("BTC", request.getCurrency());
+    }
+
+    @Test
+    public void sellResponse() throws Exception {
         final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/new_sell.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
@@ -327,7 +324,21 @@ public class CoinbaseTest {
     }
 
     @Test
-    public void buy() throws Exception {
+    public void buyRequest() throws Exception
+    {
+        final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/new_buy.json");
+        when(mockConnection.getInputStream()).thenReturn(in);
+
+        cb.buy(Money.parse("BTC 1.00"));
+
+        assertEquals("buys", urlCaptor.getValue());
+        Request request = objectMapper.readValue(requestStream.toString(), Request.class);
+        assertEquals(Double.valueOf(1), request.getQty());
+        assertEquals("BTC", request.getCurrency());
+    }
+
+    @Test
+    public void buyResponse() throws Exception {
         final InputStream in = CoinbaseSSL.class.getResourceAsStream("/com/coinbase/api/entity/new_buy.json");
         when(mockConnection.getInputStream()).thenReturn(in);
 
@@ -353,6 +364,7 @@ public class CoinbaseTest {
         Transaction t = order.getTransaction();
         Button b = order.getButton();
 
+        assertEquals("orders?page=1", urlCaptor.getValue());
         assertEquals("513eb768f12a9cf27400000b", t.getId());
         assertEquals("4cc5eec20cd692f3cdb7fc264a0e1d78b9a7e3d7b862dec1e39cf7e37ababc14", t.getHash());
         assertEquals(Integer.valueOf(1), t.getConfirmations());
@@ -380,6 +392,7 @@ public class CoinbaseTest {
         buttonParams.setPrice(Money.parse("USD 2"));
         Order order = cb.createOrder(buttonParams);
 
+        assertEquals("orders", urlCaptor.getValue());
         Button button = order.getButton();
 
         assertEquals(Money.parse("USD 1.23"), order.getTotalNative());
@@ -394,6 +407,7 @@ public class CoinbaseTest {
         when(mockConnection.getInputStream()).thenReturn(in);
 
         PaymentMethodsResponse r = cb.getPaymentMethods();
+        assertEquals("payment_methods", urlCaptor.getValue());
         assertEquals("530eb5b217cb34e07a000011", r.getDefaultBuy());
         assertEquals("530eb5b217cb34e07a000011", r.getDefaultSell());
 
@@ -416,6 +430,7 @@ public class CoinbaseTest {
 
         RecurringPaymentsResponse r = cb.getSubscribers();
 
+        assertEquals("subscribers?page=1", urlCaptor.getValue());
         RecurringPayment p1 = r.getRecurringPayments().get(0);
         RecurringPayment p2 = r.getRecurringPayments().get(1);
 
@@ -440,6 +455,7 @@ public class CoinbaseTest {
 
         RecurringPaymentsResponse r = cb.getRecurringPayments();
 
+        assertEquals("recurring_payments?page=1", urlCaptor.getValue());
         RecurringPayment p1 = r.getRecurringPayments().get(0);
         RecurringPayment p2 = r.getRecurringPayments().get(1);
 
@@ -461,6 +477,7 @@ public class CoinbaseTest {
 
         Map<String, BigDecimal> rates = cb.getExchangeRates();
 
+        assertEquals("currencies/exchange_rates", urlCaptor.getValue());
         assertEquals(new BigDecimal("0.000076"), rates.get("czk_to_btc"));
         assertEquals(new BigDecimal("22.98199"), rates.get("usd_to_uyu"));
     }
@@ -472,6 +489,7 @@ public class CoinbaseTest {
 
         List<CurrencyUnit> currencies = cb.getSupportedCurrencies();
 
+        assertEquals("currencies", urlCaptor.getValue());
         assertTrue(currencies.contains(CurrencyUnit.CAD));
     }
 
@@ -482,6 +500,8 @@ public class CoinbaseTest {
 
         Token token = cb.createToken();
 
+        assertEquals("tokens", urlCaptor.getValue());
+        // TODO: assertEquals("{}", outputStream.toString());
         assertEquals("abc12e821cf6e128afc2e821cf68e12cf68e168e128af21cf682e821cf68e1fe", token.getTokenId());
         assertEquals("n3NzN74qGYHSHPhKM1hdts3bF1zV4N1Aa3", token.getAddress());
     }
@@ -493,6 +513,8 @@ public class CoinbaseTest {
 
         AddressResponse address = cb.generateReceiveAddress();
 
+        assertEquals("account/generate_receive_address", urlCaptor.getValue());
+        // TODO: assertEquals("{}", outputStream.toString());
         assertEquals("muVu2JZo8PbewBHRp6bpqFvVD87qvqEHWA", address.getAddress());
         assertEquals("http://www.example.com/callback", address.getCallbackUrl());
         assertEquals("Dalmation donations", address.getLabel());
@@ -505,6 +527,8 @@ public class CoinbaseTest {
 
         Application app = cb.createApplication(new Application());
 
+        assertEquals("oauth/applications", urlCaptor.getValue());
+        // TODO:  assertEquals("{\"application\":{}}", outputStream.toString());
         assertEquals("5302ebdb137f73dcf7000047", app.getId());
         assertTrue(DateTime.parse("2014-02-17T21:12:59-08:00").isEqual(app.getCreatedAt()));
         assertEquals("Test App 3", app.getName());
@@ -521,6 +545,7 @@ public class CoinbaseTest {
 
         List<HistoricalPrice> prices = cb.getHistoricalPrices();
 
+        assertEquals("prices/historical?page=1", urlCaptor.getValue());
         assertEquals(DateTime.parse("2014-01-06T00:25:24-08:00"), prices.get(0).getTime());
         assertEquals(Money.parse("USD 10"), prices.get(0).getSpotPrice());
     }
@@ -544,6 +569,8 @@ public class CoinbaseTest {
 
         Report report = cb.createReport(reportParams);
 
+        assertEquals("reports", urlCaptor.getValue());
+        // TODO: assertEquals("{\"report\":{\"type\":\"transfers\",\"time_range\":\"custom\",\"start_type\":\"on\",\"next_run_date\":\"02/06/2014\",\"next_run_time\":\"12:00\",\"next_run\":1391688000000,\"time_range_start\":\"01/06/2014\",\"time_range_end\":\"01/07/2014\"}}", outputStream.toString());
         assertEquals("534711dd137f730e1c0000c6", report.getId());
         assertEquals(Report.Type.TRANSFERS, report.getType());
         assertEquals(Report.Status.ACTIVE, report.getStatus());
@@ -565,6 +592,7 @@ public class CoinbaseTest {
         User user = response.getCurrentUser();
         AccountChange transaction = response.getAccountChanges().get(0);
 
+        assertEquals("account_changes?page=1", urlCaptor.getValue());
         assertEquals(Money.parse("BTC 50"), response.getBalance());
         assertEquals(Money.parse("USD 500"), response.getNativeBalance());
 
@@ -575,11 +603,11 @@ public class CoinbaseTest {
         assertEquals("524a75a3f8182b7d2a000018", transaction.getId());
         assertEquals("524a75a3f8182b7d2a000010", transaction.getTransactionId());
         assertTrue(DateTime.parse("2013-10-01T00:11:31-07:00").isEqual(transaction.getCreatedAt()));
-        assertFalse(transaction.isConfirmed().booleanValue());
+        assertFalse(transaction.isConfirmed());
         assertEquals(Money.parse("BTC 50"), transaction.getAmount());
 
         AccountChange.Cache cache = transaction.getCache();
-        assertFalse(cache.isNotesPresent().booleanValue());
+        assertFalse(cache.isNotesPresent());
         assertEquals(AccountChange.Cache.Category.TRANSACTION, cache.getCategory());
         assertEquals("an external account", cache.getOtherUser().getName());
 
@@ -588,11 +616,11 @@ public class CoinbaseTest {
         assertEquals("546d3189543d0664da000016", transaction.getId());
         assertEquals("546d3189543d0664da000013", transaction.getTransactionId());
         assertTrue(DateTime.parse("2014-11-19T16:10:49-08:00").isEqual(transaction.getCreatedAt()));
-        assertTrue(transaction.isConfirmed().booleanValue());
+        assertTrue(transaction.isConfirmed());
         assertEquals(Money.parse("BTC -0.005"), transaction.getAmount());
 
         cache = transaction.getCache();
-        assertTrue(cache.isNotesPresent().booleanValue());
+        assertTrue(cache.isNotesPresent());
         assertEquals(AccountChange.Cache.Category.TRANSFER, cache.getCategory());
         assertEquals("EUR Wallet", cache.getPaymentMethod().getName());
         assertEquals("54630e62f1096f083e000002", cache.getPaymentMethod().getAccountId());
