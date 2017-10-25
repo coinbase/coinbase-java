@@ -38,6 +38,20 @@ public class MoneyDeserializerTest {
     }
 
     @Test
+    public void ltc() throws Exception {
+        String json = "{\"amount\": \"49.76987601\", \"currency\": \"LTC\"}";
+        Money money = mapper.readValue(json, Money.class);
+        assertEquals(Money.of(CurrencyUnit.of("LTC"), new BigDecimal("49.76987601")), money);
+    }
+
+    @Test
+    public void eth() throws Exception {
+        String json = "{\"amount\": \"49.76987601\", \"currency\": \"ETH\"}";
+        Money money = mapper.readValue(json, Money.class);
+        assertEquals(Money.of(CurrencyUnit.of("ETH"), new BigDecimal("49.76987601")), money);
+    }
+
+    @Test
     public void btc_iso_code() throws Exception {
 	String json = "{\"amount\": \"49.76987601\", \"currency_iso\": \"BTC\"}";
 	Money money = mapper.readValue(json, Money.class);
