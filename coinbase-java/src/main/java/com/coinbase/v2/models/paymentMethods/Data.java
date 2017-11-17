@@ -77,6 +77,9 @@ public class Data {
     @SerializedName("currency")
     @Expose
     private String currency;
+    @SerializedName("icon_url")
+    @Expose
+    private String iconUrl;
     @SerializedName("primary_buy")
     @Expose
     private Boolean primaryBuy;
@@ -189,6 +192,25 @@ public class Data {
      */
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+
+    /**
+     *
+     * @return
+     *     The iconUrl
+     */
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    /**
+     *
+     * @param iconUrl
+     *     The iconUrl
+     */
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
     }
 
     /**

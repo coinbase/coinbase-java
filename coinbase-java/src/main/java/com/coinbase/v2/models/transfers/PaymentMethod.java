@@ -1,9 +1,10 @@
 
 package com.coinbase.v2.models.transfers;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
 public class PaymentMethod {
@@ -71,5 +72,4 @@ public class PaymentMethod {
     public void setResourcePath(String resourcePath) {
         this.resourcePath = resourcePath;
     }
-
 }

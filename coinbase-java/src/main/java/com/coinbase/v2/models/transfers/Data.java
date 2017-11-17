@@ -60,6 +60,12 @@ public class Data {
     @SerializedName("secure3d_verification")
     @Expose
     private Secure3dVerification secure3dVerification;
+    @SerializedName("fee_explanation_url")
+    @Expose
+    private String feeExplanationUrl;
+    @SerializedName("payment_method_fee")
+    @Expose
+    private Amount paymentMethodFee;
 
     /**
      * 
@@ -367,4 +373,39 @@ public class Data {
         this.secure3dVerification = secure3dVerification;
     }
 
+    /**
+     *
+     * @return
+     *     The feeExplanationUrl
+     */
+    public String getFeeExplanationUrl() {
+        return feeExplanationUrl;
+    }
+
+    /**
+     *
+     * @param feeExplanationUrl
+     *     The feeExplanationUrl
+     */
+    public void setFeeExplanationUrl(String feeExplanationUrl) {
+        this.feeExplanationUrl = feeExplanationUrl;
+    }
+
+    /**
+     *
+     * @return
+     *     The paymentMethodFee
+     */
+    public Amount getPaymentMethodFee() {
+        return paymentMethodFee;
+    }
+
+    /**
+     *
+     * @param paymentMethodFee
+     *     The paymentMethodFee
+     */
+    public void setPaymentMethodFee(Amount paymentMethodFee) {
+        this.paymentMethodFee = paymentMethodFee;
+    }
 }
