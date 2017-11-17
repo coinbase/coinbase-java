@@ -12,7 +12,7 @@ buildscript {
 }
 
 def packageName = 'coinbase-java'
-def packageVersion = '2.2.0-79'
+def packageVersion = '2.2.0-83'
 def packageDescription = 'Coinbase Android SDK'
 group = 'com.coinbase'
 version = packageVersion
@@ -149,12 +149,13 @@ bintray {
 
 
 dependencies {
+    compile files('libs/joda-money-0.12.jar')
+
     compile 'com.google.code.gson:gson:2.5'
     compile 'org.glassfish:javax.annotation:10.0-b28'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'org.joda:joda-money:0.11'
     compile 'joda-time:joda-time:2.3'
     compile 'net.sf.opencsv:opencsv:2.0'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0'
@@ -164,8 +165,8 @@ dependencies {
     compile 'io.reactivex:rxjava:1.0.+'
     compile 'io.reactivex:rxandroid:0.23.+'
     testCompile 'junit:junit:4.12'
-    testCompile "org.powermock:powermock-module-junit4:1.6.2"
-    testCompile "org.powermock:powermock-module-junit4-rule:1.6.2"
-    testCompile "org.powermock:powermock-api-mockito:1.6.2"
-    testCompile "org.powermock:powermock-classloading-xstream:1.6.2"
+    testCompile 'org.powermock:powermock-module-junit4:1.6.2'
+    testCompile 'org.powermock:powermock-module-junit4-rule:1.6.2'
+    testCompile 'org.powermock:powermock-api-mockito:1.6.2'
+    testCompile 'org.powermock:powermock-classloading-xstream:1.6.2'
 }
