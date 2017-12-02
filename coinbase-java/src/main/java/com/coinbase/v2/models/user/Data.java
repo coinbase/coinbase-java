@@ -62,12 +62,18 @@ public class Data {
     @SerializedName("feature_flags")
     @Expose
     private List<String> featureFlags = new ArrayList<String>();
+    @SerializedName("split_test_groups")
+    @Expose
+    private List<SplitTest> splitTestGroups = new ArrayList<SplitTest>();
     @SerializedName("admin_flags")
     @Expose
     private List<String> adminFlags = new ArrayList<String>();
     @SerializedName("personal_details")
     @Expose
     private PersonalDetails personalDetails;
+    @SerializedName("tiers")
+    @Expose
+    private Tiers tiers;
     @SerializedName("merchant")
     @Expose
     private Object merchant;
@@ -387,6 +393,24 @@ public class Data {
     /**
      *
      * @return
+     *     The splitTestGroups
+     */
+    public List<SplitTest> getSplitTestGroups() {
+        return splitTestGroups;
+    }
+
+    /**
+     *
+     * @param splitTestGroups
+     *     The split_test_groups
+     */
+    public void setSplitTestGroups(List<SplitTest> splitTestGroups) {
+        this.splitTestGroups = splitTestGroups;
+    }
+
+    /**
+     *
+     * @return
      *     The adminFlags
      */
     public List<String> getAdminFlags() {
@@ -418,6 +442,24 @@ public class Data {
      */
     public void setPersonalDetails(PersonalDetails personalDetails) {
         this.personalDetails = personalDetails;
+    }
+
+    /**
+     *
+     * @return
+     *     The tiers
+     */
+    public Tiers getTiers() {
+        return tiers;
+    }
+
+    /**
+     *
+     * @param tiers
+     *     The tiers
+     */
+    public void setTiers(Tiers tiers) {
+        this.tiers = tiers;
     }
 
     /**
