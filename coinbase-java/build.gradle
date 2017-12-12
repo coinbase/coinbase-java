@@ -164,6 +164,7 @@ dependencies {
     compile 'commons-codec:commons-codec:1.10'
     compile 'io.reactivex:rxjava:1.0.+'
     compile 'io.reactivex:rxandroid:0.23.+'
+    compile 'org.apache.commons:commons-lang3:3.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.powermock:powermock-module-junit4:1.6.2'

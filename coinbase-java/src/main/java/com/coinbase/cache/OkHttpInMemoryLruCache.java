@@ -4,8 +4,17 @@ import android.text.TextUtils;
 import android.util.LruCache;
 import android.util.Pair;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
+import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
@@ -16,6 +25,14 @@ import okhttp3.ResponseBody;
 public class OkHttpInMemoryLruCache extends LruCache<String, Pair<String, OkHttpInMemoryLruCache.CachedResponseBody>> {
 
     private final static int NOT_MODIFIED = 304;
+
+    private String[] mEnabledForcedCachePathPrefixes;
+
+    private final Map<String, Long> mForcedCacheUrls = new HashMap<>();
+
+    private volatile long mTimeoutInMillis;
+
+    private volatile boolean mForcedCacheEnabled = false;
 
     public OkHttpInMemoryLruCache(int maxSize) {
         super(maxSize);
@@ -33,8 +50,15 @@ public class OkHttpInMemoryLruCache extends LruCache<String, Pair<String, OkHttp
 
             //Only send ETag for get requests
             if (!request.method().equalsIgnoreCase("GET")) {
+                /**
+                 * PUT/POST/DELETE can cause state update on the server
+                 */
+                synchronized (OkHttpInMemoryLruCache.this) {
+                    mForcedCacheUrls.clear();
+                }
                 return chain.proceed(request);
             }
+
 
             String url = request.url().toString();
             Pair<String, CachedResponseBody> responseBodyPair;
@@ -45,6 +69,13 @@ public class OkHttpInMemoryLruCache extends LruCache<String, Pair<String, OkHttp
             if (responseBodyPair != null) {
                 synchronized (OkHttpInMemoryLruCache.this) {
                     request = request.newBuilder().header("If-None-Match", get(url).first).build();
+                }
+            }
+
+            synchronized (OkHttpInMemoryLruCache.this) {
+                Response cachedResponse = handleForcedCacheResponseIfEnabled(request, responseBodyPair, chain);
+                if (cachedResponse != null) {
+                    return cachedResponse;
                 }
             }
 
@@ -82,6 +113,75 @@ public class OkHttpInMemoryLruCache extends LruCache<String, Pair<String, OkHttp
 
             return response;
         };
+    }
+
+    /**
+     * Force cache response if timeout hasn't been hit and the url is one of the urls in the set.
+     * @param paths the set of paths to force cache for
+     * @param timeoutInMillis timeout in milliseconds, after the timeout is hit the response will not be from the local cache.
+     */
+    public void setForcedCache(Set<String> paths, long timeoutInMillis) {
+        synchronized (OkHttpInMemoryLruCache.this) {
+            mForcedCacheUrls.clear();
+            mEnabledForcedCachePathPrefixes = paths.toArray(new String[paths.size()]);
+            mTimeoutInMillis = timeoutInMillis;
+        }
+    }
+
+    /**
+     * Disable forced cache response
+     */
+    public void clearForcedCache() {
+        synchronized (OkHttpInMemoryLruCache.this) {
+            mForcedCacheUrls.clear();
+            mEnabledForcedCachePathPrefixes = null;
+        }
+    }
+
+    /**
+     * Enable/disable forced cache.
+     */
+    public void setForcedCacheEnabled(boolean enabled) {
+        synchronized (OkHttpInMemoryLruCache.this) {
+            mForcedCacheEnabled = enabled;
+        }
+    }
+
+    public Response handleForcedCacheResponseIfEnabled(Request request,
+                                                       Pair<String, CachedResponseBody> responseBodyPair,
+                                                       Interceptor.Chain chain) {
+        if (!mForcedCacheEnabled) {
+            return null;
+        }
+        /**
+         * If we're forcing caching of this url path
+         */
+        String url = request.url().toString();
+        String path = request.url().encodedPath();
+        if (mEnabledForcedCachePathPrefixes != null && StringUtils.startsWithAny(path, mEnabledForcedCachePathPrefixes)) {
+
+            long currentTimeMillis = System.currentTimeMillis();
+            /**
+             * We have a response body, we've cached this path/query before and the response hasn't timed out,
+             * then terminate the chain and return the cached response.
+             */
+            if (responseBodyPair != null &&
+                    mForcedCacheUrls.containsKey(url) &&
+                    (currentTimeMillis - mForcedCacheUrls.get(url)) < mTimeoutInMillis) {
+                return new Response.Builder()
+                        .request(chain.request())
+                        .protocol(Protocol.HTTP_1_1)
+                        .body(ResponseBody.create(responseBodyPair.second.contentType(), responseBodyPair.second.body()))
+                        .code(responseBodyPair.second.successCode())
+                        .build();
+            } else {
+                /**
+                 * Skip force cache and remember the last time we served a real server response.
+                 */
+                mForcedCacheUrls.put(url, currentTimeMillis);
+            }
+        }
+        return null;
     }
 
     static class CachedResponseBody {

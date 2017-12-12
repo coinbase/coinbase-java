@@ -139,7 +139,7 @@ public class Coinbase {
     protected CallbackVerifier _callbackVerifier;
     protected Scheduler _backgroundScheduler;
     protected Context _context;
-    protected OkHttpInMemoryLruCache _cache = new OkHttpInMemoryLruCache(DEFAULT_CACHE_SIZE);
+    protected final OkHttpInMemoryLruCache _cache;
 
 
     protected final HashMap<String, Pair<ApiInterface, Retrofit>> mInitializedServices = new HashMap<>();
@@ -160,6 +160,7 @@ public class Coinbase {
         _socketFactory = _sslContext.getSocketFactory();
         _callbackVerifier = new CallbackVerifierImpl();
         _backgroundScheduler = Schedulers.io();
+        _cache = new OkHttpInMemoryLruCache(DEFAULT_CACHE_SIZE);
     }
 
     protected OkHttpClient.Builder generateClientBuilder(SSLContext sslContext) {
@@ -210,6 +211,7 @@ public class Coinbase {
         _apiSecret = apiSecret;
         _context = context;
         _cache.evictAll();
+        _cache.clearForcedCache();
     }
 
 
@@ -217,10 +219,11 @@ public class Coinbase {
         if (!TextUtils.equals(_accessToken, accessToken)) {
             mInitializedServices.clear();
             mInitializedServicesRx.clear();
+            _cache.evictAll();
+            _cache.clearForcedCache();
         }
         _accessToken = accessToken;
         _context = context;
-        _cache.evictAll();
     }
 
     Coinbase(CoinbaseBuilder builder) {
@@ -1660,6 +1663,7 @@ public class Coinbase {
 
     /**
      * Interceptor for device info, override this to add device info
+     *
      * @return
      */
     protected Interceptor deviceInfoInterceptor() {
@@ -1678,6 +1682,7 @@ public class Coinbase {
 
     /**
      * Interceptor for network sniffing, override this to add network sniffing
+     *
      * @return
      */
     protected Interceptor networkSniffingInterceptor() {
@@ -1686,6 +1691,7 @@ public class Coinbase {
 
     /**
      * Interceptor for logging, override this to add logging
+     *
      * @return
      */
     protected Interceptor loggingInterceptor() {
@@ -3058,7 +3064,7 @@ public class Coinbase {
      * @see <a href="https://developers.coinbase.com/api/v2#get-spot-price">Online Documentation</a>
      */
     public Call getSpotPrices(String fiatCurrency,
-                             HashMap<String, Object> params, final CallbackWithRetrofit<Prices> callback) {
+                              HashMap<String, Object> params, final CallbackWithRetrofit<Prices> callback) {
         final Pair<ApiInterface, Retrofit> apiRetrofitPair = getApiService();
 
         params = cleanQueryMap(params);
