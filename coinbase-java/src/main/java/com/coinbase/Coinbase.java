@@ -1676,6 +1676,22 @@ public class Coinbase {
         };
     }
 
+    /**
+     * Interceptor for network sniffing, override this to add network sniffing
+     * @return
+     */
+    protected Interceptor networkSniffingInterceptor() {
+        return chain -> chain.proceed(chain.request());
+    }
+
+    /**
+     * Interceptor for logging, override this to add logging
+     * @return
+     */
+    protected Interceptor loggingInterceptor() {
+        return chain -> chain.proceed(chain.request());
+    }
+
     protected Pair<ApiInterface, Retrofit> getOAuthApiService() {
         return getService(_baseOAuthUrl.toString());
     }
@@ -1699,6 +1715,8 @@ public class Coinbase {
         clientBuilder.addInterceptor(languageInterceptor());
         clientBuilder.addInterceptor(deviceInfoInterceptor());
         clientBuilder.addInterceptor(_cache.createInterceptor());
+        clientBuilder.addInterceptor(loggingInterceptor());
+        clientBuilder.addNetworkInterceptor(networkSniffingInterceptor());
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -1737,6 +1755,8 @@ public class Coinbase {
         clientBuilder.addInterceptor(languageInterceptor());
         clientBuilder.addInterceptor(deviceInfoInterceptor());
         clientBuilder.addInterceptor(_cache.createInterceptor());
+        clientBuilder.addInterceptor(loggingInterceptor());
+        clientBuilder.addNetworkInterceptor(networkSniffingInterceptor());
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
