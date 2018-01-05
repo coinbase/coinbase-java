@@ -1614,7 +1614,7 @@ public class Coinbase {
         };
     }
 
-    protected String getPackageVersionName() {
+    private String getPackageVersionName() {
         String packageName = "";
         String versionName = "";
 
@@ -1623,12 +1623,20 @@ public class Coinbase {
         }
 
         try {
-            versionName = BuildConfig.VERSION_NAME + "/" + BuildConfig.VERSION_CODE;
+            versionName = getVersionName() + "/" + getVersionCode();
         } catch (Throwable t) {
 
         }
 
         return packageName + "/" + versionName;
+    }
+
+    protected String getVersionName() {
+        return String.valueOf(BuildConfig.VERSION_NAME);
+    }
+
+    protected String getVersionCode() {
+        return String.valueOf(BuildConfig.VERSION_CODE);
     }
 
     protected Interceptor buildVersionInterceptor() {
@@ -1641,6 +1649,8 @@ public class Coinbase {
                         .newBuilder()
                         .addHeader("CB-VERSION", com.coinbase.ApiConstants.VERSION)
                         .addHeader("CB-CLIENT", getPackageVersionName())
+                        .addHeader("X-App-Version", getVersionName())
+                        .addHeader("X-App-Build-Number", getVersionCode())
                         .build();
                 return chain.proceed(newRequest);
             }
