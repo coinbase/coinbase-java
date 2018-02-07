@@ -24,7 +24,12 @@ public class PickerData {
     @SerializedName("institution_name")
     @Expose
     private String institutionName;
-
+    @SerializedName("account_number")
+    @Expose
+    private String accountNumber;
+    @SerializedName("swift")
+    @Expose
+    private String swift;
     /**
      * 
      * @return
@@ -98,7 +103,7 @@ public class PickerData {
     }
 
     /**
-     * 
+     *
      * @return
      *     The institutionName
      */
@@ -107,12 +112,47 @@ public class PickerData {
     }
 
     /**
-     * 
+     *
      * @param institutionName
-     *     The institution_name
+     *     The institutionName
      */
     public void setInstitutionName(String institutionName) {
         this.institutionName = institutionName;
     }
 
+    /**
+     * 
+     * @return
+     *     The accountNumber
+     */
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    /**
+     * 
+     * @param accountNumber
+     *     The accountNumber
+     */
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    /**
+     *
+     * @return
+     *     The swift
+     */
+    public String getSwift() {
+        return swift;
+    }
+
+    /**
+     *
+     * @param swift
+     *     The swift
+     */
+    public void setSwift(String swift) {
+        this.swift = swift;
+    }
 }
