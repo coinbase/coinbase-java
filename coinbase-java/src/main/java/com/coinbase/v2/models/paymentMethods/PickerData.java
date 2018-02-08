@@ -24,9 +24,21 @@ public class PickerData {
     @SerializedName("institution_name")
     @Expose
     private String institutionName;
+    @SerializedName("institution_code")
+    @Expose
+    private String institutionCode;
+    @SerializedName("account_name")
+    @Expose
+    private String accountName;
     @SerializedName("account_number")
     @Expose
     private String accountNumber;
+    @SerializedName("account_type")
+    @Expose
+    private String accountType;
+    @SerializedName("customer_name")
+    @Expose
+    private String customerName;
     @SerializedName("swift")
     @Expose
     private String swift;
@@ -121,6 +133,42 @@ public class PickerData {
     }
 
     /**
+     *
+     * @return
+     *     The institutionCode
+     */
+    public String getInstitutionCode() {
+        return institutionCode;
+    }
+
+    /**
+     *
+     * @param institutionCode
+     *     The institutionCode
+     */
+    public void setInstitutionCode(String institutionCode) {
+        this.institutionCode = institutionCode;
+    }
+
+    /**
+     *
+     * @return
+     *     The accountName
+     */
+    public String getAccountName() {
+        return accountName;
+    }
+
+    /**
+     *
+     * @param accountName
+     *     The accountName
+     */
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    /**
      * 
      * @return
      *     The accountNumber
@@ -136,6 +184,42 @@ public class PickerData {
      */
     public void setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
+    }
+
+    /**
+     *
+     * @return
+     *     The accountType
+     */
+    public String getAccountType() {
+        return accountType;
+    }
+
+    /**
+     *
+     * @param accountType
+     *     The accountType
+     */
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
+
+    /**
+     *
+     * @return
+     *     The customerName
+     */
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    /**
+     *
+     * @param customerName
+     *     The customerName
+     */
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
     /**
