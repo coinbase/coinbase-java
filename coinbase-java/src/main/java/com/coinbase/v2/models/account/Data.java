@@ -17,6 +17,8 @@ public class Data {
         MULTISIG_VAULT(),
         @SerializedName("multisig")
         MULTISIG(),
+        @SerializedName("fork_multisig_vault")
+        FORK_MULTISIG_VAULT(),
         @SerializedName("fiat")
         FIAT(),
         UNKNOWN();

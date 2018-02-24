@@ -80,6 +80,9 @@ public class Data {
     @SerializedName("icon_url")
     @Expose
     private String iconUrl;
+    @SerializedName("image")
+    @Expose
+    private String image;
     @SerializedName("primary_buy")
     @Expose
     private Boolean primaryBuy;
@@ -211,6 +214,24 @@ public class Data {
      */
     public void setIconUrl(String iconUrl) {
         this.iconUrl = iconUrl;
+    }
+
+    /**
+     *
+     * @return
+     *     The image
+     */
+    public String getImage() {
+        return image;
+    }
+
+    /**
+     *
+     * @param image
+     *     The image
+     */
+    public void setImage(String image) {
+        this.image = image;
     }
 
     /**
