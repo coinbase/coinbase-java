@@ -8,12 +8,15 @@ import javax.annotation.Generated;
 @Generated("org.jsonschema2pojo")
 public class Tiers {
 
-    @SerializedName("total")
+    @SerializedName("upgrade_button_text")
     @Expose
-    private Integer total;
-    @SerializedName("completed")
+    private String upgradeButtonText;
+    @SerializedName("header")
     @Expose
-    private Integer completed;
+    private String header;
+    @SerializedName("body")
+    @Expose
+    private String body;
     @SerializedName("completed_description")
     @Expose
     private String completedDescription;
@@ -21,39 +24,56 @@ public class Tiers {
     /**
      *
      * @return
-     *     The total
+     *     The upgrade button text
      */
-    public Integer getTotal() {
-        return total;
+    public String getUpgradeButtonText() {
+        return upgradeButtonText;
     }
 
     /**
      *
-     * @param total
-     *     The total
+     * @param upgradeButtonText
+     *     The upgrade button text
      */
-    public void setTotal(Integer total) {
-        this.total = total;
+    public void setUpgradeButtonText(String upgradeButtonText) {
+        this.upgradeButtonText = upgradeButtonText;
     }
 
     /**
      *
      * @return
-     *     The completed
+     *     The header
      */
-    public Integer getCompleted() {
-        return completed;
+    public String getHeader() {
+        return header;
     }
 
     /**
      *
-     * @param completed
-     *     The completed
+     * @param header
+     *     The header
      */
-    public void setCompleted(Integer completed) {
-        this.completed = completed;
+    public void setHeader(String header) {
+        this.header = header;
     }
 
+    /**
+     *
+     * @return
+     *     The body
+     */
+    public String getBody() {
+        return body;
+    }
+
+    /**
+     *
+     * @param body
+     *     The body
+     */
+    public void setBody(String body) {
+        this.body = body;
+    }
     /**
      *
      * @return
