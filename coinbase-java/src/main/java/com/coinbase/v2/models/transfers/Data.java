@@ -48,6 +48,9 @@ public class Data {
     @SerializedName("instant")
     @Expose
     private Boolean instant;
+    @SerializedName("is_first_buy")
+    @Expose
+    private Boolean isFirstBuy;
     @SerializedName("fee")
     @Expose
     private Amount fee;
@@ -299,6 +302,24 @@ public class Data {
      */
     public void setInstant(Boolean instant) {
         this.instant = instant;
+    }
+
+    /**
+     *
+     * @return
+     *     The isFirstBuy
+     */
+    public Boolean getIsFirstBuy() {
+        return isFirstBuy;
+    }
+
+    /**
+     *
+     * @param instant
+     *     The isFirstBuy
+     */
+    public void setIsFirstBuy(Boolean isFirstBuy) {
+        this.isFirstBuy = isFirstBuy;
     }
 
     /**
