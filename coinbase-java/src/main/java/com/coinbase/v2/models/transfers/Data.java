@@ -69,6 +69,9 @@ public class Data {
     @SerializedName("payment_method_fee")
     @Expose
     private Amount paymentMethodFee;
+    @SerializedName("hold_days")
+    @Expose
+    private Integer holdDays;
 
     /**
      * 
@@ -428,5 +431,21 @@ public class Data {
      */
     public void setPaymentMethodFee(Amount paymentMethodFee) {
         this.paymentMethodFee = paymentMethodFee;
+    }
+
+    /**
+     * @return
+     *     The number of days the funds will be on hold before the customer can withdraw/send
+     */
+    public Integer getHoldDays() {
+        return holdDays;
+    }
+
+    /**
+     * @param hold days
+     *     The hold days
+     */
+    public void setHoldDays(Integer holdDays) {
+        this.holdDays = holdDays;
     }
 }
