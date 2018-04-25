@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName;
 import javax.annotation.Generated;
 
 @Generated("org.jsonschema2pojo")
-public class OnboardingItems {
+public class OnboardingItem {
 
-    @SerializedName("screen")
+    @SerializedName("step")
     @Expose
-    private String screen;
+    private String step;
     @SerializedName("required")
     @Expose
     private Boolean required;
@@ -18,19 +18,19 @@ public class OnboardingItems {
     /**
      *
      * @return
-     *     The name of the screen to show
+     *     The name of the step to show
      */
-    public String getScreen() {
-        return screen;
+    public String getStep() {
+        return step;
     }
 
     /**
      *
-     * @param screen
-     *     The name of the screen to show
+     * @param step
+     *     The name of the step to show
      */
-    public void setScreen(String screen) {
-        this.screen = screen;
+    public void setStep(String step) {
+        this.step = step;
     }
 
     /**

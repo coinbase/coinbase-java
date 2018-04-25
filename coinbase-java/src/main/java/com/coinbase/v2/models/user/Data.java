@@ -70,7 +70,7 @@ public class Data {
     private List<String> adminFlags = new ArrayList<String>();
     @SerializedName("onboarding_items")
     @Expose
-    private List<OnboardingItems> onboardingItems = new ArrayList<OnboardingItems>();
+    private List<OnboardingItem> onboardingItems = new ArrayList<OnboardingItem>();
     @SerializedName("personal_details")
     @Expose
     private PersonalDetails personalDetails;
@@ -434,7 +434,7 @@ public class Data {
      * @return
      *     List of onboarding items
      */
-    public List<OnboardingItems> getOnboardingItems() {
+    public List<OnboardingItem> getOnboardingItems() {
         return onboardingItems;
     }
 
@@ -443,7 +443,7 @@ public class Data {
      * @param onboardingItems
      *     Set onboardingitems
      */
-    public void setOnboardingItems(List<OnboardingItems> onboardingItems) {
+    public void setOnboardingItems(List<OnboardingItem> onboardingItems) {
         this.onboardingItems = onboardingItems;
     }
 
