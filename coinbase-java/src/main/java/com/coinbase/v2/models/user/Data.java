@@ -68,6 +68,9 @@ public class Data {
     @SerializedName("admin_flags")
     @Expose
     private List<String> adminFlags = new ArrayList<String>();
+    @SerializedName("onboarding_items")
+    @Expose
+    private List<OnboardingItems> onboardingItems = new ArrayList<OnboardingItems>();
     @SerializedName("personal_details")
     @Expose
     private PersonalDetails personalDetails;
@@ -424,6 +427,24 @@ public class Data {
      */
     public void setAdminFlags(List<String> adminFlags) {
         this.adminFlags = adminFlags;
+    }
+
+    /**
+     *
+     * @return
+     *     List of onboarding items
+     */
+    public List<OnboardingItems> getOnboardingItems() {
+        return onboardingItems;
+    }
+
+    /**
+     *
+     * @param onboardingItems
+     *     Set onboardingitems
+     */
+    public void setOnboardingItems(List<OnboardingItems> onboardingItems) {
+        this.onboardingItems = onboardingItems;
     }
 
     /**
