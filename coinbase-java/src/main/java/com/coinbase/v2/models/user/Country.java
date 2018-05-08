@@ -15,6 +15,9 @@ public class Country {
     @SerializedName("name")
     @Expose
     private String name;
+    @SerializedName("is_in_europe")
+    @Expose
+    private Boolean isInEurope;
 
     /**
      * 
@@ -52,4 +55,21 @@ public class Country {
         this.name = name;
     }
 
+    /**
+     * 
+     * @return
+     *     Whether the country is in europe
+     */
+    public Boolean getIsInEurope() {
+        return isInEurope;
+    }
+
+    /**
+     * 
+     * @param isInEurope
+     *     Whether the country is in europe
+     */
+    public void setIsInEurope(Boolean isInEurope) {
+        this.isInEurope = isInEurope;
+    }
 }
