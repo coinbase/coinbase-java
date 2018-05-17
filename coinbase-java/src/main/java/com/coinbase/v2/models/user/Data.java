@@ -86,6 +86,9 @@ public class Data {
     @SerializedName("referral_id")
     @Expose
     private Object referralId;
+    @SerializedName("access_privacy_rights")
+    @Expose
+    private Boolean accessPrivacyRights;
 
     /**
      *
@@ -535,5 +538,25 @@ public class Data {
      */
     public void setReferralId(Object referralId) {
         this.referralId = referralId;
+    }
+
+    /**
+     *
+     * @return
+     * {@code true} if user should see Privacy Rights and Email Settings;
+     * {@code false} otherwise.
+     */
+    public Boolean getAccessPrivacyRights() {
+        return accessPrivacyRights;
+    }
+
+    /**
+     *
+     * @param accessPrivacyRights
+     * {@code true} if user should see Privacy Rights and Email Settings;
+     * {@code false} otherwise.
+     */
+    public void setAccessPrivacyRights(Boolean accessPrivacyRights) {
+        this.accessPrivacyRights = accessPrivacyRights;
     }
 }
