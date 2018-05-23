@@ -21,6 +21,8 @@ public class Data {
         DEBIT_CARD(),
         @SerializedName("secure3d_card")
         SECURE_3DS(),
+        @SerializedName("world_pay_card")
+        WORLD_PAY_CARD(),
         @SerializedName("sepa_bank_account")
         SEPA_BANK_ACCOUNT(),
         @SerializedName("fiat_account")
