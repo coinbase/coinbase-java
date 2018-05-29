@@ -22,7 +22,7 @@ public class Data {
         @SerializedName("secure3d_card")
         SECURE_3DS(),
         @SerializedName("worldpay_card")
-        WORLD_PAY_CARD(),
+        WORLDPAY_CARD(),
         @SerializedName("sepa_bank_account")
         SEPA_BANK_ACCOUNT(),
         @SerializedName("fiat_account")
