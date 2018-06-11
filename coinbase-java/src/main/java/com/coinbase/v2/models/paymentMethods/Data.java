@@ -124,6 +124,9 @@ public class Data {
     @SerializedName("recurring_options")
     @Expose
     private List<Object> recurringOptions = new ArrayList<Object>();
+
+    @SerializedName("verification_method")
+    @Expose
     private VerificationMethod verificationMethod;
     private CDVStatus cdvStatus;
 
