@@ -141,6 +141,9 @@ public interface ApiInterfaceRx {
     @GET(ApiConstants.PAYMENT_METHODS + "/{id}")
     Observable<Response<PaymentMethod>> getPaymentMethod(@Path("id") String paymentMethodId);
 
+    @GET(com.coinbase.ApiConstants.PAYMENT_METHODS + "/{id}" + "/verified")
+    Observable<Response<PaymentMethod>> getPaymentMethodVerified(@Path("id") String paymentMethodId);
+
     @GET(ApiConstants.EXCHANGE_RATES)
     Observable<Response<ExchangeRates>> getExchangeRates(@QueryMap HashMap<String, Object> body);
 

@@ -486,7 +486,7 @@ public class Data {
     /**
      * 
      * @param verificationMethod
-     *     The verification_method
+     *     The verificationMethod
      */
     public void setVerificationMethod(VerificationMethod verificationMethod) {
         this.verificationMethod = verificationMethod;
