@@ -3409,6 +3409,24 @@ public class Coinbase {
     }
 
     /**
+     * Show current user’s payment method.
+     *
+     * @param paymentMethodId paymentMethod ID for the account to retrieve
+     * @return observable object paymentmethod/retrofit pair
+     * @see <a href="https://developers.coinbase.com/api/v2#show-a-payment-method">Online Documentation</a>
+     */
+    public Observable<Pair<retrofit2.Response<PaymentMethod>, Retrofit>> getPaymentMethodVerifiedRx(String paymentMethodId) {
+        final Pair<ApiInterfaceRx, Retrofit> apiRetrofitPair = getApiServiceRx();
+
+        Observable<retrofit2.Response<PaymentMethod>> observable = apiRetrofitPair.first.getPaymentMethodVerified(paymentMethodId);
+
+        Observable<Retrofit> retrofitObservable = Observable.just(apiRetrofitPair.second);
+        return Observable.combineLatest(observable,
+                retrofitObservable,
+                (a, b) -> new Pair<>(a, b));
+    }
+
+    /**
      * Lists current user’s payment methods.
      *
      * @param options  endpoint options
