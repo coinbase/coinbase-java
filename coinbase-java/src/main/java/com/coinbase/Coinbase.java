@@ -1555,7 +1555,7 @@ public class Coinbase {
 
     protected HashMap<String, String> getV2VersionHeaders() {
         HashMap<String, String> headers = new HashMap<>();
-        headers.put("CB-VERSION", com.coinbase.ApiConstants.VERSION);
+        headers.put("CB-VERSION", getApiVersion());
         headers.put("CB-CLIENT", getPackageVersionName());
         return headers;
     }
@@ -1614,6 +1614,10 @@ public class Coinbase {
         };
     }
 
+    protected String getApiVersion() {
+        return com.coinbase.ApiConstants.VERSION;
+    }
+
     private String getPackageVersionName() {
         String packageName = "";
         String versionName = "";
@@ -1647,7 +1651,7 @@ public class Coinbase {
                 okhttp3.Request newRequest = chain
                         .request()
                         .newBuilder()
-                        .addHeader("CB-VERSION", com.coinbase.ApiConstants.VERSION)
+                        .addHeader("CB-VERSION", getApiVersion())
                         .addHeader("CB-CLIENT", getPackageVersionName())
                         .addHeader("X-App-Version", getVersionName())
                         .addHeader("X-App-Build-Number", getVersionCode())
