@@ -89,6 +89,9 @@ public class Data {
     @SerializedName("access_privacy_rights")
     @Expose
     private Boolean accessPrivacyRights;
+    @SerializedName("analytics_processing_enabled")
+    @Expose
+    private Boolean analyticsProcessingEnabled;
 
     /**
      *
@@ -558,5 +561,25 @@ public class Data {
      */
     public void setAccessPrivacyRights(Boolean accessPrivacyRights) {
         this.accessPrivacyRights = accessPrivacyRights;
+    }
+
+    /**
+     *
+     * @return
+     * {@code true} if user is opted into analytics processing
+     * {@code false} otherwise.
+     */
+    public Boolean getAnalyticsProcessingEnabled() {
+        return analyticsProcessingEnabled;
+    }
+
+    /**
+     *
+     * @param analyticsProcessingEnabled
+     * {@code true} if user opted out of analytics processing
+     * {@code false} otherwise.
+     */
+    public void setAnalyticsProcessingEnabled(Boolean analyticsProcessingEnabled) {
+        this.analyticsProcessingEnabled = analyticsProcessingEnabled;
     }
 }
