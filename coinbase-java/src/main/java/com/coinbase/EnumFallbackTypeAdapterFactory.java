@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken;
 /**
  * A {@link TypeAdapterFactory} that provides fallback deserialization semantics for enums.
  */
-class EnumFallbackTypeAdapterFactory implements TypeAdapterFactory {
+public class EnumFallbackTypeAdapterFactory implements TypeAdapterFactory {
 
     static EnumFallbackTypeAdapterFactory create() {
        return new EnumFallbackTypeAdapterFactory() ;
