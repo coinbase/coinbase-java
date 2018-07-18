@@ -72,6 +72,7 @@ import com.coinbase.v2.models.supportedCurrencies.SupportedCurrencies;
 import com.coinbase.v2.models.transactions.Transactions;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.GsonBuilder;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.IOUtils;
@@ -1741,7 +1742,9 @@ public class Coinbase {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .client(clientBuilder.build())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                        .registerTypeAdapterFactory(EnumFallbackTypeAdapterFactory.create())
+                        .create()))
                 .build();
 
         com.coinbase.ApiInterface service = retrofit.create(com.coinbase.ApiInterface.class);
@@ -1783,7 +1786,9 @@ public class Coinbase {
                 .client(clientBuilder.build())
                 .addCallAdapterFactory((_backgroundScheduler == null) ?
                         RxJavaCallAdapterFactory.create() : RxJavaCallAdapterFactory.createWithScheduler(_backgroundScheduler))
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+                        .registerTypeAdapterFactory(EnumFallbackTypeAdapterFactory.create())
+                        .create()))
                 .build();
 
         com.coinbase.ApiInterfaceRx service = retrofit.create(com.coinbase.ApiInterfaceRx.class);
