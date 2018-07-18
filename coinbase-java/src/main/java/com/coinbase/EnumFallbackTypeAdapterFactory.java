@@ -11,7 +11,7 @@ import com.google.gson.reflect.TypeToken;
  */
 public class EnumFallbackTypeAdapterFactory implements TypeAdapterFactory {
 
-    static EnumFallbackTypeAdapterFactory create() {
+    public static EnumFallbackTypeAdapterFactory create() {
        return new EnumFallbackTypeAdapterFactory() ;
     }
 
