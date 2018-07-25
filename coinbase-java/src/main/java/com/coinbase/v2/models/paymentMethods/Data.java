@@ -35,6 +35,8 @@ public class Data {
         BANK_WIRE(),
         @SerializedName("paypal_account")
         PAYPAL_ACCOUNT(),
+        @SerializedName("uk_bank_account")
+        UK_BANK_ACCOUNT,
         UNKNOWN();
 
         @Override
