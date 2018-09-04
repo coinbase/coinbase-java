@@ -92,6 +92,9 @@ public class Data {
     @SerializedName("analytics_processing_enabled")
     @Expose
     private Boolean analyticsProcessingEnabled;
+    @SerializedName("invite_friends_url")
+    @Expose
+    private String inviteFriendsUrl;
 
     /**
      *
@@ -581,5 +584,14 @@ public class Data {
      */
     public void setAnalyticsProcessingEnabled(Boolean analyticsProcessingEnabled) {
         this.analyticsProcessingEnabled = analyticsProcessingEnabled;
+    }
+
+    /**
+     *
+     * @return
+     * The invite url
+     */
+    public String getInviteFriendsUrl() {
+        return inviteFriendsUrl;
     }
 }
