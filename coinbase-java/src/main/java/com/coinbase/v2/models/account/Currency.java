@@ -20,6 +20,9 @@ public class Currency {
     @SerializedName("exponent")
     @Expose
     private Integer exponent;
+    @SerializedName("asset_id")
+    @Expose
+    private String assetId;
     @SerializedName("uri_scheme")
     @Expose
     private String uriScheme;
@@ -57,6 +60,14 @@ public class Currency {
 
     public void setExponent(Integer exponent) {
         this.exponent = exponent;
+    }
+
+    public String getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(String assetId) {
+        this.assetId = assetId;
     }
 
     public String getUriScheme() {
