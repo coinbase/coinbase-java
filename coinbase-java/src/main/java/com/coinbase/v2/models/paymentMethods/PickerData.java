@@ -42,6 +42,13 @@ public class PickerData {
     @SerializedName("swift")
     @Expose
     private String swift;
+    @SerializedName("paypal_email")
+    @Expose
+    private String paypalEmail;
+    @SerializedName("paypal_owner")
+    @Expose
+    private String paypalOwner;
+
     /**
      * 
      * @return
@@ -238,5 +245,41 @@ public class PickerData {
      */
     public void setSwift(String swift) {
         this.swift = swift;
+    }
+
+    /**
+     *
+     * @return
+     *      The paypalEmail
+     */
+    public String getPaypalEmail() {
+        return paypalEmail;
+    }
+
+    /**
+     *
+     * @param paypalEmail
+     *      The paypalEmail
+     */
+    public void setPaypalEmail(String paypalEmail) {
+        this.paypalEmail = paypalEmail;
+    }
+
+    /**
+     *
+     * @return
+     *     The paypalOwner
+     */
+    public String getPaypalOwner() {
+        return paypalOwner;
+    }
+
+    /**
+     *
+     * @param paypalOwner
+     *      Thie paypalOwner
+     */
+    public void setPaypalOwner(String paypalOwner) {
+        this.paypalOwner = paypalOwner;
     }
 }
