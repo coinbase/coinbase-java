@@ -46,6 +46,9 @@ public class Data {
     @SerializedName("primary")
     @Expose
     private Boolean primary;
+    @SerializedName("default")
+    @Expose
+    private Boolean defaultAccount;
     private Type type;
     @SerializedName("currency")
     @Expose
@@ -130,6 +133,24 @@ public class Data {
      */
     public void setPrimary(Boolean primary) {
         this.primary = primary;
+    }
+
+    /**
+     *
+     * @return
+     * The default account
+     */
+    public Boolean getDefaultAccount() {
+        return defaultAccount;
+    }
+
+    /**
+     *
+     * @param defaultAccount
+     * The default account
+     */
+    public void setDefaultAccount(Boolean defaultAccount) {
+        this.defaultAccount = defaultAccount;
     }
 
     /**
