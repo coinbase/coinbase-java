@@ -72,6 +72,9 @@ public class Data {
     @SerializedName("hold_days")
     @Expose
     private Integer holdDays;
+    @SerializedName("unit_price")
+    @Expose
+    private Amount unitPrice;
 
     /**
      * 
@@ -308,7 +311,7 @@ public class Data {
     }
 
     /**
-     *
+     * 
      * @return
      *     The isFirstBuy
      */
@@ -317,7 +320,7 @@ public class Data {
     }
 
     /**
-     *
+     * 
      * @param instant
      *     The isFirstBuy
      */
@@ -362,7 +365,7 @@ public class Data {
     }
 
     /**
-     *
+     * 
      * @return
      *     The requiresCompletionStep
      */
@@ -371,7 +374,7 @@ public class Data {
     }
 
     /**
-     *
+     * 
      * @param requiresCompletionStep
      *     The requires_completion_step
      */
@@ -380,7 +383,7 @@ public class Data {
     }
 
     /**
-     *
+     * 
      * @return
      *     The secure3dVerification
      */
@@ -389,7 +392,7 @@ public class Data {
     }
 
     /**
-     *
+     * 
      * @param secure3dVerification
      *     The secure3d_verification
      */
@@ -398,7 +401,7 @@ public class Data {
     }
 
     /**
-     *
+     * 
      * @return
      *     The feeExplanationUrl
      */
@@ -407,7 +410,7 @@ public class Data {
     }
 
     /**
-     *
+     * 
      * @param feeExplanationUrl
      *     The feeExplanationUrl
      */
@@ -416,7 +419,7 @@ public class Data {
     }
 
     /**
-     *
+     * 
      * @return
      *     The paymentMethodFee
      */
@@ -425,7 +428,7 @@ public class Data {
     }
 
     /**
-     *
+     * 
      * @param paymentMethodFee
      *     The paymentMethodFee
      */
@@ -447,5 +450,23 @@ public class Data {
      */
     public void setHoldDays(Integer holdDays) {
         this.holdDays = holdDays;
+    }
+
+    /**
+     * 
+     * @return
+     *     The unit price
+     */
+    public Amount getUnitPrice() {
+        return unitPrice;
+    }
+
+    /**
+     * 
+     * @param unitPrice
+     *     The unit price
+     */
+    public void setUnitPrice(Amount unitPrice) {
+        this.unitPrice = unitPrice;
     }
 }
