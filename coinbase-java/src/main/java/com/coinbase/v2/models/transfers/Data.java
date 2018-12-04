@@ -72,6 +72,9 @@ public class Data {
     @SerializedName("hold_days")
     @Expose
     private Integer holdDays;
+    @SerializedName("unit_price")
+    @Expose
+    private Amount unitPrice;
 
     /**
      * 
@@ -447,5 +450,23 @@ public class Data {
      */
     public void setHoldDays(Integer holdDays) {
         this.holdDays = holdDays;
+    }
+
+    /**
+     * 
+     * @return
+     *     The unit price
+     */
+    public Amount getUnitPrice() {
+        return unitPrice;
+    }
+
+    /**
+     * 
+     * @param unitPrice
+     *     The unit price
+     */
+    public void setUnitPrice(Amount unitPrice) {
+        this.unitPrice = unitPrice;
     }
 }
