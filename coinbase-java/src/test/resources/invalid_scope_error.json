@@ -1,0 +1,9 @@
+{
+  "errors": [
+    {
+      "id": "invalid_scope",
+      "message": "Invalid scope",
+      "url": "https://developers.coinbase.com/api#permissions-scopes"
+    }
+  ]
+}

@@ -1,67 +1,111 @@
+/*
+ * Copyright 2018 Coinbase, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.coinbase;
 
-public class ApiConstants {
-    public static final String BASE_URL_PRODUCTION = "https://api.coinbase.com";
-    public static final String SERVER_VERSION = "v2";
-    public static final String CLIENT_PLATFORM = "mobile";
-    public static final String VERSION = "2018-05-03";
+public interface ApiConstants {
+
+    String PATH_SEPARATOR = "/";
+    String BASE_URL_PRODUCTION = "https://api.coinbase.com";
+    String SERVER_VERSION = "v2";
+    String CLIENT_PLATFORM = "mobile";
+    String VERSION = "2018-02-08";
 
     // Endpoints
-    public static final String TOKEN = "token";
-    public static final String REVOKE = "revoke";
-    public static final String AUTH_CODE = "oauth/authorize/with-credentials";
-    public static final String ACCESS_TOKEN = "oauth/token";
-    public static final String USER = "user";
-    public static final String TRANSACTIONS = "transactions";
-    public static final String ACCOUNTS = "accounts";
-    public static final String COMPLETE = "complete";
-    public static final String RESEND = "resend";
-    public static final String PRICES = "prices";
-    public static final String SPOT = "spot";
-    public static final String ADDRESSES = "addresses";
-    public static final String PRIMARY = "primary";
-    public static final String DEPOSITS = "deposits";
-    public static final String WITHDRAWALS = "withdrawals";
-    public static final String PAYMENT_METHODS = "payment-methods";
-    public static final String EXCHANGE_RATES = "exchange-rates";
-    public static final String CURRENCIES = "currencies";
-
+    String AUTH_CODE = "oauth/authorize/with-credentials";
+    String ACCESS_TOKEN = "oauth/token";
+    String USER = "user";
+    String USERS = "users";
+    String USER_AUTH_INFO = USER + "/auth";
+    String TRANSACTIONS = "transactions";
+    String ACCOUNTS = "accounts";
+    String COMPLETE = "complete";
+    String RESEND = "resend";
+    String PRICES = "prices";
+    String SPOT = "spot";
+    String ADDRESSES = "addresses";
+    String PRIMARY = "primary";
+    String DEPOSITS = "deposits";
+    String WITHDRAWALS = "withdrawals";
+    String PAYMENT_METHODS = "payment-methods";
+    String EXCHANGE_RATES = "exchange-rates";
+    String CURRENCIES = "currencies";
+    String TIME = "time";
 
     // Params
-    public static final String CLIENT_ID = "client_id";
-    public static final String CLIENT_SECRET = "client_secret";
-    public static final String REFRESH_TOKEN = "refresh_token";
-    public static final String GRANT_TYPE = "grant_type";
-    public static final String STARTING_AFTER = "starting_after";
-    public static final String LOCALE = "locale";
-    public static final String TZ_OFFSET = "tz_offset";
-    public static final String ABOVE = "above";
-    public static final String CURRENCY_CODE = "currency_code";
-    public static final String MESSAGE = "message";
-    public static final String PRICE = "price";
-    public static final String COMPLETED = "completed";
-    public static final String PENDING = "pending";
-    public static final String TYPE = "type";
-    public static final String SEND = "send";
-    public static final String REQUEST = "request";
-    public static final String TRANSFER = "transfer";
-    public static final String BUY = "buy";
-    public static final String SELL = "sell";
-    public static final String BUYS = "buys";
-    public static final String SELLS = "sells";
-    public static final String TO = "to";
-    public static final String FROM = "from";
-    public static final String AMOUNT = "amount";
-    public static final String TOTAL = "total";
-    public static final String CURRENCY = "currency";
-    public static final String COMMIT = "commit";
-    public static final String QUOTE = "quote";
-    public static final String IDEM = "idem";
-    public static final String FEE = "fee";
-    public static final String PAYMENT_METHOD ="payment_method";
-    public static final String DESCRIPTION = "description";
-    public static final String INSTANT_EXCHANGE_QUOTE = "instant_exchange_quote";
-    public static final String NAME = "name";
-    public static final String TIME_ZONE = "time_zone";
-    public static final String NATIVE_CURRENCY = "native_currency";
+    String CLIENT_ID = "client_id";
+    String CLIENT_SECRET = "client_secret";
+    String TOKEN = "token";
+
+    String AUTHORIZE = "authorize";
+    String REFRESH_TOKEN = "refresh_token";
+    String AUTHORIZATION_CODE = "authorization_code";
+    String TWO_LEGGED = "2_legged";
+
+    String GRANT_TYPE = "grant_type";
+    String STARTING_AFTER = "starting_after";
+    String LOCALE = "locale";
+    String TZ_OFFSET = "tz_offset";
+    String ABOVE = "above";
+    String CURRENCY_CODE = "currency_code";
+    String MESSAGE = "message";
+    String PRICE = "price";
+    String COMPLETED = "completed";
+    String PENDING = "pending";
+    String TYPE = "type";
+    String SEND = "send";
+    String REQUEST = "request";
+    String TRANSFER = "transfer";
+    String BUY = "buy";
+    String SELL = "sell";
+    String BUYS = "buys";
+    String SELLS = "sells";
+    String TO = "to";
+    String FROM = "from";
+    String AMOUNT = "amount";
+    String CURRENCY = "currency";
+    String COMMIT = "commit";
+    String IDEM = "idem";
+    String FEE = "fee";
+    String PAYMENT_METHOD = "payment_method";
+    String DESCRIPTION = "description";
+    String INSTANT_EXCHANGE_QUOTE = "instant_exchange_quote";
+    String NAME = "name";
+    String TIME_ZONE = "time_zone";
+    String NATIVE_CURRENCY = "native_currency";
+
+    String TOTAL = "total";
+    String QUOTE = "quote";
+    String STATE = "state";
+
+    interface Headers {
+        String CB_VERSION = "CB-VERSION";
+        String CB_CLIENT = "CB-CLIENT";
+        String APP_VERSION = "X-App-Version";
+        String APP_BUILD_NUMBER = "X-App-Build-Number";
+        String AUTHORIZATION = "Authorization";
+        String ACCEPT_LANGUAGE = "Accept-Language";
+        String CB_2_FA_TOKEN = "CB-2FA-Token";
+    }
+
+    interface OAuth {
+        String OAUTH = "oauth";
+        String ROOT = PATH_SEPARATOR + OAUTH + PATH_SEPARATOR;
+
+        String TOKEN = ROOT + ApiConstants.TOKEN;
+        String REVOKE = ROOT + "revoke";
+    }
 }

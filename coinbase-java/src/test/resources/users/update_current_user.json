@@ -1,0 +1,29 @@
+{
+  "data": {
+    "id": "user-id-1",
+    "name": "new name",
+    "username": null,
+    "profile_location": null,
+    "profile_bio": null,
+    "profile_url": null,
+    "avatar_url": "https://images.coinbase.com/avatar.png",
+    "resource": "user",
+    "resource_path": "/v2/user",
+    "time_zone": "UTC",
+    "native_currency": "USD",
+    "bitcoin_unit": "BTC",
+    "state": null,
+    "country": {
+      "code": "CA",
+      "name": "Canada",
+      "is_in_europe": false
+    },
+    "created_at": "2018-02-22T11:32:55Z",
+    "tiers": {
+      "completed_description": null,
+      "upgrade_button_text": "Complete Account Setup",
+      "header": "Complete account setup",
+      "body": "Before you can buy or sell digital currency, you will need to complete setting up your account."
+    }
+  }
+}

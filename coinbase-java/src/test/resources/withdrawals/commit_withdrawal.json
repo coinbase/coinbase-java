@@ -1,0 +1,73 @@
+{
+  "data": {
+    "id": "withdrawal-id1",
+    "status": "created",
+    "payment_method": {
+      "id": "payment-method-id-1",
+      "type": "ach_bank_account",
+      "name": "BANK ******0000",
+      "currency": "USD",
+      "primary_buy": false,
+      "primary_sell": true,
+      "allow_buy": true,
+      "allow_sell": true,
+      "allow_deposit": true,
+      "allow_withdraw": true,
+      "instant_buy": false,
+      "instant_sell": false,
+      "created_at": "2018-03-06T19:39:11Z",
+      "updated_at": "2018-03-14T01:26:52Z",
+      "resource": "payment_method",
+      "resource_path": "/v2/payment-methods/payment-method-id-1",
+      "verified": true
+    },
+    "transaction": {
+      "id": "transaction-id-1",
+      "type": "fiat_withdrawal",
+      "status": "completed",
+      "amount": {
+        "amount": "-10.00",
+        "currency": "USD"
+      },
+      "native_amount": {
+        "amount": "-10.00",
+        "currency": "USD"
+      },
+      "description": null,
+      "created_at": "2018-04-13T15:43:40Z",
+      "updated_at": "2018-04-13T15:43:40Z",
+      "resource": "transaction",
+      "resource_path": "/v2/accounts/account-id-1/transactions/transaction-id-1",
+      "instant_exchange": false,
+      "fiat_withdrawal": {
+        "id": "withdrawal-id1",
+        "resource": "fiat_withdrawal",
+        "resource_path": "/v2/accounts/account-id-1/withdrawals/withdrawal-id-1"
+      },
+      "details": {
+        "title": "Withdrew funds",
+        "subtitle": "To BANK ******0000",
+        "payment_method_name": "BANK ******0000"
+      }
+    },
+    "user_reference": "9K98AFXX",
+    "created_at": "2018-04-13T15:41:34Z",
+    "updated_at": "2018-04-13T15:43:40Z",
+    "resource": "withdrawal",
+    "resource_path": "/v2/accounts/account-id-1/withdrawals/withdrawal-id1",
+    "committed": true,
+    "payout_at": "2018-04-18T15:43:39Z",
+    "fee": {
+      "amount": "0.00",
+      "currency": "USD"
+    },
+    "amount": {
+      "amount": "10.00",
+      "currency": "USD"
+    },
+    "subtotal": {
+      "amount": "10.00",
+      "currency": "USD"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "data": {
+    "resource": "email",
+    "currency": "USD",
+    "email": "some.user@email.com"
+  }
+}

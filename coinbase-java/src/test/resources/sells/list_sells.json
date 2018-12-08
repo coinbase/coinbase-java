@@ -1,0 +1,50 @@
+{
+  "pagination": {
+    "ending_before": null,
+    "starting_after": null,
+    "limit": 25,
+    "order": "desc",
+    "previous_uri": null,
+    "next_uri": null
+  },
+  "data": [
+    {
+      "id": "sell-id-1",
+      "status": "created",
+      "payment_method": {
+        "id": "payment-method-id-1",
+        "resource": "payment_method",
+        "resource_path": "/v2/payment-methods/payment-method-id-1"
+      },
+      "transaction": {
+        "id": "transaction-id-1",
+        "resource": "transaction",
+        "resource_path": "/v2/accounts/account-id-1/transactions/transaction-id-1"
+      },
+      "user_reference": "K2XXS4T8",
+      "created_at": "2018-04-11T08:22:58Z",
+      "updated_at": "2018-04-11T08:28:22Z",
+      "resource": "sell",
+      "resource_path": "/v2/accounts/account-id-1/sells/sell-id-1",
+      "committed": true,
+      "payout_at": "2018-04-14T08:28:21Z",
+      "instant": false,
+      "fee": {
+        "amount": "0.99",
+        "currency": "USD"
+      },
+      "amount": {
+        "amount": "0.00020000",
+        "currency": "BTC"
+      },
+      "total": {
+        "amount": "0.37",
+        "currency": "USD"
+      },
+      "subtotal": {
+        "amount": "1.36",
+        "currency": "USD"
+      }
+    }
+  ]
+}

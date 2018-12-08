@@ -1,0 +1,74 @@
+{
+  "data": {
+    "id": "deposit-id-1",
+    "status": "completed",
+    "payment_method": {
+      "id": "payment-method-id-1",
+      "type": "ach_bank_account",
+      "name": "BANK ******0000",
+      "currency": "USD",
+      "primary_buy": false,
+      "primary_sell": true,
+      "allow_buy": true,
+      "allow_sell": true,
+      "allow_deposit": true,
+      "allow_withdraw": true,
+      "instant_buy": false,
+      "instant_sell": false,
+      "created_at": "2018-03-06T19:39:11Z",
+      "updated_at": "2018-03-14T01:26:52Z",
+      "resource": "payment_method",
+      "resource_path": "/v2/payment-methods/payment-method-id-1",
+      "verified": true
+    },
+    "transaction": {
+      "id": "transaction-id-1",
+      "type": "fiat_deposit",
+      "status": "completed",
+      "amount": {
+        "amount": "100.00",
+        "currency": "USD"
+      },
+      "native_amount": {
+        "amount": "100.00",
+        "currency": "USD"
+      },
+      "description": null,
+      "created_at": "2018-03-14T02:00:05Z",
+      "updated_at": "2018-03-21T02:00:07Z",
+      "resource": "transaction",
+      "resource_path": "/v2/accounts/account-id-1/transactions/transaction-id-1",
+      "instant_exchange": false,
+      "fiat_deposit": {
+        "id": "deposit-id-1",
+        "resource": "fiat_deposit",
+        "resource_path": "/v2/accounts/account-id-1/deposits/e9dca112-6572-59f4-8913-43f6d293566e"
+      },
+      "details": {
+        "title": "Deposited funds",
+        "subtitle": "From BANK ******0000",
+        "payment_method_name": "BANK ******0000"
+      }
+    },
+    "user_reference": "L9EPPDX3",
+    "created_at": "2018-03-14T02:00:03Z",
+    "updated_at": "2018-03-21T02:00:07Z",
+    "resource": "deposit",
+    "resource_path": "/v2/accounts/account-id-1/deposits/deposit-id-1",
+    "committed": true,
+    "payout_at": "2018-03-22T02:00:04Z",
+    "instant": false,
+    "fee": {
+      "amount": "0.00",
+      "currency": "USD"
+    },
+    "amount": {
+      "amount": "100.00",
+      "currency": "USD"
+    },
+    "subtotal": {
+      "amount": "100.00",
+      "currency": "USD"
+    }
+  }
+}

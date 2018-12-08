@@ -1,0 +1,13 @@
+{
+  "data": {
+    "id": "user-id-1",
+    "name": "User Name",
+    "username": null,
+    "profile_location": null,
+    "profile_bio": null,
+    "profile_url": null,
+    "avatar_url": "https://images.coinbase.com/avatar.png",
+    "resource": "user",
+    "resource_path": "/v2/users/user-id-1"
+  }
+}

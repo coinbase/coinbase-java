@@ -4,7 +4,8 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
+# ignoring all jar files removes gradle-wrapper.jar from repo
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.ear
 
@@ -37,4 +38,5 @@ bin/
 .DS_Store
 /build
 /captures
-gradle.properties
+/gradle.properties
+coinbase-java/src/test/**/_*.java

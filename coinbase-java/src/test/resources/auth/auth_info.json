@@ -1,0 +1,10 @@
+{
+  "data": {
+    "method": "oauth",
+    "scopes": [
+      "wallet:user:read",
+      "wallet:accounts:read"
+    ],
+    "oauth_meta": {}
+  }
+}

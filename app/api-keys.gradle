@@ -1,0 +1,9 @@
+// Place your API keys here.
+
+// NOTE: Go to https://www.coinbase.com/oauth/applications/new
+// to create an application and generate your own keys
+
+// TODO Replace these with placeholders before publishing.
+ext.clientId = "f89d5f52d5bf6678b6449e0b6feb5100bf8e0ed3dc45f5f2be51fcea1232111c"
+ext.clientSecret = "9fbb237f4bc9c977f5e88895882b5677c4de395fe0996a6eedf912d4fee2b415"
+ext.redirectUri = "coinbase-sample-app://coinbase-oauth"

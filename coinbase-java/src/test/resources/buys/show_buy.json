@@ -1,0 +1,80 @@
+{
+  "data": {
+    "id": "buy-id-1",
+    "status": "completed",
+    "payment_method": {
+      "id": "payment-id-1",
+      "type": "ach_bank_account",
+      "name": "Using bank card *****0000",
+      "currency": "USD",
+      "primary_buy": true,
+      "primary_sell": false,
+      "allow_buy": true,
+      "allow_sell": true,
+      "allow_deposit": true,
+      "allow_withdraw": true,
+      "instant_buy": false,
+      "instant_sell": false,
+      "created_at": "2018-03-06T19:39:11Z",
+      "updated_at": "2018-03-14T01:26:52Z",
+      "resource": "payment_method",
+      "resource_path": "/v2/payment-methods/payment-id-1",
+      "verified": true
+    },
+    "transaction": {
+      "id": "transaction-id-1",
+      "type": "buy",
+      "status": "completed",
+      "amount": {
+        "amount": "0.00096735",
+        "currency": "BTC"
+      },
+      "native_amount": {
+        "amount": "10.00",
+        "currency": "USD"
+      },
+      "description": null,
+      "created_at": "2018-03-14T01:59:47Z",
+      "updated_at": "2018-03-21T01:59:57Z",
+      "resource": "transaction",
+      "resource_path": "/v2/accounts/e9534254-b773-549b-a6d1-0d8ca7fd24d4/transactions/transaction-id-1",
+      "instant_exchange": false,
+      "buy": {
+        "id": "buy-id-1",
+        "resource": "buy",
+        "resource_path": "/v2/accounts/account-id-1/buys/buy-id-1"
+      },
+      "details": {
+        "title": "Bought Bitcoin",
+        "subtitle": "Using bank card *****0000",
+        "payment_method_name": "bank card *****0000"
+      }
+    },
+    "user_reference": "A1B2C3D4",
+    "created_at": "2018-03-14T01:59:44Z",
+    "updated_at": "2018-03-21T01:59:58Z",
+    "resource": "buy",
+    "resource_path": "/v2/accounts/account-id-1/buys/buy-id-1",
+    "committed": true,
+    "payout_at": "2018-03-22T01:59:46Z",
+    "instant": false,
+    "fee": {
+      "amount": "0.99",
+      "currency": "USD"
+    },
+    "amount": {
+      "amount": "0.00096735",
+      "currency": "BTC"
+    },
+    "total": {
+      "amount": "10.00",
+      "currency": "USD"
+    },
+    "subtotal": {
+      "amount": "9.01",
+      "currency": "USD"
+    },
+    "requires_completion_step": false,
+    "is_first_buy": true
+  }
+}

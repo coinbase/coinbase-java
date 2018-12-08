@@ -1,0 +1,38 @@
+{
+  "data": {
+    "id": "buy-id-1",
+    "status": "created",
+    "payment_method": {
+      "id": "payment-method-1",
+      "resource": "payment_method",
+      "resource_path": "/v2/payment-methods/payment-method-1"
+    },
+    "transaction": null,
+    "user_reference": "A1B2C3D4",
+    "created_at": "2018-04-10T16:29:13Z",
+    "updated_at": "2018-04-10T16:32:04Z",
+    "resource": "buy",
+    "resource_path": "/v2/accounts/e9534254-b773-549b-a6d1-0d8ca7fd24d4/buys/buy-id-1",
+    "committed": true,
+    "payout_at": "2018-04-17T16:32:04Z",
+    "instant": false,
+    "fee": {
+      "amount": "0.99",
+      "currency": "USD"
+    },
+    "amount": {
+      "amount": "0.00020000",
+      "currency": "BTC"
+    },
+    "total": {
+      "amount": "2.36",
+      "currency": "USD"
+    },
+    "subtotal": {
+      "amount": "1.37",
+      "currency": "USD"
+    },
+    "requires_completion_step": false,
+    "is_first_buy": false
+  }
+}

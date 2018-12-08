@@ -1,0 +1,31 @@
+{
+  "data": {
+    "id": "transaction-id-1",
+    "type": "transfer",
+    "status": "completed",
+    "amount": {
+      "amount": "-0.00020000",
+      "currency": "BTC"
+    },
+    "native_amount": {
+      "amount": "-1.47",
+      "currency": "USD"
+    },
+    "description": null,
+    "created_at": "2018-04-03T10:10:26Z",
+    "updated_at": "2018-04-03T10:10:26Z",
+    "resource": "transaction",
+    "resource_path": "/v2/accounts/account-id-1/transactions/transaction-id-1",
+    "instant_exchange": false,
+    "to": {
+      "id": "account-id-2",
+      "resource": "account",
+      "resource_path": "/v2/accounts/account-id-2",
+      "currency": "BTC"
+    },
+    "details": {
+      "title": "Transferred Bitcoin",
+      "subtitle": "To test app"
+    }
+  }
+}

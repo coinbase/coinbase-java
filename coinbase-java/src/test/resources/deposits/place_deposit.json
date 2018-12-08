@@ -1,0 +1,32 @@
+{
+  "data": {
+    "id": "deposit-id-1",
+    "status": "created",
+    "payment_method": {
+      "id": "payment-method-id-1",
+      "resource": "payment_method",
+      "resource_path": "/v2/payment-methods/payment-method-id-1"
+    },
+    "transaction": null,
+    "user_reference": "ABCDEF1",
+    "created_at": "2018-04-13T15:29:52Z",
+    "updated_at": "2018-04-13T15:29:52Z",
+    "resource": "deposit",
+    "resource_path": "/v2/accounts/36528550-3fefef4/deposits/deposit-id-1",
+    "committed": false,
+    "payout_at": "2018-04-20T15:29:52Z",
+    "instant": false,
+    "fee": {
+      "amount": "0.00",
+      "currency": "USD"
+    },
+    "amount": {
+      "amount": "10.00",
+      "currency": "USD"
+    },
+    "subtotal": {
+      "amount": "10.00",
+      "currency": "USD"
+    }
+  }
+}

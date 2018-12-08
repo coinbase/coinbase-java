@@ -1,0 +1,32 @@
+{
+  "pagination": {
+    "ending_before": null,
+    "starting_after": null,
+    "limit": 25,
+    "order": "desc",
+    "previous_uri": null,
+    "next_uri": null
+  },
+  "data": [
+    {
+      "id": "address-id-1",
+      "address": "abcdef123456",
+      "name": null,
+      "created_at": "2015-01-31T20:49:02Z",
+      "updated_at": "2015-03-31T17:25:29-07:00",
+      "network": "bitcoin",
+      "resource": "address",
+      "resource_path": "/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/addresses/address-id-1"
+    },
+    {
+      "id": "address-id-2",
+      "address": "abcdef12345678293",
+      "name": null,
+      "created_at": "2015-03-31T17:23:52-07:00",
+      "updated_at": "2015-01-31T20:49:02Z",
+      "network": "bitcoin",
+      "resource": "address",
+      "resource_path": "/v2/accounts/2bbf394c-193b-5b2a-9155-3b4732659ede/addresses/address-id-2"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "id": "transaction-id-1",
+  "type": "request",
+  "status": "pending",
+  "amount": {
+    "amount": "-0.00040000",
+    "currency": "SuperCoin"
+  },
+  "native_amount": {
+    "amount": "-100.0",
+    "currency": "USD"
+  },
+  "description": "Test",
+  "created_at": "2018-04-03T14:22:18Z",
+  "updated_at": "2018-04-03T14:22:18Z",
+  "resource": "transaction",
+  "resource_path": "/v2/accounts/account-id-1/transactions/transaction-id-1",
+  "instant_exchange": false,
+  "from": {
+    "resource": "super_coin_network",
+    "currency": "SuperCoin"
+  }
+}

@@ -1,0 +1,49 @@
+ext {
+
+    //region Versions
+    gson = '2.8.0'
+    rxjava2 = '2.1.13'
+    okHttp = '3.6.0'
+    commonsIo = '2.5'
+    retrofit = '2.2.0'
+    apacheCommons = '3.5'
+    androidX = '1.0.0'
+
+    // Tests
+    junit = '4.12'
+    robolectric = '3.7.1'
+    assertjCore = '3.5.2'
+    mockitoCore = '2.16.0'
+    //endregion
+
+    //region Dependencies
+    projectDependencies = [
+            gson         : "com.google.code.gson:gson:$gson",
+            commonsIo    : "commons-io:commons-io:$commonsIo",
+            rxJava2       : "io.reactivex.rxjava2:rxjava:$rxjava2",
+            apacheCommons: "org.apache.commons:commons-lang3:$apacheCommons"
+    ]
+
+    okHttpDependencies = [
+            okHttpLogin: "com.squareup.okhttp3:logging-interceptor:$okHttp",
+    ]
+
+    retrofitDependencies = [
+            retrofit     : "com.squareup.retrofit2:retrofit:$retrofit",
+            rxJavaAdapter: "com.squareup.retrofit2:adapter-rxjava2:$retrofit",
+            gsonConverter: "com.squareup.retrofit2:converter-gson:$retrofit"
+    ]
+
+    androidDependencies = [
+            supportAnnotations: "androidx.annotation:annotation:1.0.0"
+    ]
+
+    testDependencies = [
+            mockwebserver: "com.squareup.okhttp3:mockwebserver:$okHttp",
+            robolectric  : "org.robolectric:robolectric:$robolectric",
+            assertjCore  : "org.assertj:assertj-core:$assertjCore",
+            mockitoCore  : "org.mockito:mockito-core:$mockitoCore",
+            junit        : "junit:junit:$junit"
+    ]
+    //endregion
+}

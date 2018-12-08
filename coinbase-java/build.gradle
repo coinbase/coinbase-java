@@ -1,39 +1,49 @@
+apply from: './dependencies.gradle'
+
 buildscript {
+
     repositories {
         mavenLocal()
         mavenCentral()
         jcenter()
+        google()
     }
+
+    ext.mavenGradlePlugin = '1.5'
+    ext.retrolambda = '3.6.1'
+    ext.bintary = '1.6'
+
     dependencies {
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6"
-        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
+        classpath "com.github.dcendents:android-maven-gradle-plugin:$mavenGradlePlugin"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintary"
+        classpath "me.tatarka:gradle-retrolambda:$retrolambda"
     }
 }
 
 def packageName = 'coinbase-java'
-def packageVersion = '2.2.0-138'
+def packageVersion = '2.2.0-100'
 def packageDescription = 'Coinbase Android SDK'
 group = 'com.coinbase'
 version = packageVersion
 
-allprojects {
-    repositories {
-        jcenter()
-    }
-    apply plugin: 'com.android.library'
-    apply plugin: 'com.github.dcendents.android-maven'
-    apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.bintray'
-    apply plugin: 'me.tatarka.retrolambda'
+
+repositories {
+    jcenter()
 }
 
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+
 android {
-    compileSdkVersion 23
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 27
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 27
         versionCode 1
         versionName packageVersion
     }
@@ -49,15 +59,18 @@ android {
 
 
     buildTypes {
+        debug {}
+        developer {}
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-}
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.14'
+    sourceSets {
+        test.resources.srcDirs += 'src/test/resources'
+    }
+
 }
 
 // custom tasks for creating source/javadoc jars
@@ -147,28 +160,70 @@ bintray {
     }
 }
 
+task checkstyle(type: Checkstyle) {
+    description 'Check code standard'
+    group 'verification'
+
+    configFile file("${project.rootDir}/coinbase-java/tools/rules-checkstyle.xml")
+
+    source fileTree("${project.rootDir}/coinbase-java/src/main/java")
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    classpath = files()
+    showViolations true
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+        html.setDestination(new File("$project.buildDir/reports/checkstyle/checkstyle.html"))
+    }
+}
+
+task pmd(type: Pmd) {
+    description 'Check code quality with pmd'
+    group 'verification'
+
+    ruleSetFiles = files("${project.rootDir}/coinbase-java/tools/rules-pmd.xml")
+
+    source fileTree("${project.rootDir}/coinbase-java/src/main/java")
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml.enabled = false
+        html.enabled = true
+        xml.setDestination(new File("$project.buildDir/reports/pmd/pmd.xml"))
+        html.setDestination(new File("$project.buildDir/reports/pmd/pmd.html"))
+    }
+}
+
+task codeQualityCheck {
+    description 'Check code quality with all available tools'
+    group 'verification'
+
+    dependsOn 'pmd'
+    dependsOn 'lint'
+    dependsOn 'checkstyle'
+}
+
 
 dependencies {
-    compile files('libs/joda-money-0.12.jar')
+    api projectDependencies.gson
+    api okHttpDependencies.okHttpLogin
+    api projectDependencies.rxJava2
 
-    compile 'com.google.code.gson:gson:2.5'
-    compile 'org.glassfish:javax.annotation:10.0-b28'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'joda-time:joda-time:2.3'
-    compile 'net.sf.opencsv:opencsv:2.0'
-    compile 'com.fasterxml.jackson.datatype:jackson-datatype-joda:2.4.0'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.4.0'
-    compile 'commons-io:commons-io:2.4'
-    compile 'commons-codec:commons-codec:1.10'
-    compile 'io.reactivex:rxjava:1.0.+'
-    compile 'io.reactivex:rxandroid:0.23.+'
-    compile 'org.apache.commons:commons-lang3:3.0'
+    implementation retrofitDependencies.retrofit
+    implementation retrofitDependencies.rxJavaAdapter
+    implementation retrofitDependencies.gsonConverter
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.powermock:powermock-module-junit4:1.6.2'
-    testCompile 'org.powermock:powermock-module-junit4-rule:1.6.2'
-    testCompile 'org.powermock:powermock-api-mockito:1.6.2'
-    testCompile 'org.powermock:powermock-classloading-xstream:1.6.2'
+    implementation projectDependencies.commonsIo
+    implementation projectDependencies.apacheCommons
+    implementation androidDependencies.supportAnnotations
+
+    testImplementation testDependencies.mockwebserver
+    testImplementation testDependencies.robolectric
+    testImplementation testDependencies.junit
+    testImplementation testDependencies.assertjCore
+    testImplementation testDependencies.mockitoCore
 }

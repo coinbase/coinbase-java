@@ -1,3 +1,55 @@
+<!--
+  ~ Copyright 2018 Coinbase, Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
 <resources>
-    <string name="app_name">CoinbaseSample</string>
+    <string name="app_name">Coinbase Sample</string>
+    <string name="authorization_information">Login with OAuth2 flow</string>
+    <string name="login">Login</string>
+    <string name="refresh_token">🔄  Refresh token</string>
+    <string name="revoke_token">❎  Revoke token</string>
+    <string name="logout">🚪 Logout</string>
+    <string name="proceed">Proceed</string>
+    <string name="login_info">Logged in:\n\nscope:\n%s\n\nExpires:\n%s</string>
+    <string name="logged_in">Logged in!</string>
+    <string name="label_scopes">🔑 Scopes:</string>
+    <string name="label_expires">⏱ Expires:</string>
+    <string name="auth_info">Auth Info</string>
+    <string name="label_account_setting">Account Setting:</string>
+    <string name="accounts">🔢  Accounts</string>
+    <string name="prices">💲  Spot Prices</string>
+    <string name="currencies">💱  Currencies</string>
+    <string name="payment_methods">💳  Payment Methods</string>
+    <string name="transactions">💸 Transactions</string>
+    <string name="authorization_info_button">🔐  Authorization Info</string>
+    <string name="login_with_chrome_tab">Login with Chrome Tab</string>
+    <string name="load_user_error">Loading user failed!</string>
+    <string name="money_zero">$0.00</string>
+    <string name="sell_price">Sell Price</string>
+    <string name="buy_price">Buy Price</string>
+    <string name="spot_price">Spot Price</string>
+    <string name="generic_error">Error occurred, please try again</string>
+    <string name="primary">primary ✔</string>
+    <string name="prices_title_format">Currency: %s</string>
+    <string name="buy">buy</string>
+    <string name="sell">sell</string>
+    <string name="format_buy_info">buy %s instant %s</string>
+    <string name="format_sell_info">sell %s instant %s</string>
+    <string name="format_deposit_info">deposit %s</string>
+    <string name="format_withdraw_info">withdraw %s</string>
+    <string name="format_primary_info">primary: %s</string>
+    <string name="no_accounts_loaded">No accounts loaded</string>
+    <string name="sign_up">Sign Up (opens browser)</string>
 </resources>

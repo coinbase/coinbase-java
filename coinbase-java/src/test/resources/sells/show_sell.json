@@ -1,0 +1,78 @@
+{
+  "data": {
+    "id": "sell-id-1",
+    "status": "created",
+    "payment_method": {
+      "id": "53f4-5077-85d2-782fd93c9payment-method-id-1",
+      "type": "ach_bank_account",
+      "name": "Credit card 0000",
+      "currency": "USD",
+      "primary_buy": true,
+      "primary_sell": true,
+      "allow_buy": true,
+      "allow_sell": true,
+      "allow_deposit": true,
+      "allow_withdraw": true,
+      "instant_buy": false,
+      "instant_sell": false,
+      "created_at": "2018-03-06T19:39:11Z",
+      "updated_at": "2018-03-14T01:26:52Z",
+      "resource": "payment_method",
+      "resource_path": "/v2/payment-methods/payment-method-id-1",
+      "verified": true
+    },
+    "transaction": {
+      "id": "transaction-id-1",
+      "type": "sell",
+      "status": "completed",
+      "amount": {
+        "amount": "-0.00020000",
+        "currency": "BTC"
+      },
+      "native_amount": {
+        "amount": "-0.37",
+        "currency": "USD"
+      },
+      "description": null,
+      "created_at": "2018-04-11T08:28:21Z",
+      "updated_at": "2018-04-11T08:28:21Z",
+      "resource": "transaction",
+      "resource_path": "/v2/accounts/account-id-1/transactions/transaction-id-1",
+      "instant_exchange": false,
+      "sell": {
+        "id": "sell-id-1",
+        "resource": "sell",
+        "resource_path": "/v2/accounts/account-id-1/sells/sell-id-1"
+      },
+      "details": {
+        "title": "Sold Bitcoin",
+        "subtitle": "Using credit card *****0000",
+        "payment_method_name": "credit card *****0000"
+      }
+    },
+    "user_reference": "ABCDEF",
+    "created_at": "2018-04-11T08:22:58Z",
+    "updated_at": "2018-04-11T08:28:22Z",
+    "resource": "sell",
+    "resource_path": "/v2/accounts/account-id-1/sells/sell-id-1",
+    "committed": true,
+    "payout_at": "2018-04-14T08:28:21Z",
+    "instant": false,
+    "fee": {
+      "amount": "0.99",
+      "currency": "USD"
+    },
+    "amount": {
+      "amount": "0.00020000",
+      "currency": "BTC"
+    },
+    "total": {
+      "amount": "0.37",
+      "currency": "USD"
+    },
+    "subtotal": {
+      "amount": "1.36",
+      "currency": "USD"
+    }
+  }
+}

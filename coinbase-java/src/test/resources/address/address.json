@@ -1,0 +1,14 @@
+{
+  "data": {
+    "id": "btc-address-1",
+    "address": "abcdef1234567890",
+    "name": "Test address",
+    "callback_url": null,
+    "created_at": "2015-01-31T20:49:02Z",
+    "updated_at": "2015-03-31T17:25:29-07:00",
+    "network": "bitcoin",
+    "uri_scheme": "bitcoin",
+    "resource": "address",
+    "resource_path": "/v2/accounts/btc-account-1/addresses/btc-address-1"
+  }
+}

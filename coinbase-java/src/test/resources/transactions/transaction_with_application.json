@@ -1,0 +1,41 @@
+{
+  "data": {
+    "id": "transaction-id-1",
+    "type": "send",
+    "status": "completed",
+    "amount": {
+      "amount": "-0.00010000",
+      "currency": "BTC"
+    },
+    "native_amount": {
+      "amount": "-0.65",
+      "currency": "USD"
+    },
+    "description": null,
+    "created_at": "2018-04-06T10:10:37Z",
+    "updated_at": "2018-04-06T10:10:37Z",
+    "resource": "transaction",
+    "resource_path": "/v2/accounts/account-id-1/transactions/transaction-id-1",
+    "instant_exchange": false,
+    "network": {
+      "status": "off_blockchain"
+    },
+    "to": {
+      "resource": "email",
+      "email": "email.out.of.coinbase@email.com",
+      "currency": "BTC"
+    },
+    "application": {
+      "id": "application-id-1",
+      "name": "Test API app",
+      "description": "Test application for testing the Coinbase API",
+      "image_url": "http://api.coinbase.com/images/test-app",
+      "resource": "application",
+      "resource_path": "/v2/applications/application-id-1"
+    },
+    "details": {
+      "title": "Sent Bitcoin",
+      "subtitle": "To email.out.of.coinbase@email.com"
+    }
+  }
+}

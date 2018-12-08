@@ -1,0 +1,123 @@
+{
+  "pagination": {
+    "ending_before": null,
+    "starting_after": null,
+    "limit": 25,
+    "order": "desc",
+    "previous_uri": null,
+    "next_uri": null
+  },
+  "data": [
+    {
+      "id": "transaction-id-1",
+      "type": "buy",
+      "status": "pending",
+      "amount": {
+        "amount": "486.34313725",
+        "currency": "BTC"
+      },
+      "native_amount": {
+        "amount": "4863.43",
+        "currency": "USD"
+      },
+      "description": null,
+      "created_at": "2015-03-26T23:44:08-07:00",
+      "updated_at": "2015-03-26T23:44:08-07:00",
+      "resource": "transaction",
+      "resource_path": "/v2/accounts/account-id-1/transactions/transaction-id-1",
+      "buy": {
+        "id": "buy-id-1",
+        "resource": "buy",
+        "resource_path": "/v2/accounts/account-id-1/buys/buy-id-1"
+      },
+      "details": {
+        "title": "Bought bitcoin",
+        "subtitle": "using Capital One Bank"
+      }
+    },
+    {
+      "id": "transaction-id-2",
+      "type": "request",
+      "status": "pending",
+      "amount": {
+        "amount": "0.10000000",
+        "currency": "BTC"
+      },
+      "native_amount": {
+        "amount": "1.00",
+        "currency": "USD"
+      },
+      "description": "",
+      "created_at": "2015-03-24T18:32:35-07:00",
+      "updated_at": "2015-01-31T20:49:02Z",
+      "resource": "transaction",
+      "resource_path": "/v2/accounts/account-id-1/transactions/transaction-id-2",
+      "to": {
+        "resource": "email",
+        "email": "rb@coinbase.com"
+      },
+      "details": {
+        "title": "Requested bitcoin",
+        "subtitle": "from rb@coinbase.com"
+      }
+    },
+    {
+      "id": "transaction-id-3",
+      "type": "transfer",
+      "status": "completed",
+      "amount": {
+        "amount": "-5.00000000",
+        "currency": "BTC"
+      },
+      "native_amount": {
+        "amount": "-50.00",
+        "currency": "USD"
+      },
+      "description": "",
+      "created_at": "2015-03-12T15:51:38-07:00",
+      "updated_at": "2015-01-31T20:49:02Z",
+      "resource": "transaction",
+      "resource_path": "/v2/accounts/account-id-1/transactions/transaction-id-3",
+      "to": {
+        "id": "account-id-2",
+        "resource": "account",
+        "resource_path": "/v2/accounts/account-id-2"
+      },
+      "details": {
+        "title": "Transfered bitcoin",
+        "subtitle": "to Secondary Account"
+      }
+    },
+    {
+      "id": "transaction-id-4",
+      "type": "send",
+      "status": "completed",
+      "amount": {
+        "amount": "-0.00100000",
+        "currency": "BTC"
+      },
+      "native_amount": {
+        "amount": "-0.01",
+        "currency": "USD"
+      },
+      "description": null,
+      "created_at": "2015-03-11T13:13:35-07:00",
+      "updated_at": "2015-03-26T15:55:43-07:00",
+      "resource": "transaction",
+      "resource_path": "/v2/accounts/account-id-1/transactions/transaction-id-4",
+      "network": {
+        "status": "off_blockchain",
+        "name": "bitcoin"
+      },
+      "to": {
+        "id": "user-id-1",
+        "resource": "user",
+        "resource_path": "/v2/users/user-id-1"
+      },
+      "details": {
+        "title": "Send bitcoin",
+        "subtitle": "to User 2"
+      }
+    }
+  ]
+}

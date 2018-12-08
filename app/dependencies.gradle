@@ -1,0 +1,24 @@
+ext {
+
+    //region Versions
+    androidSupport = '27.1.1'
+    rxandroid = '2.0.1'
+    picasso = '2.71828'
+    constraintLayout = '1.1.2'
+    //endregion
+
+    //region Dependencies
+    projectDependencies = [
+            rxandroid                     : "io.reactivex.rxjava2:rxandroid:$rxandroid",
+            picasso                       : "com.squareup.picasso:picasso:$picasso"
+    ]
+
+    // android dependencies
+    androidDependencies = [
+            androidSupport                : "com.android.support:appcompat-v7:$androidSupport",
+            recyclerView                  : "com.android.support:recyclerview-v7:$androidSupport",
+            customtabs                    : "com.android.support:customtabs:$androidSupport",
+            constraintLayout              : "com.android.support.constraint:constraint-layout:$constraintLayout"
+    ]
+    //endregion
+}
