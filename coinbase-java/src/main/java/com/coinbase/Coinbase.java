@@ -164,6 +164,7 @@ public class Coinbase {
     private ExecutorService httpExecutorService;
     private boolean autorefresh;
     private final Handler uiHandler = new Handler(Looper.getMainLooper());
+    private String apiVersionCode = null;
     // endregion
 
     // region Authentication fields
@@ -236,6 +237,7 @@ public class Coinbase {
         clientId = builder.clientId;
         tokenListener = builder.tokenListener;
         autorefresh = builder.autorefresh;
+        apiVersionCode = builder.apiVersionCode;
 
         sslContext = builder.sslContext;
         baseApiUrl = builder.baseApiUrl;
@@ -790,6 +792,15 @@ public class Coinbase {
      */
     protected String getVersionCode() {
         return String.valueOf(BuildConfig.VERSION_CODE);
+    }
+
+    /**
+     * Determines the api version code
+     *
+     * @return api version code
+     */
+    protected String getApiVersionCode() {
+        return apiVersionCode == null ? ApiConstants.VERSION : apiVersionCode;
     }
 
     /**

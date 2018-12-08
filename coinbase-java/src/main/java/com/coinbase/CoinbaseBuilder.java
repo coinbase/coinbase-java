@@ -56,6 +56,7 @@ public class CoinbaseBuilder<T extends CoinbaseBuilder<T>> {
     String refreshToken;
     TokenListener tokenListener;
     boolean autorefresh;
+    String apiVersionCode = ApiConstants.VERSION;
 
     SSLContext sslContext;
     URL baseOauthUrl;
@@ -361,6 +362,11 @@ public class CoinbaseBuilder<T extends CoinbaseBuilder<T>> {
 
     protected T tokenListener(Coinbase.TokenListener tokenListener) {
         this.tokenListener = tokenListener;
+        return getThis();
+    }
+
+    protected T apiVersionCode(String apiVersionCode) {
+        this.apiVersionCode = apiVersionCode;
         return getThis();
     }
 
