@@ -996,9 +996,9 @@ public class Coinbase {
                 .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS);
 
         // Add interceptors.
-        builder.addInterceptor(errorHandlingInterceptor())
+        builder.addInterceptor(tokenRefreshInterceptor())
+                .addInterceptor(errorHandlingInterceptor())
                 .addInterceptor(saveAuthTokensInterceptor())
-                .addInterceptor(tokenRefreshInterceptor())
                 .addInterceptor(loggingInterceptor())
                 .addInterceptor(authHeaderInterceptor())
                 .addInterceptor(clientInfoInterceptor())
