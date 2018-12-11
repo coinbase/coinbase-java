@@ -872,9 +872,7 @@ public class Coinbase {
             final Request request = chain.request();
             final Request.Builder builder = request.newBuilder();
             final Response response = chain.proceed(request);
-            if (autorefresh && response.code() == HttpURLConnection.HTTP_UNAUTHORIZED
-                    && !request.url().pathSegments().contains(OAUTH)
-                    && !TextUtils.isEmpty(refreshToken)) {
+            if (shouldDoAutoRefresh(request, response)) {
                 String originalRefreshToken = refreshToken;
                 doRefreshToken(originalRefreshToken);
                 // if token is refreshed successfully redo request
@@ -897,7 +895,7 @@ public class Coinbase {
         return chain -> {
             Request request = chain.request();
             Response response = chain.proceed(request);
-            if (!response.isSuccessful()) {
+            if (!response.isSuccessful() && !shouldDoAutoRefresh(request, response)) {
                 if (request.url().pathSegments().contains(OAUTH)) {
                     OAuthError errorResponse = gson.fromJson(response.body().string(), OAuthError.class);
                     throw new CoinbaseOAuthException(errorResponse);
@@ -908,6 +906,12 @@ public class Coinbase {
             }
             return response;
         };
+    }
+
+    private boolean shouldDoAutoRefresh(Request request, Response response) {
+        return autorefresh && response.code() == HttpURLConnection.HTTP_UNAUTHORIZED
+                && !request.url().pathSegments().contains(OAUTH)
+                && !TextUtils.isEmpty(refreshToken);
     }
 
     private Request.Builder insertAccessToken(final Request.Builder builder) {
