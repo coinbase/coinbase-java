@@ -533,7 +533,7 @@ public class Coinbase {
         return getRedirectUrlFromUri(resultUri);
     }
 
-    private String getRedirectUrlFromUri(Uri resultUri) {
+    public String getRedirectUrlFromUri(Uri resultUri) {
 
         final String csrfToken = resultUri.getQueryParameter(ApiConstants.STATE);
         if (csrfToken == null || !csrfToken.equals(getCsrfToken())) {
@@ -547,7 +547,7 @@ public class Coinbase {
         return getAuthCodeFromUri(resultUri);
     }
 
-    private String getAuthCodeFromUri(Uri resultUri) {
+    public String getAuthCodeFromUri(Uri resultUri) {
         final String authCode = resultUri.getQueryParameter("code");
         if (authCode == null) {
             final String errorDescription = resultUri.getQueryParameter("error_description");
