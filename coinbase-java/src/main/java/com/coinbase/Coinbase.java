@@ -503,29 +503,31 @@ public class Coinbase {
     }
 
     /**
-     * Process an OAuth result {@link Uri} and attempt to get an {@link AccessToken}.
+     * Process an OAuth result and attempt to get an {@link AccessToken}.
      *
-     * @param uri OAuth result {@link Uri}.
+     * @param redirectUri a redirectUri parsed from the result uri at the end of oauth
+     * @param code the auth code returned from the result uri at the end of oauth
      * @return {@link ApiCall} with auth data.
      */
-    public ApiCall<AccessToken> completeAuthorizationWithRedirect(@NonNull Uri uri) {
+    public ApiCall<AccessToken> completeAuthorizationWithRedirectAndCode(@NonNull String redirectUri, @NonNull String code) {
         return getAuthResource().getTokens(clientId,
                 clientSecret,
-                getAuthCodeFromUri(uri),
-                getRedirectUrlFromUri(uri));
+                code,
+                redirectUri);
     }
 
     /**
-     * Rx version of {@link #completeAuthorizationWithRedirectRx(Uri)}.
+     * Rx version of {@link #completeAuthorizationWithRedirectAndCode(String, String)}.
      *
-     * @param uri OAuth result {@link Uri}.
+     * @param redirectUri a redirectUri parsed from the result uri at the end of oauth
+     * @param code the auth code returned from the result uri at the end of oauth 
      * @return {@link Single} with auth data.
      */
-    public Single<AccessToken> completeAuthorizationWithRedirectRx(@NonNull Uri uri) {
+    public Single<AccessToken> completeAuthorizationWithRedirectAndCodeRx(@NonNull String redirectUri, @NonNull String code) {
         return getAuthResource().getTokensRx(clientId,
                 clientSecret,
-                getAuthCodeFromUri(uri),
-                getRedirectUrlFromUri(uri));
+                code,
+                redirectUri);
     }
 
     private String getRedirectUrl(Intent intent) {

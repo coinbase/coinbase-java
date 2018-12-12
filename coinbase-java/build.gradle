@@ -21,7 +21,7 @@ buildscript {
 }
 
 def packageName = 'coinbase-java'
-def packageVersion = '3.0.0-6'
+def packageVersion = '3.0.0-7'
 def packageDescription = 'Coinbase Android SDK'
 group = 'com.coinbase'
 version = packageVersion
