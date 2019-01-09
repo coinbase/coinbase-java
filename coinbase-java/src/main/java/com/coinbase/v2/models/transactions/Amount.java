@@ -14,6 +14,9 @@ public class Amount {
     @SerializedName("currency")
     @Expose
     private String currency;
+    @SerializedName("scale")
+    @Expose
+    private Integer scale;
 
     /**
      *
@@ -49,6 +52,24 @@ public class Amount {
      */
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    /**
+     *
+     * @return
+     * The scale
+     */
+    public Integer getScale() {
+        return scale;
+    }
+
+    /**
+     *
+     * @param scale
+     * The scale
+     */
+    public void setScale(Integer scale) {
+        this.scale = scale;
     }
 
 }
