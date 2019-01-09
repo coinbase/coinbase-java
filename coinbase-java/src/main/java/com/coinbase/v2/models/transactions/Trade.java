@@ -47,6 +47,9 @@ public class Trade {
     @SerializedName("subtotal")
     @Expose
     private Amount subtotal;
+    @SerializedName("unit_price")
+    @Expose
+    private Amount unitPrice;
     @SerializedName("committed")
     @Expose
     private Boolean committed;
@@ -223,6 +226,20 @@ public class Trade {
      */
     public void setSubtotal(Amount subtotal) {
         this.subtotal = subtotal;
+    }
+
+    /**
+     * @return The unit price
+     */
+    public Amount getUnitPrice() {
+        return unitPrice;
+    }
+
+    /**
+     * @param unitPrice The unit price
+     */
+    public void setUnitPrice(Amount unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     /**
