@@ -90,7 +90,7 @@ public class JsonSerializationTest {
         // Then:
         assertThat(json).containsOnlyOnce("\"class\":10");
         assertThat(json).containsOnlyOnce("\"some_long_name\":\"Serialized\"");
-        assertThat(json).containsOnlyOnce("\"created_at\":\"2018-01-30T10:30:40Z\"");
+        assertThat(json).containsOnlyOnce("\"created_at\":\"2018-01-30T10:30:40+0000\"");
 
     }
 

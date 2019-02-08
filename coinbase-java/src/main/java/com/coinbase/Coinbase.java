@@ -1048,7 +1048,7 @@ public class Coinbase {
                 .registerTypeAdapter(Trade.class, new TradesDeserializer())
                 .registerTypeAdapter(PlaceTradeOrderBody.class, new PlaceTradeOrderBodySerializer())
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     }
 
     /**
