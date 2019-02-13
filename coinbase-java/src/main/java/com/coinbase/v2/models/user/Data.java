@@ -95,6 +95,9 @@ public class Data {
     @SerializedName("invite_friends_url")
     @Expose
     private String inviteFriendsUrl;
+    @SerializedName("show_account_levels")
+    @Expose
+    private boolean showAccountLevels;
 
     /**
      *
@@ -593,5 +596,14 @@ public class Data {
      */
     public String getInviteFriendsUrl() {
         return inviteFriendsUrl;
+    }
+
+    /**
+     *
+     * @return
+     * Whether or not account levels should be shown.
+     */
+    public Boolean getShowAccountLevels() {
+        return showAccountLevels;
     }
 }
