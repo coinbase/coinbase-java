@@ -98,6 +98,12 @@ public class Data {
     @SerializedName("show_account_levels")
     @Expose
     private boolean showAccountLevels;
+    @SerializedName("region_supports_fiat_transfers")
+    @Expose
+    private Boolean regionSupportsFiatTransfers;
+    @SerializedName("region_supports_crypto_to_crypto_transfers")
+    @Expose
+    private Boolean regionSupportsCryptoToCryptoTransfers;
 
     /**
      *
@@ -605,5 +611,33 @@ public class Data {
      */
     public Boolean getShowAccountLevels() {
         return showAccountLevels;
+    }
+
+    /**
+     * @return true if fiat transfers are supported, false otherwise.
+     */
+    public Boolean getRegionSupportsFiatTransfers() {
+        return regionSupportsFiatTransfers;
+    }
+
+    /**
+     * @param regionSupportsFiatTransfers Whether fiat transfers are supported in the region
+     */
+    public void setRegionSupportsFiatTransfers(Boolean regionSupportsFiatTransfers) {
+        this.regionSupportsFiatTransfers = regionSupportsFiatTransfers;
+    }
+
+    /**
+     * @return true if crypto to crypto transfers are supported, false otherwise.
+     */
+    public Boolean getRegionSupportsCryptoToCryptoTransfers() {
+        return regionSupportsCryptoToCryptoTransfers;
+    }
+
+    /**
+     * @param regionSupportsCryptoToCryptoTransfers Whether crypto to crypto transfers are supported
+     */
+    public void setRegionSupportsCryptoToCryptoTransfers(Boolean regionSupportsCryptoToCryptoTransfers) {
+        this.regionSupportsCryptoToCryptoTransfers = regionSupportsCryptoToCryptoTransfers;
     }
 }
