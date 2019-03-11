@@ -58,7 +58,6 @@ public class Account extends DynamicResource {
     private Boolean primary;
     private String type;
     private Currency currency;
-    private String destinationTagName;
     private MoneyHash balance;
     private Date createdAt;
     private Date updatedAt;
@@ -108,13 +107,6 @@ public class Account extends DynamicResource {
     public Currency getCurrency() {
         return currency;
     }
-
-    /**
-     * Destination tag name
-     *
-     * @return optional destination tag name
-     */
-    public String getDestinationTagName() { return destinationTagName; }
 
     /**
      * Balance of this account in it's currency.

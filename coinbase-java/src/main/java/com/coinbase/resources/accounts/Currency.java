@@ -38,6 +38,7 @@ public class Currency {
     private String type;
     private String addressRegex;
     private String assetId;
+    private String destinationTagName;
 
     /**
      * Returns currency abbreviation (e.g USD or BTC).
@@ -104,6 +105,13 @@ public class Currency {
     public String getAssetId() {
         return assetId;
     }
+
+    /**
+     * Destination tag name
+     *
+     * @return optional destination tag name
+     */
+    public String getDestinationTagName() { return destinationTagName; }
 
     /**
      * Custom deserializer for {@link Currency} class.
