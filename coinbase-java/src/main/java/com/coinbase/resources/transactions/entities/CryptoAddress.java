@@ -27,6 +27,7 @@ public class CryptoAddress extends DynamicResource {
 
     private String address;
     private String currency;
+    private AddressInfo addressInfo;
 
     public String getAddress() {
         return address;
@@ -36,4 +37,5 @@ public class CryptoAddress extends DynamicResource {
         return currency;
     }
 
+    public AddressInfo getAddressInfo() { return addressInfo; }
 }
