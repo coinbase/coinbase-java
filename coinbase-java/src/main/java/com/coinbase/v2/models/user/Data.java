@@ -95,6 +95,9 @@ public class Data {
     @SerializedName("invite_friends_url")
     @Expose
     private String inviteFriendsUrl;
+    @SerializedName("referral_money")
+    @Expose
+    private ReferralMoney referralMoney;
     @SerializedName("show_account_levels")
     @Expose
     private boolean showAccountLevels;
@@ -106,459 +109,364 @@ public class Data {
     private boolean regionSupportsCryptoToCryptoTransfers;
 
     /**
-     *
-     * @return
-     * The id
+     * @return The id
      */
     public String getId() {
         return id;
     }
 
     /**
-     *
-     * @param id
-     * The id
+     * @param id The id
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     *
-     * @return
-     * The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
-     * The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
-     * @return
-     * The username
+     * @return The username
      */
     public String getUsername() {
         return username;
     }
 
     /**
-     *
-     * @param username
-     * The username
+     * @param username The username
      */
     public void setUsername(String username) {
         this.username = username;
     }
 
     /**
-     *
-     * @return
-     * The profileLocation
+     * @return The profileLocation
      */
     public String getProfileLocation() {
         return profileLocation;
     }
 
     /**
-     *
-     * @param profileLocation
-     * The profile_location
+     * @param profileLocation The profile_location
      */
     public void setProfileLocation(String profileLocation) {
         this.profileLocation = profileLocation;
     }
 
     /**
-     *
-     * @return
-     * The profileBio
+     * @return The profileBio
      */
     public String getProfileBio() {
         return profileBio;
     }
 
     /**
-     *
-     * @param profileBio
-     * The profile_bio
+     * @param profileBio The profile_bio
      */
     public void setProfileBio(String profileBio) {
         this.profileBio = profileBio;
     }
 
     /**
-     *
-     * @return
-     * The profileUrl
+     * @return The profileUrl
      */
     public String getProfileUrl() {
         return profileUrl;
     }
 
     /**
-     *
-     * @param profileUrl
-     * The profile_url
+     * @param profileUrl The profile_url
      */
     public void setProfileUrl(String profileUrl) {
         this.profileUrl = profileUrl;
     }
 
     /**
-     *
-     * @return
-     * The avatarUrl
+     * @return The avatarUrl
      */
     public String getAvatarUrl() {
         return avatarUrl;
     }
 
     /**
-     *
-     * @param avatarUrl
-     * The avatar_url
+     * @param avatarUrl The avatar_url
      */
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
 
     /**
-     *
-     * @return
-     * The resource
+     * @return The resource
      */
     public String getResource() {
         return resource;
     }
 
     /**
-     *
-     * @param resource
-     * The resource
+     * @param resource The resource
      */
     public void setResource(String resource) {
         this.resource = resource;
     }
 
     /**
-     *
-     * @return
-     * The resourcePath
+     * @return The resourcePath
      */
     public String getResourcePath() {
         return resourcePath;
     }
 
     /**
-     *
-     * @param resourcePath
-     * The resource_path
+     * @param resourcePath The resource_path
      */
     public void setResourcePath(String resourcePath) {
         this.resourcePath = resourcePath;
     }
 
     /**
-     *
-     * @return
-     * The email
+     * @return The email
      */
     public String getEmail() {
         return email;
     }
 
     /**
-     *
-     * @param email
-     * The email
+     * @param email The email
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     *
-     * @return
-     *     The timeZone
+     * @return The timeZone
      */
     public String getTimeZone() {
         return timeZone;
     }
 
     /**
-     *
-     * @param timeZone
-     *     The time_zone
+     * @param timeZone The time_zone
      */
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
     }
 
     /**
-     *
-     * @return
-     *     The nativeCurrency
+     * @return The nativeCurrency
      */
     public String getNativeCurrency() {
         return nativeCurrency;
     }
 
     /**
-     *
-     * @param nativeCurrency
-     *     The native_currency
+     * @param nativeCurrency The native_currency
      */
     public void setNativeCurrency(String nativeCurrency) {
         this.nativeCurrency = nativeCurrency;
     }
 
     /**
-     *
-     * @return
-     *     The bitcoinUnit
+     * @return The bitcoinUnit
      */
     public String getBitcoinUnit() {
         return bitcoinUnit;
     }
 
     /**
-     *
-     * @param bitcoinUnit
-     *     The bitcoin_unit
+     * @param bitcoinUnit The bitcoin_unit
      */
     public void setBitcoinUnit(String bitcoinUnit) {
         this.bitcoinUnit = bitcoinUnit;
     }
 
     /**
-     *
-     * @return
-     *     The country
+     * @return The country
      */
     public Country getCountry() {
         return country;
     }
 
     /**
-     *
-     * @param country
-     *     The country
+     * @param country The country
      */
     public void setCountry(Country country) {
         this.country = country;
     }
 
     /**
-     *
-     * @return
-     *     The createdAt
+     * @return The createdAt
      */
     public String getCreatedAt() {
         return createdAt;
     }
 
     /**
-     *
-     * @param createdAt
-     *     The created_at
+     * @param createdAt The created_at
      */
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
     /**
-     *
-     * @return
-     *     The restrictions
+     * @return The restrictions
      */
     public List<String> getRestrictions() {
         return restrictions;
     }
 
     /**
-     *
-     * @param restrictions
-     *     The restrictions
+     * @param restrictions The restrictions
      */
     public void setRestrictions(List<String> restrictions) {
         this.restrictions = restrictions;
     }
 
     /**
-     *
-     * @return
-     *     The featureFlags
+     * @return The featureFlags
      */
     public List<String> getFeatureFlags() {
         return featureFlags;
     }
 
     /**
-     *
-     * @param featureFlags
-     *     The feature_flags
+     * @param featureFlags The feature_flags
      */
     public void setFeatureFlags(List<String> featureFlags) {
         this.featureFlags = featureFlags;
     }
 
     /**
-     *
-     * @return
-     *     The splitTestGroups
+     * @return The splitTestGroups
      */
     public List<SplitTest> getSplitTestGroups() {
         return splitTestGroups;
     }
 
     /**
-     *
-     * @param splitTestGroups
-     *     The split_test_groups
+     * @param splitTestGroups The split_test_groups
      */
     public void setSplitTestGroups(List<SplitTest> splitTestGroups) {
         this.splitTestGroups = splitTestGroups;
     }
 
     /**
-     *
-     * @return
-     *     The adminFlags
+     * @return The adminFlags
      */
     public List<String> getAdminFlags() {
         return adminFlags;
     }
 
     /**
-     *
-     * @param adminFlags
-     *     The admin_flags
+     * @param adminFlags The admin_flags
      */
     public void setAdminFlags(List<String> adminFlags) {
         this.adminFlags = adminFlags;
     }
 
     /**
-     *
-     * @return
-     *     List of onboarding items
+     * @return List of onboarding items
      */
     public List<OnboardingItem> getOnboardingItems() {
         return onboardingItems;
     }
 
     /**
-     *
-     * @param onboardingItems
-     *     Set onboardingitems
+     * @param onboardingItems Set onboardingitems
      */
     public void setOnboardingItems(List<OnboardingItem> onboardingItems) {
         this.onboardingItems = onboardingItems;
     }
 
     /**
-     *
-     * @return
-     *     The personalDetails
+     * @return The personalDetails
      */
     public PersonalDetails getPersonalDetails() {
         return personalDetails;
     }
 
     /**
-     *
-     * @param personalDetails
-     *     The personal_details
+     * @param personalDetails The personal_details
      */
     public void setPersonalDetails(PersonalDetails personalDetails) {
         this.personalDetails = personalDetails;
     }
 
     /**
-     *
-     * @return
-     *     The tiers
+     * @return The tiers
      */
     public Tiers getTiers() {
         return tiers;
     }
 
     /**
-     *
-     * @param tiers
-     *     The tiers
+     * @param tiers The tiers
      */
     public void setTiers(Tiers tiers) {
         this.tiers = tiers;
     }
 
     /**
-     *
-     * @return
-     *     The merchant
+     * @return The merchant
      */
     public Object getMerchant() {
         return merchant;
     }
 
     /**
-     *
-     * @param merchant
-     *     The merchant
+     * @param merchant The merchant
      */
     public void setMerchant(Object merchant) {
         this.merchant = merchant;
     }
 
     /**
-     *
-     * @return
-     * The oauth
+     * @return The oauth
      */
     public Oauth getOauth() {
         return oauth;
     }
 
     /**
-     *
-     * @param oauth
-     * The oauth
+     * @param oauth The oauth
      */
     public void setOauth(Oauth oauth) {
         this.oauth = oauth;
     }
 
     /**
-     *
-     * @return
-     * The referralId
+     * @return The referralId
      */
     public Object getReferralId() {
         return referralId;
     }
 
     /**
-     *
-     * @param referralId
-     * The referral_id
+     * @param referralId The referral_id
      */
     public void setReferralId(Object referralId) {
         this.referralId = referralId;
     }
 
     /**
-     *
-     * @return
-     * {@code true} if user should see Privacy Rights and Email Settings;
+     * @return The referralAmount
+     */
+    public ReferralMoney getReferralAmount() {
+        return referralMoney;
+    }
+
+    /**
+     * @return {@code true} if user should see Privacy Rights and Email Settings;
      * {@code false} otherwise.
      */
     public Boolean getAccessPrivacyRights() {
@@ -566,19 +474,15 @@ public class Data {
     }
 
     /**
-     *
-     * @param accessPrivacyRights
-     * {@code true} if user should see Privacy Rights and Email Settings;
-     * {@code false} otherwise.
+     * @param accessPrivacyRights {@code true} if user should see Privacy Rights and Email Settings;
+     *                            {@code false} otherwise.
      */
     public void setAccessPrivacyRights(Boolean accessPrivacyRights) {
         this.accessPrivacyRights = accessPrivacyRights;
     }
 
     /**
-     *
-     * @return
-     * {@code true} if user is opted into analytics processing
+     * @return {@code true} if user is opted into analytics processing
      * {@code false} otherwise.
      */
     public Boolean getAnalyticsProcessingEnabled() {
@@ -586,28 +490,22 @@ public class Data {
     }
 
     /**
-     *
-     * @param analyticsProcessingEnabled
-     * {@code true} if user opted out of analytics processing
-     * {@code false} otherwise.
+     * @param analyticsProcessingEnabled {@code true} if user opted out of analytics processing
+     *                                   {@code false} otherwise.
      */
     public void setAnalyticsProcessingEnabled(Boolean analyticsProcessingEnabled) {
         this.analyticsProcessingEnabled = analyticsProcessingEnabled;
     }
 
     /**
-     *
-     * @return
-     * The invite url
+     * @return The invite url
      */
     public String getInviteFriendsUrl() {
         return inviteFriendsUrl;
     }
 
     /**
-     *
-     * @return
-     * Whether or not account levels should be shown.
+     * @return Whether or not account levels should be shown.
      */
     public Boolean getShowAccountLevels() {
         return showAccountLevels;
