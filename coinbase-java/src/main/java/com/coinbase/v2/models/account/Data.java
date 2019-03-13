@@ -77,6 +77,12 @@ public class Data {
     @SerializedName("image")
     @Expose
     private Image image;
+    @SerializedName("allow_deposits")
+    @Expose
+    private Boolean allowDeposits;
+    @SerializedName("allow_withdrawals")
+    @Expose
+    private Boolean allowWithdrawls;
 
     /**
      *
@@ -321,4 +327,19 @@ public class Data {
         this.image = image;
     }
 
+    public Boolean getAllowDeposits() {
+        return allowDeposits;
+    }
+
+    public void setAllowDeposits(Boolean allowDeposits) {
+        this.allowDeposits = allowDeposits;
+    }
+
+    public Boolean getAllowWithdrawls() {
+        return allowWithdrawls;
+    }
+
+    public void setAllowWithdrawls(Boolean allowWithdrawls) {
+        this.allowWithdrawls = allowWithdrawls;
+    }
 }
