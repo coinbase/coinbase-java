@@ -71,24 +71,6 @@ public class Data {
         }
     }
 
-    public enum IAVStatus {
-        @SerializedName("plaid_success")
-        PLAID_SUCCESS(),
-
-        @SerializedName("plaid_complete")
-        PLAID_COMPLETE(),
-
-        @SerializedName("plaid_revoked")
-        PLAID_REVOKED(),
-
-        UNKNOWN();
-
-        @Override
-        public String toString() {
-            return super.toString().toLowerCase();
-        }
-    }
-
     @SerializedName("id")
     @Expose
     private String id;
@@ -149,10 +131,6 @@ public class Data {
     @Expose
     private VerificationMethod verificationMethod;
     private CDVStatus cdvStatus;
-
-    @SerializedName("iav_status")
-    @Expose
-    private IAVStatus iavStatus;
 
     /**
      * 
@@ -532,13 +510,5 @@ public class Data {
      */
     public void setCdvStatus(CDVStatus cdvStatus) {
         this.cdvStatus = cdvStatus;
-    }
-
-    public IAVStatus getIavStatus() {
-        return iavStatus;
-    }
-
-    public void setIavStatus(IAVStatus iavStatus) {
-        this.iavStatus = iavStatus;
     }
 }

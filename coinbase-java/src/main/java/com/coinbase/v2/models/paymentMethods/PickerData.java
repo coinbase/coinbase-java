@@ -48,6 +48,9 @@ public class PickerData {
     @SerializedName("paypal_owner")
     @Expose
     private String paypalOwner;
+    @SerializedName("iav_status")
+    @Expose
+    private IAVStatus iavStatus;
 
     /**
      * 
@@ -281,5 +284,13 @@ public class PickerData {
      */
     public void setPaypalOwner(String paypalOwner) {
         this.paypalOwner = paypalOwner;
+    }
+
+    public IAVStatus getIavStatus() {
+        return iavStatus;
+    }
+
+    public void setIavStatus(IAVStatus iavStatus) {
+        this.iavStatus = iavStatus;
     }
 }
