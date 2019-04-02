@@ -1080,6 +1080,8 @@ public class Coinbase {
         deserializer.addTypeMapping("litecoin_address", CryptoAddress.class);
         deserializer.addTypeMapping("ethereum_address", CryptoAddress.class);
         deserializer.addTypeMapping("ethereum_classic_address", CryptoAddress.class);
+        deserializer.addTypeMapping("ripple_address", CryptoAddress.class);
+        deserializer.addTypeMapping("stellar_address", CryptoAddress.class);
 
         // Custom currencies:
         for (String name : cryptoAddressNames) {
