@@ -107,6 +107,9 @@ public class Data {
     @SerializedName("region_supports_crypto_to_crypto_transfers")
     @Expose
     private boolean regionSupportsCryptoToCryptoTransfers;
+    @SerializedName("barclays_hold_days")
+    @Expose
+    private Integer barclaysHoldDays;
 
     /**
      * @return The id
@@ -537,5 +540,16 @@ public class Data {
      */
     public void setRegionSupportsCryptoToCryptoTransfers(boolean regionSupportsCryptoToCryptoTransfers) {
         this.regionSupportsCryptoToCryptoTransfers = regionSupportsCryptoToCryptoTransfers;
+    }
+
+    /**
+     * @return the number of days deposited funds can be put on hold for. Possibly null.
+     */
+    public Integer getBarclaysHoldDays() {
+        return barclaysHoldDays;
+    }
+
+    public void setBarclaysHoldDays(Integer barclaysHoldDays) {
+        this.barclaysHoldDays = barclaysHoldDays;
     }
 }
