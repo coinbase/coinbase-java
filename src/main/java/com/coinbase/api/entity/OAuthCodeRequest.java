@@ -78,6 +78,23 @@ public class OAuthCodeRequest implements Serializable {
         }
     }
 
+    public enum Account {
+        SELECT("select"),
+        ALL("all");
+
+        private String _value;
+
+        Account(String value) {
+            this._value = value;
+        }
+
+        @Override
+        @JsonValue
+        public String toString() {
+            return this._value;
+        }
+    }
+
     private String clientId;
     private String clientSecret;
     private String username;
@@ -85,6 +102,9 @@ public class OAuthCodeRequest implements Serializable {
     private String token;
     private String scope;
     private String redirectUri;
+    private Account account;
+    private String referral;
+    private String layout;
 
     public String getRedirectUri() {
         return redirectUri;
@@ -150,5 +170,29 @@ public class OAuthCodeRequest implements Serializable {
 
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public String getReferral() {
+        return referral;
+    }
+
+    public void setReferral(String referral) {
+        this.referral = referral;
+    }
+
+    public String getLayout() {
+        return layout;
+    }
+
+    public void setLayout(String layout) {
+        this.layout = layout;
     }
 }

@@ -1172,6 +1172,18 @@ class CoinbaseImpl implements Coinbase {
             throw new CoinbaseException("scope is required");
         }
 
+        if (params.getAccount() != null) {
+            uriBuilder.addParameter("account", params.getAccount().toString());
+        }
+
+        if (params.getReferral() != null) {
+            uriBuilder.addParameter("referral", params.getReferral());
+        }
+
+        if (params.getLayout() != null) {
+            uriBuilder.addParameter("layout", params.getLayout());
+        }
+
         if (params.getMeta() != null) {
             OAuthCodeRequest.Meta meta = params.getMeta();
 
