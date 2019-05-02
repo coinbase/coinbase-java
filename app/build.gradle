@@ -34,12 +34,12 @@ def redirectScheme = redirectUri.split("://")[0]
 def redirectHost = redirectUri.split("://")[1]
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     defaultConfig {
         applicationId "com.coinbase.coinbasesample"
         minSdkVersion 18
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
