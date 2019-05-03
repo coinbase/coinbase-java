@@ -113,6 +113,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.internal.platform.Platform;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.BufferedSource;
 import retrofit2.Retrofit;
@@ -133,13 +134,12 @@ import static com.coinbase.ApiConstants.OAuth.OAUTH;
  */
 public class Coinbase {
 
-    public static final int READ_TIMEOUT = 30;
-    public static final int CONNECTION_TIMEOUT = 30;
-    public static final String OAUTH_URL = "https://www.coinbase.com/oauth/";
-    public static final String BASE_API_URL = "https://api.coinbase.com/v2/";
-    protected static final String PREFS_NAME = "com.coinbase.android.sdk";
-    protected static final String KEY_LOGIN_CSRF_TOKEN = "com.coinbase.android.sdk.login_csrf_token";
-    protected static final int BTC_DECIMAL_PLACES = 8;
+    private static final int READ_TIMEOUT = 30;
+    private static final int CONNECTION_TIMEOUT = 30;
+    private static final String OAUTH_URL = "https://www.coinbase.com/oauth/";
+    private static final String BASE_API_URL = "https://api.coinbase.com/v2/";
+    private static final String PREFS_NAME = "com.coinbase.android.sdk";
+    private static final String KEY_LOGIN_CSRF_TOKEN = "com.coinbase.android.sdk.login_csrf_token";
     private static final String LOG_TAG = "Coinbase";
     private static final int PERSISTENT_CACHE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -149,15 +149,14 @@ public class Coinbase {
     /**
      * Main {@link Retrofit} instance to make networking calls.
      */
-    protected URL baseOAuthUrl;
-    protected URL baseApiUrl;
-    protected final Cache diskCache;
-    protected volatile Coinbase.TokenListener tokenListener;
-    protected Scheduler backgroundScheduler;
-    protected SSLContext sslContext;
-    protected SSLSocketFactory sslSocketFactory;
-    protected Set<String> cryptoAddressNames = new HashSet<>();
-    protected Set<String> cryptoNetworkNames = new HashSet<>();
+    private URL baseOAuthUrl;
+    private URL baseApiUrl;
+    private final Cache diskCache;
+    private volatile Coinbase.TokenListener tokenListener;
+    private Scheduler backgroundScheduler;
+    private SSLContext sslContext;
+    private Set<String> cryptoAddressNames = new HashSet<>();
+    private Set<String> cryptoNetworkNames = new HashSet<>();
     protected Gson gson;
     private Retrofit retrofit;
     private HttpLoggingInterceptor.Level loggingLevel = HttpLoggingInterceptor.Level.NONE;
@@ -212,7 +211,6 @@ public class Coinbase {
         }
 
         sslContext = CoinbaseSSL.getSSLContext();
-        sslSocketFactory = sslContext.getSocketFactory();
         backgroundScheduler = Schedulers.io();
         diskCache = new Cache(context.getCacheDir(), PERSISTENT_CACHE_SIZE);
         gson = createGson();
@@ -264,11 +262,8 @@ public class Coinbase {
             throw new RuntimeException(ex);
         }
 
-        if (sslContext != null) {
-            sslSocketFactory = sslContext.getSocketFactory();
-        } else {
+        if (sslContext == null) {
             sslContext = CoinbaseSSL.getSSLContext();
-            sslSocketFactory = sslContext.getSocketFactory();
         }
         gson = createGson();
     }
@@ -984,10 +979,13 @@ public class Coinbase {
         return new HttpLoggingInterceptor().setLevel(loggingLevel);
     }
 
+    @SuppressWarnings("deprecation")
     private OkHttpClient.Builder generateClientBuilder(SSLContext sslContext) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         if (sslContext != null) {
-            builder.sslSocketFactory(sslContext.getSocketFactory());
+            SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+            builder.sslSocketFactory(sslSocketFactory);
         }
 
         // Set custom executor (e.g. for testing).
@@ -1051,20 +1049,9 @@ public class Coinbase {
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
     }
 
-    /**
-     * Hook method to configure {@link GsonBuilder} that will be used for parsing responses json.
-     *
-     * @param gsonBuilder {@link GsonBuilder builder} to configure
-     */
-    protected void configureGsonBuilder(GsonBuilder gsonBuilder) {
-        // This space is left for rent.
-    }
-
     private Gson createGson() {
         GsonBuilder gsonBuilder = createGsonBuilder()
                 .registerTypeAdapter(DynamicResource.class, initDynamicResourceDeserializer());
-
-        configureGsonBuilder(gsonBuilder);
 
         return gsonBuilder.create();
     }

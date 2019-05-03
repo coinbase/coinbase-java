@@ -10,13 +10,11 @@ buildscript {
     }
 
     ext.mavenGradlePlugin = '1.5'
-    ext.retrolambda = '3.6.1'
     ext.bintary = '1.6'
 
     dependencies {
         classpath "com.github.dcendents:android-maven-gradle-plugin:$mavenGradlePlugin"
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$bintary"
-        classpath "me.tatarka:gradle-retrolambda:$retrolambda"
     }
 }
 
@@ -35,7 +33,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'maven-publish'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 
