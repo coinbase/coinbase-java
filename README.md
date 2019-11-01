@@ -34,7 +34,7 @@ Add the following dependency to your project's Maven pom.xml:
 <dependency>
 	<groupId>com.coinbase</groupId>
 	<artifactId>coinbase-android</artifactId>
-	<version>3.0.0</version>
+	<version>4.0.0</version>
 </dependency>
 ```
 
@@ -44,7 +44,7 @@ The library will automatically be pulled from Maven Central.
 
 ```gradle
 dependencies {
-    compile 'com.coinbase:coinbase-android:3.0.0'
+    compile 'com.coinbase:coinbase-android:4.0.0'
 }
 ```
 
