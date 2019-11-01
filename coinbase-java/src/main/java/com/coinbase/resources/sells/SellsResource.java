@@ -30,7 +30,7 @@ import com.coinbase.resources.trades.TradesApiRx;
 import com.coinbase.resources.trades.TradesResource;
 import com.coinbase.resources.trades.TransferOrderBody;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Represents a resource for working with Sells: listing, placing orders and committing.

@@ -22,7 +22,7 @@ import com.coinbase.CoinbaseResponse;
 import com.coinbase.network.ApiCall;
 import com.coinbase.resources.currencies.CurrenciesResource;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Resource for getting exchange rates for specified currency.

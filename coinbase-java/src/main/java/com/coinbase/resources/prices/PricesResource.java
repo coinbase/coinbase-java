@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Represents Prices resource and get prices for specified currencies.

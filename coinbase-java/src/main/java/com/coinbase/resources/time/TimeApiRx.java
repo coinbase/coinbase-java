@@ -19,7 +19,7 @@ package com.coinbase.resources.time;
 import com.coinbase.ApiConstants;
 import com.coinbase.CoinbaseResponse;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 import retrofit2.http.GET;
 
 /**

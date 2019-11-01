@@ -19,7 +19,7 @@ buildscript {
 }
 
 def packageName = 'coinbase-java'
-def packageVersion = '3.0.0-17'
+def packageVersion = '4.0.0-18'
 def packageDescription = 'Coinbase Android SDK'
 group = 'com.coinbase'
 version = packageVersion
@@ -32,7 +32,6 @@ repositories {
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 
@@ -141,36 +140,6 @@ install {
     }
 }
 
-bintray {
-    if (project.hasProperty('bintrayUser')) {
-        user = project.property('bintrayUser')
-    } else {
-        user = ""
-    }
-    if (project.hasProperty('bintrayKey')) {
-        key = project.property('bintrayKey')
-    } else {
-        key = ""
-    }
-
-    configurations = ['archives']
-    publish = true
-    pkg {
-        repo = 'maven'
-        name = packageName
-        userOrg = 'coinbase'
-        desc = packageDescription
-        licenses = ['MIT']
-        vcsUrl = 'https://github.com/coinbase/coinbase-java.git'
-        version {
-            name = packageVersion
-            desc = 'Coinbase Android SDK'
-            released = new Date()
-            vcsTag = packageVersion
-        }
-    }
-}
-
 task checkstyle(type: Checkstyle) {
     description 'Check code standard'
     group 'verification'
@@ -222,7 +191,7 @@ task codeQualityCheck {
 dependencies {
     api projectDependencies.gson
     api okHttpDependencies.okHttpLogin
-    api projectDependencies.rxJava2
+    api projectDependencies.rxJava3
 
     implementation retrofitDependencies.retrofit
     implementation retrofitDependencies.rxJavaAdapter

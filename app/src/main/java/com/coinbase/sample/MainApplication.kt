@@ -26,8 +26,8 @@ import com.coinbase.errors.CoinbaseOAuthException
 import com.coinbase.resources.auth.AccessToken
 import com.coinbase.resources.auth.RevokeTokenResponse
 import com.google.gson.Gson
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
 import okhttp3.logging.HttpLoggingInterceptor
 import java.util.*
 

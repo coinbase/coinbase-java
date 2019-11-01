@@ -27,8 +27,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import com.coinbase.resources.currencies.Currency
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_currencies.*
 import kotlinx.android.synthetic.main.item_currency.view.*
 

@@ -24,7 +24,7 @@ import com.coinbase.PagedResponse;
 import com.coinbase.PaginationParams;
 import com.coinbase.network.ApiCall;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Resource for handling Account information.

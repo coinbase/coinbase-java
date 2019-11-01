@@ -19,7 +19,7 @@ package com.coinbase.resources.auth;
 import com.coinbase.ApiConstants;
 import com.coinbase.network.ApiCall;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Resource that provides methods for authorization.

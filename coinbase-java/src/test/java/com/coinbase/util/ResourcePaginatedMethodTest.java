@@ -26,8 +26,8 @@ import org.mockito.ArgumentCaptor;
 
 import java.util.Map;
 
-import io.reactivex.Single;
-import io.reactivex.functions.Function;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.functions.Function;
 import okhttp3.mockwebserver.RecordedRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;

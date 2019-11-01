@@ -25,10 +25,10 @@ import com.coinbase.util.ResourceMethodTest;
 
 import java.util.List;
 
-import io.reactivex.Single;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.functions.Function;
-import io.reactivex.functions.Function3;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.functions.BiFunction;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.functions.Function3;
 import okhttp3.mockwebserver.RecordedRequest;
 import okio.Buffer;
 

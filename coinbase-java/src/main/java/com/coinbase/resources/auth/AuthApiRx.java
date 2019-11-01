@@ -18,7 +18,7 @@ package com.coinbase.resources.auth;
 
 import com.coinbase.ApiConstants;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 

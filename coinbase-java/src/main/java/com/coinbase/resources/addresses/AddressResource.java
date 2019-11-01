@@ -25,7 +25,7 @@ import com.coinbase.PaginationParams;
 import com.coinbase.network.ApiCall;
 import com.coinbase.resources.transactions.Transaction;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Address API methods.

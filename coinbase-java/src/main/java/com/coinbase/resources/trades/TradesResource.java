@@ -24,7 +24,7 @@ import com.coinbase.resources.trades.Trade.ExpandField;
 
 import java.util.Collections;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 import static com.coinbase.resources.ExpandUtils.toValueSet;
 

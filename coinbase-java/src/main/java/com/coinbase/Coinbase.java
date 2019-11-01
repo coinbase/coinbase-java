@@ -102,10 +102,12 @@ import javax.net.ssl.SSLSocketFactory;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-import io.reactivex.Scheduler;
-import io.reactivex.Single;
-import io.reactivex.functions.BiFunction;
-import io.reactivex.schedulers.Schedulers;
+
+import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.functions.BiFunction;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import okhttp3.Cache;
 import okhttp3.Dispatcher;
 import okhttp3.Interceptor;
@@ -113,11 +115,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.internal.platform.Platform;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.BufferedSource;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.coinbase.ApiConstants.OAuth.OAUTH;
@@ -757,7 +757,7 @@ public class Coinbase {
         try {
             final Retrofit retrofit = getRetrofit();
             return constructor.apply(retrofit.create(api), retrofit.create(rxApi));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Log.e(this.getClass().getSimpleName(), "Could not instantiate resource", e);
             throw new IllegalArgumentException(e);
         }
@@ -1029,8 +1029,8 @@ public class Coinbase {
                 .client(okHttpClient)
                 .addCallAdapterFactory(ApiCallAdapterFactory.create())
                 .addCallAdapterFactory(backgroundScheduler == null
-                        ? RxJava2CallAdapterFactory.create()
-                        : RxJava2CallAdapterFactory.createWithScheduler(backgroundScheduler)
+                        ? RxJava3CallAdapterFactory.create()
+                        : RxJava3CallAdapterFactory.createWithScheduler(backgroundScheduler)
                 )
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

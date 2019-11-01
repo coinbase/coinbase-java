@@ -27,9 +27,9 @@ import com.coinbase.network.ApiCall
 import com.coinbase.network.Callback
 import com.coinbase.resources.accounts.Account
 import com.coinbase.resources.transactions.MoneyHash
-import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
-import java.util.*
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import java.util.Locale
 
 
 //region SDK Classes extension

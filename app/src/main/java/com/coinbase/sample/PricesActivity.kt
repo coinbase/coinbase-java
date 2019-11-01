@@ -28,8 +28,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.coinbase.CoinbaseResponse
 import com.coinbase.resources.prices.Price
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_prices.*
 import kotlinx.android.synthetic.main.item_price.view.*
 

@@ -2,10 +2,10 @@ ext {
 
     //region Versions
     gson = '2.8.0'
-    rxjava2 = '2.1.13'
+    rxJava3 = '3.0.0-RC4'
     okHttp = '3.6.0'
     commonsIo = '2.5'
-    retrofit = '2.2.0'
+    retrofit = '2.6.2'
     apacheCommons = '3.5'
     androidX = '1.0.0'
 
@@ -20,7 +20,7 @@ ext {
     projectDependencies = [
             gson         : "com.google.code.gson:gson:$gson",
             commonsIo    : "commons-io:commons-io:$commonsIo",
-            rxJava2       : "io.reactivex.rxjava2:rxjava:$rxjava2",
+            rxJava3       : "io.reactivex.rxjava3:rxjava:$rxJava3",
             apacheCommons: "org.apache.commons:commons-lang3:$apacheCommons"
     ]
 
@@ -30,7 +30,7 @@ ext {
 
     retrofitDependencies = [
             retrofit     : "com.squareup.retrofit2:retrofit:$retrofit",
-            rxJavaAdapter: "com.squareup.retrofit2:adapter-rxjava2:$retrofit",
+            rxJavaAdapter: "com.github.akarnokd:rxjava3-retrofit-adapter:$rxJava3",
             gsonConverter: "com.squareup.retrofit2:converter-gson:$retrofit"
     ]
 

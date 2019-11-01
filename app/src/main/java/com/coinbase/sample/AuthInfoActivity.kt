@@ -18,7 +18,7 @@ package com.coinbase.sample
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_auth_info.*
 
 class AuthInfoActivity : AppCompatActivity() {

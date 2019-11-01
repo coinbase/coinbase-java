@@ -21,7 +21,7 @@ import com.coinbase.network.ApiCall;
 
 import java.util.List;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Represents resource for getting supported currencies.

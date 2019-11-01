@@ -31,12 +31,21 @@ import com.coinbase.PagedResponse
 import com.coinbase.PaginationParams
 import com.coinbase.resources.transactions.Transaction
 import com.coinbase.resources.transactions.TransactionsResource
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_transactions.*
-import kotlinx.android.synthetic.main.item_transaction.view.*
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_transactions.accountText
+import kotlinx.android.synthetic.main.activity_transactions.recyclerView
+import kotlinx.android.synthetic.main.activity_transactions.swipeRefreshLayout
+import kotlinx.android.synthetic.main.item_transaction.view.amount
+import kotlinx.android.synthetic.main.item_transaction.view.date
+import kotlinx.android.synthetic.main.item_transaction.view.nativeAmount
+import kotlinx.android.synthetic.main.item_transaction.view.status
+import kotlinx.android.synthetic.main.item_transaction.view.subtitle
+import kotlinx.android.synthetic.main.item_transaction.view.title
+import kotlinx.android.synthetic.main.item_transaction.view.type
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.ArrayList
+import java.util.Locale
 
 class TransactionsActivity : AppCompatActivity() {
 

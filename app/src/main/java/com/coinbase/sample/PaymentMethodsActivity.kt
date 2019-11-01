@@ -26,11 +26,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.coinbase.resources.paymentmethods.models.PaymentMethod
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_payment_methods.*
-import kotlinx.android.synthetic.main.item_payment_method.view.*
-import java.util.*
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_payment_methods.progressBar
+import kotlinx.android.synthetic.main.activity_payment_methods.recyclerView
+import kotlinx.android.synthetic.main.item_payment_method.view.buyInfo
+import kotlinx.android.synthetic.main.item_payment_method.view.currency
+import kotlinx.android.synthetic.main.item_payment_method.view.depositInfo
+import kotlinx.android.synthetic.main.item_payment_method.view.paymentMethodName
+import kotlinx.android.synthetic.main.item_payment_method.view.primaryInfo
+import kotlinx.android.synthetic.main.item_payment_method.view.sellInfo
+import kotlinx.android.synthetic.main.item_payment_method.view.withdrawalInfo
+import java.util.Locale
 
 class PaymentMethodsActivity : AppCompatActivity() {
 

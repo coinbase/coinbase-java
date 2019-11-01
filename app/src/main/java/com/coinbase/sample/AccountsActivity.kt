@@ -27,11 +27,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.coinbase.resources.accounts.Account
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_accounts.*
-import kotlinx.android.synthetic.main.item_account.view.*
-import java.util.*
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_accounts.accountsRecyclerView
+import kotlinx.android.synthetic.main.activity_accounts.progressBar
+import kotlinx.android.synthetic.main.item_account.view.currencyAmount
+import kotlinx.android.synthetic.main.item_account.view.name
+import kotlinx.android.synthetic.main.item_account.view.primary
+import java.util.ArrayList
 
 class AccountsActivity : AppCompatActivity() {
 

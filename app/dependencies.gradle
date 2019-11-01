@@ -2,14 +2,14 @@ ext {
 
     //region Versions
     androidSupport = '27.1.1'
-    rxandroid = '2.0.1'
+    rxandroid = '3.0.0-SNAPSHOT'
     picasso = '2.71828'
     constraintLayout = '1.1.2'
     //endregion
 
     //region Dependencies
     projectDependencies = [
-            rxandroid                     : "io.reactivex.rxjava2:rxandroid:$rxandroid",
+            rxandroid                     : "io.reactivex.rxjava3:rxandroid:$rxandroid",
             picasso                       : "com.squareup.picasso:picasso:$picasso"
     ]
 

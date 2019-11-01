@@ -21,7 +21,7 @@ import androidx.annotation.NonNull;
 import com.coinbase.CoinbaseResponse;
 import com.coinbase.network.ApiCall;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Represents resource for getting user information.

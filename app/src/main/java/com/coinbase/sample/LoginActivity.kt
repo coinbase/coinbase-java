@@ -28,8 +28,8 @@ import com.coinbase.AuthorizationRequest
 import com.coinbase.AuthorizationRequest.AccountSetting
 import com.coinbase.Scope.Wallet
 import com.coinbase.resources.auth.AccessToken
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {

@@ -29,7 +29,7 @@ import com.coinbase.resources.trades.TradesApi;
 import com.coinbase.resources.trades.TradesApiRx;
 import com.coinbase.resources.trades.TradesResource;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Represents a resource for working with Withdrawals: listing, placing orders and committing.

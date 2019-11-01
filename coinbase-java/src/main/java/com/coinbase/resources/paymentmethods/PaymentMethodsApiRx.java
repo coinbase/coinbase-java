@@ -24,7 +24,7 @@ import com.coinbase.resources.paymentmethods.models.PaymentMethod;
 import java.util.Map;
 import java.util.Set;
 
-import io.reactivex.Single;
+import io.reactivex.rxjava3.core.Single;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

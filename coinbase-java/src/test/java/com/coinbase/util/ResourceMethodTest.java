@@ -34,10 +34,10 @@ import org.robolectric.annotation.Config;
 import java.io.IOException;
 import java.net.URL;
 
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.SingleObserver;
+import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -92,7 +92,7 @@ public abstract class ResourceMethodTest<R, T> {
     }
 
     @Test
-    public void shouldHandleGetDataWithCallback() throws Exception {
+    public void shouldHandleGetDataWithCallback() throws Throwable {
         final R resource = getResource.apply(coinbase);
 
         final Callback callback = mock(Callback.class);
@@ -110,7 +110,7 @@ public abstract class ResourceMethodTest<R, T> {
     }
 
     @Test
-    public void shouldHandleGetDataWithRx() throws Exception {
+    public void shouldHandleGetDataWithRx() throws Throwable {
         final R resource = getResource.apply(coinbase);
 
         //noinspection unchecked
