@@ -875,6 +875,7 @@ public class Coinbase {
                 // if token is refreshed successfully redo request
                 if (!TextUtils.isEmpty(refreshToken) && !refreshToken.equals(originalRefreshToken)) {
                     insertAccessToken(builder);
+                    response.close();
                     return chain.proceed(builder.build());
                 }
             }
