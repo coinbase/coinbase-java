@@ -17,6 +17,7 @@
 package com.coinbase.resources.addresses;
 
 import com.coinbase.resources.base.BaseResource;
+import com.coinbase.resources.transactions.entities.AddressInfo;
 
 import java.util.Date;
 
@@ -27,6 +28,7 @@ import java.util.Date;
 public class Address extends BaseResource {
 
     private String address;
+    private AddressInfo addressInfo;
     private String callbackUrl;
     private String legacyAddress;
     private String name;
@@ -39,13 +41,20 @@ public class Address extends BaseResource {
     private Date updatedAt;
 
     /**
-     * Bitcoin, Bitcoin Cash, Litecoin or Ethereum address.
+     * Bitcoin, Bitcoin Cash, Litecoin, Ethereum, etc address.
      *
      * @return currency address.
      */
     public String getAddress() {
         return address;
     }
+
+    /**
+     * Extra information for certain blockchains (XRP, Stellar)
+     *
+     * @return the address info
+     */
+    public AddressInfo getAddressInfo() { return addressInfo; }
 
     /**
      * Callback url.
